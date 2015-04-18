@@ -1,5 +1,5 @@
 name: EithonFixes
-main: net.eithon.plugin.eithonfixes.Plugin
+main: net.eithon.plugin.fixes.Plugin
 version: 1.0
 author: vanbrayne
 softdepend: [Essentials]

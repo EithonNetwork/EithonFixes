@@ -1,4 +1,4 @@
-package net.eithon.plugin.eithonfixes;
+package net.eithon.plugin.fixes;
 
 import net.eithon.library.extensions.EithonPlugin;
 
