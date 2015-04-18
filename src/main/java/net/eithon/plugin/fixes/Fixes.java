@@ -54,7 +54,7 @@ public class Fixes {
 				"Your balance is %.2f E-Coins.");
 		Plugin ess = plugin.getJavaPlugin().getServer().getPluginManager().getPlugin("Economy");
 		if (ess != null && ess.isEnabled()) {
-			plugin.getDebug().info("Succesfully hooked into Essentials economy!");
+			plugin.getLogger().info("Succesfully hooked into Essentials economy!");
 		}	
 	}
 
