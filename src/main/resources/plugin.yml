@@ -1,0 +1,23 @@
+name: EithonFixes
+main: net.eithon.plugin.eithonfixes.Plugin
+version: 1.0
+author: vanbrayne
+depend: [Essentials, EithonLibraryPlugin]
+description: A Minecraft plugin for Eithon fixes
+commands:
+  eithonfixes:
+    description: Fix things other plugins fail to do
+    usage: /eithonfixes buy | balance
+    permission-message: You don't have <permission>
+permissions:
+  eithonfixes.*:
+    description: Gives access to all eithonfixes commands
+    default: op
+    eithonfixes.buy: true
+    eithonfixes.balance: true
+  eithonfixes.buy:
+    description: Access to /eithonfixes buy command
+    default: op
+  eithonfixes.balance:
+    description: Access to /eithonfixes balance command
+    default: op
