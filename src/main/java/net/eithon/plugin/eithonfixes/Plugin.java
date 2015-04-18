@@ -1,5 +1,4 @@
 package net.eithon.plugin.eithonfixes;
-
 import net.eithon.library.extensions.EithonPlugin;
 
 import org.bukkit.command.Command;

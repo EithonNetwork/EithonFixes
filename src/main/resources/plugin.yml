@@ -2,7 +2,8 @@ name: EithonFixes
 main: net.eithon.plugin.eithonfixes.Plugin
 version: 1.0
 author: vanbrayne
-depend: [Essentials, EithonLibraryPlugin]
+softdepend: [Essentials]
+depend: [EithonLibrary]
 description: A Minecraft plugin for Eithon fixes
 commands:
   eithonfixes:
