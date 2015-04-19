@@ -14,8 +14,7 @@ import org.bukkit.plugin.Plugin;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
-public class Fixes {
-	private static Fixes singleton = null;
+public class Controller {
 	private ConfigurableCommand _giveCommand;
 	private ConfigurableCommand _takeCommand;
 	private ConfigurableMessage _youNeedMoreMoneyMessage;
@@ -24,19 +23,8 @@ public class Fixes {
 	private ConfigurableMessage _penaltyOnDeathMessage;
 	private List<String> _penaltyOnDeathWorlds;
 	private double _costOfDeath;
-
-	private Fixes() {
-	}
-
-	static Fixes get()
-	{
-		if (singleton == null) {
-			singleton = new Fixes();
-		}
-		return singleton;
-	}
-
-	void enable(EithonPlugin plugin){
+	
+	public Controller(EithonPlugin plugin){
 		Configuration config = plugin.getConfiguration();
 		this._penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
 		this._costOfDeath = config.getDouble("CostOfDeath", 30.0);
@@ -52,7 +40,7 @@ public class Fixes {
 				"You successfully purchased %d item(s) of %s.");
 		this._currentBalanceMessage = plugin.getConfigurableMessage("messages.CurrentBalance", 1,
 				"Your balance is %.2f E-Coins.");
-		Plugin ess = plugin.getJavaPlugin().getServer().getPluginManager().getPlugin("Economy");
+		Plugin ess = plugin.getServer().getPluginManager().getPlugin("Economy");
 		if (ess != null && ess.isEnabled()) {
 			plugin.getLogger().info("Succesfully hooked into Essentials economy!");
 		}	
