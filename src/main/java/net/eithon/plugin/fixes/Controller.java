@@ -1,10 +1,6 @@
 package net.eithon.plugin.fixes;
 
-import java.util.List;
-
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.ConfigurableCommand;
-import net.eithon.library.plugin.ConfigurableMessage;
 import net.eithon.library.plugin.Configuration;
 
 import org.bukkit.command.CommandSender;
@@ -15,31 +11,8 @@ import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
 public class Controller {
-	private ConfigurableCommand _giveCommand;
-	private ConfigurableCommand _takeCommand;
-	private ConfigurableMessage _youNeedMoreMoneyMessage;
-	private ConfigurableMessage _successfulPurchaseMessage;
-	private ConfigurableMessage _currentBalanceMessage;
-	private ConfigurableMessage _penaltyOnDeathMessage;
-	private List<String> _penaltyOnDeathWorlds;
-	private double _costOfDeath;
-	
+
 	public Controller(EithonPlugin plugin){
-		Configuration config = plugin.getConfiguration();
-		this._penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
-		this._costOfDeath = config.getDouble("CostOfDeath", 30.0);
-		this._giveCommand = plugin.getConfigurableCommand("GiveCommand", 3,
-				"give %s %s %d");
-		this._takeCommand = plugin.getConfigurableCommand("TakeCommand", 2,
-				"eco take %s %f");
-		this._penaltyOnDeathMessage = plugin.getConfigurableMessage("messages.PenaltyOnDeath", 1,
-				"Your death has resulted in a penalty of %.2f.");
-		this._youNeedMoreMoneyMessage = plugin.getConfigurableMessage("messages.YouNeedMoreMoney", 4,
-				"You need %.2f to buy %d %s. You have %.2f.");
-		this._successfulPurchaseMessage = plugin.getConfigurableMessage("messages.SuccessfulPurchase", 2,
-				"You successfully purchased %d item(s) of %s.");
-		this._currentBalanceMessage = plugin.getConfigurableMessage("messages.CurrentBalance", 1,
-				"Your balance is %.2f E-Coins.");
 		Plugin ess = plugin.getServer().getPluginManager().getPlugin("Economy");
 		if (ess != null && ess.isEnabled()) {
 			plugin.getLogger().info("Succesfully hooked into Essentials economy!");
@@ -64,25 +37,17 @@ public class Controller {
 			return;
 		}
 		if (!hasEnough) {
-			try {
-				buyingPlayer.sendMessage(String.format(
-						this._youNeedMoreMoneyMessage.getFormat(), totalPrice, amount, item, balance));
-			} catch (Exception e) {
-				this._youNeedMoreMoneyMessage.reportFailure(buyingPlayer, e);
-			}
+			buyingPlayer.sendMessage(String.format(
+					Config.M.youNeedMoreMoney.getFormat(), totalPrice, amount, item, balance));
 			return;
 		}
 
-		this._takeCommand.execute(buyingPlayer.getName(), totalPrice);
-		this._giveCommand.execute(buyingPlayer.getName(), item, amount);
+		Config.C._take.execute(buyingPlayer.getName(), totalPrice);
+		Config.C._give.execute(buyingPlayer.getName(), item, amount);
 
-		try {
-			buyingPlayer.sendMessage(String.format(this._successfulPurchaseMessage.getFormat(), amount, item));
-		} catch (Exception e) {
-			this._successfulPurchaseMessage.reportFailure(buyingPlayer, e);
-		}
+		Config.M.successfulPurchase.sendMessage(buyingPlayer, amount, item);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void balance(CommandSender sender) {
 		Player player = (Player)sender;
@@ -94,18 +59,14 @@ public class Controller {
 			sender.sendMessage(String.format("Could not find a user named \"%s\".", playerName));
 			return;
 		}
-		try {
-			sender.sendMessage(String.format(this._currentBalanceMessage.getFormat(), balance));
-		} catch (Exception e) {
-			this._currentBalanceMessage.reportFailure(sender, e);
-		}
+		Config.M.currentBalance.sendMessage(sender, balance);
 	}
 
 	public void playerDied(Player player) {
-		for (String penaltyWorld : this._penaltyOnDeathWorlds) {
+		for (String penaltyWorld : Config.V.penaltyOnDeathWorlds) {
 			if (penaltyWorld.equalsIgnoreCase(player.getWorld().getName())) {
-				this._takeCommand.execute(player.getName(), this._costOfDeath);
-				this._penaltyOnDeathMessage.sendMessage(player, this._costOfDeath);
+				Config.C._take.execute(player.getName(), Config.V.costOfDeath);
+				Config.M.penaltyOnDeath.sendMessage(player, Config.V.costOfDeath);
 				break;
 			}
 		}
