@@ -1,5 +1,6 @@
 package net.eithon.plugin.fixes;
 
+import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.CommandParser;
 import net.eithon.library.plugin.ICommandHandler;
@@ -34,6 +35,8 @@ public class CommandHandler implements ICommandHandler {
 	void buyCommand(CommandParser commandParser)
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.buy")) return;
+		EithonPlayer eithonPlayer = commandParser.getEithonPlayer();
+		if ((eithonPlayer != null) && (!eithonPlayer.isInAcceptableWorldOrInformPlayer(Config.V.buyWorlds))) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(4, 5)) return;
 
 		Player buyingPlayer = commandParser.getArgumentPlayer(null);

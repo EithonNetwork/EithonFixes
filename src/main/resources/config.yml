@@ -8,6 +8,10 @@ PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
 #
 CostOfDeath: 30.0
 
+#
+# Worlds where you can buy stuff
+#
+BuyWorlds: [W_SurvivalFreebuild]
 
 commands:
 
