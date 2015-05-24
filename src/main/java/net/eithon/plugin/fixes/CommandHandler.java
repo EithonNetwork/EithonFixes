@@ -26,6 +26,8 @@ public class CommandHandler implements ICommandHandler {
 			buyCommand(commandParser);
 		} else if (command.equals("balance")) {
 			balanceCommand(commandParser);
+		} else if (command.equals("join")) {
+			joinCommand(commandParser);
 		} else {
 			commandParser.showCommandSyntax();
 		}
@@ -55,6 +57,15 @@ public class CommandHandler implements ICommandHandler {
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
 
 		this._controller.balance(commandParser.getSender());
+	}
+
+	void joinCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.join")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
+		
+		String channel = commandParser.getArgumentString();
+		this._controller.joinChannel(channel);
 	}
 
 	@Override

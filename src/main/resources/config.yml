@@ -8,6 +8,10 @@ PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
 #
 CostOfDeath: 30.0
 
+#
+# Chat channels. Used to leave all other channels.
+#
+ChatChannelsToLeave: [1, 2, 3, 4]
 
 commands:
 
@@ -18,6 +22,14 @@ commands:
   #
   # TakeCommand has 2 parameters: <player> (%s), <totalprice> (%f)
   TakeCommand: eco take %s %f
+  
+  #
+  # LeaveChannel has 1 parameters: <channel name> (%s)
+  LeaveChannel: /ch leave %s
+
+  #
+  # LeaveChannel has 1 parameters: <channel name> (%s)
+  JoinChannel: /ch enter %s
 
 messages:
 

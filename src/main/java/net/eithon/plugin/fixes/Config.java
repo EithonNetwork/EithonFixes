@@ -18,22 +18,30 @@ public class Config {
 	}
 	public static class V {
 		public static List<String> penaltyOnDeathWorlds;
+		public static List<String> chatChannelsToLeave;
 		public static double costOfDeath;
 
 		static void load(Configuration config) {
 			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
+			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
 			costOfDeath = config.getDouble("CostOfDeath", 30.0);
 		}
 	}
 	public static class C {
-		public static ConfigurableCommand _give;
-		public static ConfigurableCommand _take;
+		public static ConfigurableCommand give;
+		public static ConfigurableCommand take;
+		public static ConfigurableCommand joinChat;
+		public static ConfigurableCommand leaveChat;
 
 		static void load(Configuration config) {
-			_give = config.getConfigurableCommand("GiveCommand", 3,
+			give = config.getConfigurableCommand("GiveCommand", 3,
 					"give %s %s %d");
-			_take = config.getConfigurableCommand("TakeCommand", 2,
+			take = config.getConfigurableCommand("TakeCommand", 2,
 					"eco take %s %f");
+			joinChat = config.getConfigurableCommand("JoinChannel", 1,
+					"/ch enter %s");
+			leaveChat = config.getConfigurableCommand("LeaveChannel", 1,
+					"/ch leave %s");
 		}
 
 	}
