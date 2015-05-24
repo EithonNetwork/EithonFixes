@@ -51,3 +51,7 @@ messages:
   #
   # Parameters: <balance> (%f)
   CurrentBalance: Your balance is %.2f E-Coins.
+
+  #
+  # Parameters: <channel name> (%s)
+  JoinedChat: You have joined chat channel %s.

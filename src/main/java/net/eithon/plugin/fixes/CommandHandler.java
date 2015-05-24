@@ -65,7 +65,9 @@ public class CommandHandler implements ICommandHandler {
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
 		
 		String channel = commandParser.getArgumentString();
-		this._controller.joinChannel(channel);
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+		this._controller.joinChannel(player, channel);
 	}
 
 	@Override

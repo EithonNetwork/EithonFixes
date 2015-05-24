@@ -71,10 +71,11 @@ public class Controller {
 		}
 	}
 
-	public void joinChannel(String channel) {
+	public void joinChannel(Player player, String channel) {
 		for (String ch : Config.V.chatChannelsToLeave) {
 			Config.C.leaveChat.execute(ch);
 		}
 		Config.C.joinChat.execute(channel);
+		Config.M.joinedChat.sendMessage(player, channel);
 	}
 }

@@ -50,6 +50,7 @@ public class Config {
 		public static ConfigurableMessage successfulPurchase;
 		public static ConfigurableMessage currentBalance;
 		public static ConfigurableMessage penaltyOnDeath;
+		public static ConfigurableMessage joinedChat;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -60,6 +61,8 @@ public class Config {
 					"You successfully purchased %d item(s) of %s.");
 			currentBalance = config.getConfigurableMessage("messages.CurrentBalance", 1,
 					"Your balance is %.2f E-Coins.");
+			joinedChat = config.getConfigurableMessage("messages.JoinedChat", 1,
+					"You have joined chat channel %s.");
 		}		
 	}
 
