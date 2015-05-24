@@ -9,6 +9,10 @@ PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
 CostOfDeath: 30.0
 
 #
+# Worlds where you can buy stuff
+#
+BuyWorlds: [W_SurvivalFreebuild]
+#
 # Chat channels. Used to leave all other channels.
 #
 ChatChannelsToLeave: [1, 2, 3, 4]

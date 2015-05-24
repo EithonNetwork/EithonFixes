@@ -17,11 +17,13 @@ public class Config {
 
 	}
 	public static class V {
+		public static List<String> buyWorlds;
 		public static List<String> penaltyOnDeathWorlds;
 		public static List<String> chatChannelsToLeave;
 		public static double costOfDeath;
 
 		static void load(Configuration config) {
+			buyWorlds = config.getStringList("BuyWorlds");
 			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
 			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
 			costOfDeath = config.getDouble("CostOfDeath", 30.0);

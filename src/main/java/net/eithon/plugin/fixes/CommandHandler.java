@@ -1,5 +1,6 @@
 package net.eithon.plugin.fixes;
 
+import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.CommandParser;
 import net.eithon.library.plugin.ICommandHandler;
@@ -18,9 +19,8 @@ public class CommandHandler implements ICommandHandler {
 
 	public boolean onCommand(CommandParser commandParser) {
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1)) return true;
-
-		String command = commandParser.getArgumentStringAsLowercase(0);
-		commandParser.setCurrentCommand(command);
+		
+		String command = commandParser.getArgumentCommand();
 
 		if (command.equals("buy")) {
 			buyCommand(commandParser);
@@ -37,16 +37,18 @@ public class CommandHandler implements ICommandHandler {
 	void buyCommand(CommandParser commandParser)
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.buy")) return;
+		EithonPlayer eithonPlayer = commandParser.getEithonPlayer();
+		if ((eithonPlayer != null) && (!eithonPlayer.isInAcceptableWorldOrInformPlayer(Config.V.buyWorlds))) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(4, 5)) return;
 
-		Player buyingPlayer = commandParser.getArgumentPlayer(1, null);
+		Player buyingPlayer = commandParser.getArgumentPlayer(null);
 		if (buyingPlayer == null) return;
 
 
-		String item = commandParser.getArgumentStringAsLowercase(2);
-		double pricePerItem = commandParser.getArgumentDouble(3, Double.MAX_VALUE);
+		String item = commandParser.getArgumentStringAsLowercase();
+		double pricePerItem = commandParser.getArgumentDouble(Double.MAX_VALUE);
 		if (pricePerItem == Double.MAX_VALUE) return;
-		int amount = commandParser.getArgumentInteger(4, 1);
+		int amount = commandParser.getArgumentInteger(1);
 
 		this._controller.buy(buyingPlayer, item, pricePerItem, amount);
 	}
