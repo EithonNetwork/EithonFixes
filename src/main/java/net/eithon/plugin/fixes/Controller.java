@@ -1,7 +1,6 @@
 package net.eithon.plugin.fixes;
 
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Configuration;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,8 +41,8 @@ public class Controller {
 			return;
 		}
 
-		Config.C._take.execute(buyingPlayer.getName(), totalPrice);
-		Config.C._give.execute(buyingPlayer.getName(), item, amount);
+		Config.C.take.execute(buyingPlayer.getName(), totalPrice);
+		Config.C.give.execute(buyingPlayer.getName(), item, amount);
 
 		Config.M.successfulPurchase.sendMessage(buyingPlayer, amount, item);
 	}
@@ -65,10 +64,18 @@ public class Controller {
 	public void playerDied(Player player) {
 		for (String penaltyWorld : Config.V.penaltyOnDeathWorlds) {
 			if (penaltyWorld.equalsIgnoreCase(player.getWorld().getName())) {
-				Config.C._take.execute(player.getName(), Config.V.costOfDeath);
+				Config.C.take.execute(player.getName(), Config.V.costOfDeath);
 				Config.M.penaltyOnDeath.sendMessage(player, Config.V.costOfDeath);
 				break;
 			}
 		}
+	}
+
+	public void joinChannel(Player player, String channel) {
+		for (String ch : Config.V.chatChannelsToLeave) {
+			Config.C.leaveChat.execute(ch);
+		}
+		Config.C.joinChat.execute(channel);
+		Config.M.joinedChat.sendMessage(player, channel);
 	}
 }
