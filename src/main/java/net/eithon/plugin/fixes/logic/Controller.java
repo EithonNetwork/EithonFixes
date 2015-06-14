@@ -1,6 +1,10 @@
 package net.eithon.plugin.fixes.logic;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.library.time.CoolDown;
 import net.eithon.plugin.fixes.Config;
 import net.eithon.plugin.fixes.Config.C;
 import net.eithon.plugin.fixes.Config.M;
@@ -14,12 +18,17 @@ import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
 public class Controller {
+	private HashMap<UUID, CoolDown> _coolDownHashMap;
 
 	public Controller(EithonPlugin plugin){
 		Plugin ess = plugin.getServer().getPluginManager().getPlugin("Economy");
 		if (ess != null && ess.isEnabled()) {
 			plugin.getLogger().info("Succesfully hooked into Essentials economy!");
-		}	
+		}
+		this._coolDownHashMap = new HashMap<UUID, CoolDown>();
+		for (CoolDownInfo info : Config.V.coolDownInfos) {
+			this._coolDownHashMap.put(info.getId(), new CoolDown(info.getName(), info.getCoolDownPeriodInSeconds()));
+		}
 	}
 
 	void disable() {
@@ -83,8 +92,21 @@ public class Controller {
 		Config.M.joinedChat.sendMessage(player, channel);
 	}
 
-	public boolean commandShouldBeCancelled(Player player, String message) {
-		// TODO Auto-generated method stub
+	public boolean commandShouldBeCancelled(Player player, String command) {
+		CoolDown coolDown = getCoolDown(command);
+		if (coolDown == null) return false;
+		if (coolDown.isInCoolDownPeriod(player)) return true;
+		coolDown.addPlayer(player);
 		return false;
+	}
+
+	private CoolDown getCoolDown(String command) {
+		CoolDownInfo info = getCoolDownInfo(command);
+		if (info == null) return null;
+		return this._coolDownHashMap.get(info.getId());
+	}
+
+	private CoolDownInfo getCoolDownInfo(String command) {
+		return null;
 	}
 }
