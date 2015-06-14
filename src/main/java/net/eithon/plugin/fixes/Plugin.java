@@ -1,5 +1,6 @@
 package net.eithon.plugin.fixes;
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.plugin.fixes.logic.Controller;
 
 import org.bukkit.event.Listener;
 

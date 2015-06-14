@@ -1,6 +1,10 @@
-package net.eithon.plugin.fixes;
+package net.eithon.plugin.fixes.logic;
 
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.plugin.fixes.Config;
+import net.eithon.plugin.fixes.Config.C;
+import net.eithon.plugin.fixes.Config.M;
+import net.eithon.plugin.fixes.Config.V;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -77,5 +81,10 @@ public class Controller {
 		}
 		Config.C.joinChat.execute(channel);
 		Config.M.joinedChat.sendMessage(player, channel);
+	}
+
+	public boolean commandShouldBeCancelled(Player player, String message) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

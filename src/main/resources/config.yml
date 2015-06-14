@@ -13,6 +13,12 @@ EithonDebugLevel: 1
 PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
 
 #
+# Commands that should have a cooldown period
+#
+CoolDownCommands: ["jump", "hej och ha"]
+CoolDownInSeconds: [5, 10]
+
+#
 # The cost of dying in one of the worlds in PenaltyOnDeathWorlds
 #
 CostOfDeath: 30.0
