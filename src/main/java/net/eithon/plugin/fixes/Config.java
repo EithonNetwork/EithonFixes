@@ -68,6 +68,7 @@ public class Config {
 		public static ConfigurableMessage currentBalance;
 		public static ConfigurableMessage penaltyOnDeath;
 		public static ConfigurableMessage joinedChat;
+		public static ConfigurableMessage waitForCoolDown;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -80,6 +81,8 @@ public class Config {
 					"Your balance is %.2f E-Coins.");
 			joinedChat = config.getConfigurableMessage("messages.JoinedChat", 1,
 					"You have joined chat channel %s.");
+			waitForCoolDown = config.getConfigurableMessage("messages.WaitForCoolDown", 0,
+					"You must wait some time before you can use that command again.");
 		}		
 	}
 

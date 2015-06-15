@@ -74,3 +74,9 @@ messages:
   #
   # Parameters: <channel name> (%s)
   JoinedChat: You have joined chat channel %s.
+
+  #
+  # This message is displayed when someone tries to use a command again to fast
+  # Parameters: -
+  #
+  WaitForCoolDown: You must wait some time before you can use that command again.

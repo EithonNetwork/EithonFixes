@@ -6,9 +6,6 @@ import java.util.UUID;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.time.CoolDown;
 import net.eithon.plugin.fixes.Config;
-import net.eithon.plugin.fixes.Config.C;
-import net.eithon.plugin.fixes.Config.M;
-import net.eithon.plugin.fixes.Config.V;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -107,6 +104,9 @@ public class Controller {
 	}
 
 	private CoolDownInfo getCoolDownInfo(String command) {
+		for (CoolDownInfo info : Config.V.coolDownInfos) {
+			if (info.isSame(command)) return info;
+		}
 		return null;
 	}
 }

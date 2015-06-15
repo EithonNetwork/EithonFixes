@@ -31,6 +31,7 @@ public class EventListener implements Listener {
 		if (event.isCancelled()) return;
 		if (this._controller.commandShouldBeCancelled(event.getPlayer(), event.getMessage())) {
 			event.setCancelled(true);
+			Config.M.waitForCoolDown.sendMessage(event.getPlayer());
 		}
 	}
 }
