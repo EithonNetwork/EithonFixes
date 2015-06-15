@@ -1,13 +1,36 @@
 #
+# Debug level
+#	0 = NONE (no debug messages)
+#	1 = MAJOR (only major messages)
+#	2 = MINOR (also minor messages)
+#	3 = VERBOSE (all messages)
+#
+EithonDebugLevel: 1
+
+#
 # Worlds where there is a penalty for dying
 #
 PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
+
+#
+# Commands that should have a cooldown period
+#
+CoolDownCommands: ["jump", "hej och ha"]
+CoolDownInSeconds: [5, 10]
 
 #
 # The cost of dying in one of the worlds in PenaltyOnDeathWorlds
 #
 CostOfDeath: 30.0
 
+#
+# Worlds where you can buy stuff
+#
+BuyWorlds: [W_SurvivalFreebuild]
+#
+# Chat channels. Used to leave all other channels.
+#
+ChatChannelsToLeave: [1, 2, 3, 4]
 
 commands:
 
@@ -18,6 +41,14 @@ commands:
   #
   # TakeCommand has 2 parameters: <player> (%s), <totalprice> (%f)
   TakeCommand: eco take %s %f
+  
+  #
+  # LeaveChannel has 1 parameters: <channel name> (%s)
+  LeaveChannel: ch leave %s
+
+  #
+  # LeaveChannel has 1 parameters: <channel name> (%s)
+  JoinChannel: ch enter %s
 
 messages:
 
@@ -39,3 +70,13 @@ messages:
   #
   # Parameters: <balance> (%f)
   CurrentBalance: Your balance is %.2f E-Coins.
+
+  #
+  # Parameters: <channel name> (%s)
+  JoinedChat: You have joined chat channel %s.
+
+  #
+  # This message is displayed when someone tries to use a command again to fast
+  # Parameters: -
+  #
+  WaitForCoolDown: You must wait some time before you can use that command again.
