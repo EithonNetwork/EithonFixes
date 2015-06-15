@@ -44,11 +44,11 @@ commands:
   
   #
   # LeaveChannel has 1 parameters: <channel name> (%s)
-  LeaveChannel: /ch leave %s
+  LeaveChannel: ch leave %s
 
   #
   # LeaveChannel has 1 parameters: <channel name> (%s)
-  JoinChannel: /ch enter %s
+  JoinChannel: ch enter %s
 
 messages:
 
