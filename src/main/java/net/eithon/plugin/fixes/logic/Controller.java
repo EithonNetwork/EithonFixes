@@ -3,6 +3,7 @@ package net.eithon.plugin.fixes.logic;
 import java.util.HashMap;
 import java.util.UUID;
 
+import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
@@ -102,15 +103,26 @@ public class Controller {
 			return 0;
 		}
 		
+		if (player.hasPermission("eithonfixes.nocooldown")) {
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: Player \"%s\" has permission eithonfixes.nocooldown.", player.getName());
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: return 0.");
+			return 0;			
+		}
+		
 		long secondsLeft = coolDown.secondsLeft(player);
 		if (secondsLeft > 0) {
 			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: Player \"%s\" is in cooldown.", player.getName());
-			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: return true.");
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: return secondsLeft.");
+			return secondsLeft;
+		}
+		if (secondsLeft > 0) {
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: Player \"%s\" is in cooldown.", player.getName());
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: return secondsLeft.");
 			return secondsLeft;
 		}
 		coolDown.addPlayer(player);
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: Player \"%s\" added to cooldown.", player.getName());
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: return false.");
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: return 0.");
 		return 0;
 	}
 

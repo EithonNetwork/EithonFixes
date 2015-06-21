@@ -25,3 +25,6 @@ permissions:
   eithonfixes.join:
     description: Access to /eithonfixes join command
     default: op
+  eithonfixes.nocooldown:
+    description: Avoid cool down period between commands.
+    default: op
