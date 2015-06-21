@@ -1,13 +1,4 @@
 #
-# Debug level
-#	0 = NONE (no debug messages)
-#	1 = MAJOR (only major messages)
-#	2 = MINOR (also minor messages)
-#	3 = VERBOSE (all messages)
-#
-EithonDebugLevel: 1
-
-#
 # Worlds where there is a penalty for dying
 #
 PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
@@ -31,6 +22,19 @@ BuyWorlds: [W_SurvivalFreebuild]
 # Chat channels. Used to leave all other channels.
 #
 ChatChannelsToLeave: [1, 2, 3, 4]
+
+eithon:
+  UseMarkUpForMessages: 0
+  UseWrappingForMessages: 0
+  
+  #
+  # Debug level
+  #  0 = NONE (no debug messages)
+  #  1 = MAJOR (only major messages)
+  #  2 = MINOR (also minor messages)
+  #  3 = VERBOSE (all messages)
+  #
+  EithonDebugLevel: 1
 
 commands:
 
