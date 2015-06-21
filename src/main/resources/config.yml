@@ -15,8 +15,8 @@ PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
 #
 # Commands that should have a cooldown period
 #
-CoolDownCommands: ["jump", "hej och ha"]
-CoolDownInSeconds: [5, 10]
+CoolDownCommands: ["/broadcast", "/estats player"]
+CoolDownTimeInSeconds: [30, 10]
 
 #
 # The cost of dying in one of the worlds in PenaltyOnDeathWorlds
@@ -76,7 +76,7 @@ messages:
   JoinedChat: You have joined chat channel %s.
 
   #
-  # This message is displayed when someone tries to use a command again to fast
-  # Parameters: -
+  # This message is displayed when someone tries to use a command again too fast
+  # Parameters: <remaining time> (%s)
   #
-  WaitForCoolDown: You must wait some time before you can use that command again.
+  WaitForCoolDown: "In cool down. Remaining time: %s."

@@ -2,6 +2,8 @@ package net.eithon.plugin.fixes.logic;
 
 import java.util.UUID;
 
+import net.eithon.library.plugin.Logger;
+
 public class CoolDownInfo {
 	private String _comparableString;
 	private int _length;
@@ -21,6 +23,7 @@ public class CoolDownInfo {
 	public String getComparableString() { return this._comparableString; }
 	public boolean isSame(String command) {
 		String comparable = makeComparable(command);
+		Logger.libraryInfo("isSame: %s, %s", comparable, this._comparableString);
 		if (comparable.length() < this._comparableString.length()) return false;
 		return (comparable.substring(0, this._length).equalsIgnoreCase(this._comparableString));
 	}

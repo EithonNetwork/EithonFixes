@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.library.plugin.Logger;
+import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.CoolDown;
 import net.eithon.plugin.fixes.Config;
 
@@ -16,8 +18,10 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 
 public class Controller {
 	private HashMap<UUID, CoolDown> _coolDownHashMap;
+	private Logger _eithonLogger;
 
 	public Controller(EithonPlugin plugin){
+		this._eithonLogger = plugin.getEithonLogger();
 		Plugin ess = plugin.getServer().getPluginManager().getPlugin("Economy");
 		if (ess != null && ess.isEnabled()) {
 			plugin.getLogger().info("Succesfully hooked into Essentials economy!");
@@ -89,17 +93,37 @@ public class Controller {
 		Config.M.joinedChat.sendMessage(player, channel);
 	}
 
-	public boolean commandShouldBeCancelled(Player player, String command) {
+	public long secondsLeftOfCoolDown(Player player, String command) {
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: Enter");
 		CoolDown coolDown = getCoolDown(command);
-		if (coolDown == null) return false;
-		if (coolDown.isInCoolDownPeriod(player)) return true;
+		if (coolDown == null) {
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: No cooldown found.");
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: return 0.");
+			return 0;
+		}
+		
+		long secondsLeft = coolDown.secondsLeft(player);
+		if (secondsLeft > 0) {
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: Player \"%s\" is in cooldown.", player.getName());
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: return true.");
+			return secondsLeft;
+		}
 		coolDown.addPlayer(player);
-		return false;
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: Player \"%s\" added to cooldown.", player.getName());
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "commandShouldBeCancelled: return false.");
+		return 0;
 	}
 
 	private CoolDown getCoolDown(String command) {
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "getCoolDown: Enter");
 		CoolDownInfo info = getCoolDownInfo(command);
-		if (info == null) return null;
+		if (info == null) {
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "getCoolDown: Command \"%s\" not found.", command);
+			this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "getCoolDown: return null");
+			return null;
+		}
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "getCoolDown: Command \"%s\" found.", command);
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "getCoolDown: return CoolDown object.");
 		return this._coolDownHashMap.get(info.getId());
 	}
 

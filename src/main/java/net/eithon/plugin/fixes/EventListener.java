@@ -1,6 +1,9 @@
 package net.eithon.plugin.fixes;
 
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.library.plugin.Logger;
+import net.eithon.library.plugin.Logger.DebugPrintLevel;
+import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.Controller;
 
 import org.bukkit.entity.Entity;
@@ -13,9 +16,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class EventListener implements Listener {
 
 	private Controller _controller;
+	private Logger _eithonLogger;
 
 	public EventListener(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
+		this._eithonLogger = eithonPlugin.getEithonLogger();
 	}
 
 	@EventHandler
@@ -29,9 +34,12 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) return;
-		if (this._controller.commandShouldBeCancelled(event.getPlayer(), event.getMessage())) {
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "Intercepted command \"%s\".", event.getMessage());
+		long secondsLeftOfCoolDown = this._controller.secondsLeftOfCoolDown(event.getPlayer(), event.getMessage());
+		if (secondsLeftOfCoolDown > 0) {
+			this._eithonLogger.debug(DebugPrintLevel.MAJOR, "Command \"%s\" will be cancelled.", event.getMessage());
 			event.setCancelled(true);
-			Config.M.waitForCoolDown.sendMessage(event.getPlayer());
+			Config.M.waitForCoolDown.sendMessage(event.getPlayer(), TimeMisc.secondsToString(secondsLeftOfCoolDown));
 		}
 	}
 }

@@ -27,15 +27,16 @@ public class Config {
 
 		static void load(Configuration config, EithonPlugin plugin) {
 			ArrayList<String> coolDownCommands = new ArrayList<String>(config.getStringList("CoolDownCommands"));
-			ArrayList<String> strings = new ArrayList<String>(config.getStringList("CoolDownTimeInSeconds"));
-			if (coolDownCommands.size() != strings.size()) {
+			ArrayList<String> integersAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeInSeconds"));
+			if (coolDownCommands.size() != integersAsStrings.size()) {
 				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownTimeInSeconds. Should be the same number.",
-						coolDownCommands.size(), strings.size());
+						coolDownCommands.size(), integersAsStrings.size());
 			}
 			coolDownInfos = new ArrayList<CoolDownInfo>();
 			for (int i = 0; i < coolDownCommands.size(); i++) {
 				String command = coolDownCommands.get(i);
-				int time = Integer.parseInt(strings.get(i));
+				String integerAsString = integersAsStrings.get(i);
+				int time = Integer.parseInt(integerAsString);
 				coolDownInfos.add(new CoolDownInfo(command, time));
 			}
 			buyWorlds = config.getStringList("BuyWorlds");
@@ -81,8 +82,8 @@ public class Config {
 					"Your balance is %.2f E-Coins.");
 			joinedChat = config.getConfigurableMessage("messages.JoinedChat", 1,
 					"You have joined chat channel %s.");
-			waitForCoolDown = config.getConfigurableMessage("messages.WaitForCoolDown", 0,
-					"You must wait some time before you can use that command again.");
+			waitForCoolDown = config.getConfigurableMessage("messages.WaitForCoolDown", 1,
+					"In cool down. Remaining time: %s.");
 		}		
 	}
 
