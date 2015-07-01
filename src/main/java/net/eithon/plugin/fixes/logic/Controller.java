@@ -3,7 +3,6 @@ package net.eithon.plugin.fixes.logic;
 import java.util.HashMap;
 import java.util.UUID;
 
-import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
@@ -22,6 +21,7 @@ public class Controller {
 	private Logger _eithonLogger;
 
 	public Controller(EithonPlugin plugin){
+		CoolDownInfo.initialize(plugin);
 		this._eithonLogger = plugin.getEithonLogger();
 		Plugin ess = plugin.getServer().getPluginManager().getPlugin("Economy");
 		if (ess != null && ess.isEnabled()) {

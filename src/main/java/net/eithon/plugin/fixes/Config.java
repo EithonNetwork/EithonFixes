@@ -57,9 +57,9 @@ public class Config {
 			take = config.getConfigurableCommand("TakeCommand", 2,
 					"eco take %s %f");
 			joinChat = config.getConfigurableCommand("JoinChannel", 1,
-					"/ch enter %s");
+					"ch enter %s");
 			leaveChat = config.getConfigurableCommand("LeaveChannel", 1,
-					"/ch leave %s");
+					"ch leave %s");
 		}
 
 	}
