@@ -19,9 +19,8 @@ public class CommandHandler implements ICommandHandler {
 	}
 
 	public boolean onCommand(CommandParser commandParser) {
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1)) return true;
-		
 		String command = commandParser.getArgumentCommand();
+		if (command == null) return false;
 
 		if (command.equals("buy")) {
 			buyCommand(commandParser);
