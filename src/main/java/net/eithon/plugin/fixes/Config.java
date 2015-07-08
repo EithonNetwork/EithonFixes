@@ -66,6 +66,7 @@ public class Config {
 	public static class M {
 		public static ConfigurableMessage youNeedMoreMoney;
 		public static ConfigurableMessage successfulPurchase;
+		public static ConfigurableMessage inventoryFull;
 		public static ConfigurableMessage currentBalance;
 		public static ConfigurableMessage penaltyOnDeath;
 		public static ConfigurableMessage joinedChat;
@@ -78,6 +79,8 @@ public class Config {
 					"You need %.2f to buy %d %s. You have %.2f.");
 			successfulPurchase = config.getConfigurableMessage("messages.SuccessfulPurchase", 2,
 					"You successfully purchased %d item(s) of %s.");
+			inventoryFull = config.getConfigurableMessage("messages.InventoryFull", 0,
+					"Your inventory is full.");
 			currentBalance = config.getConfigurableMessage("messages.CurrentBalance", 1,
 					"Your balance is %.2f E-Coins.");
 			joinedChat = config.getConfigurableMessage("messages.JoinedChat", 1,
