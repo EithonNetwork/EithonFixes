@@ -46,5 +46,12 @@
 			<version>[1.0,)</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.puharesource.mc</groupId>
+			<artifactId>titlemanager</artifactId>
+			<version>3.13</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/dependencies/KillerMoney-3.13.jar</systemPath>
+		</dependency>
 	</dependencies>
 </project>

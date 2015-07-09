@@ -3,7 +3,6 @@ package net.eithon.plugin.fixes.logic;
 import java.util.UUID;
 
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
 
 public class CoolDownInfo {

@@ -19,6 +19,8 @@ public class Config {
 
 	}
 	public static class V {
+		public static int rewardCoolDownInSeconds;
+		public static double rewardReduction;
 		public static List<CoolDownInfo> coolDownInfos;
 		public static List<String> buyWorlds;
 		public static List<String> penaltyOnDeathWorlds;
@@ -26,6 +28,8 @@ public class Config {
 		public static double costOfDeath;
 
 		static void load(Configuration config, EithonPlugin plugin) {
+			rewardCoolDownInSeconds = config.getInt("RewardCoolDownInSeconds", 10);
+			rewardReduction = config.getDouble("RewardReduction", 0.85);
 			ArrayList<String> coolDownCommands = new ArrayList<String>(config.getStringList("CoolDownCommands"));
 			ArrayList<String> integersAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeInSeconds"));
 			if (coolDownCommands.size() != integersAsStrings.size()) {

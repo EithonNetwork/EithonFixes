@@ -2,7 +2,7 @@ name: EithonFixes
 main: net.eithon.plugin.fixes.Plugin
 version: 1.2
 author: vanbrayne
-softdepend: [Essentials]
+softdepend: [Essentials, KillerMoney]
 depend: [EithonLibrary]
 description: A Minecraft plugin for Eithon fixes
 commands:
