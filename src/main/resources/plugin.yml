@@ -16,6 +16,7 @@ permissions:
     default: op
     eithonfixes.buy: true
     eithonfixes.balance: true
+    eithonfixes.join: true
   eithonfixes.buy:
     description: Access to /eithonfixes buy command
     default: op

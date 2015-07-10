@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 public class CommandHandler implements ICommandHandler {
 	private static final String BUY_COMMAND = "/eithonfixes buy <player> <item> <price> <amount>";
 	private static final String BALANCE_COMMAND = "/eithonfixes balance";
+	private static final String JOIN_COMMAND = "/eithonfixes join <channel>";
 	private Controller _controller;
 
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
@@ -78,6 +79,8 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(BUY_COMMAND);
 		} else if (command.equals("balance")) {
 			sender.sendMessage(BALANCE_COMMAND);
+		} else if (command.equals("join")) {
+			sender.sendMessage(JOIN_COMMAND);
 		} else {
 			sender.sendMessage(String.format("Unknown command: %s.", command));
 		}

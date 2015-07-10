@@ -23,6 +23,7 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 public class Controller {
 	private HashMap<UUID, CoolDown> _coolDownHashMap;
 	private Logger _eithonLogger;
+	private KillerMoneyFixes _killerMoneyFixes;
 
 	public Controller(EithonPlugin plugin){
 		CoolDownInfo.initialize(plugin);
@@ -35,6 +36,7 @@ public class Controller {
 		for (CoolDownInfo info : Config.V.coolDownInfos) {
 			this._coolDownHashMap.put(info.getId(), new CoolDown(info.getName(), info.getCoolDownPeriodInSeconds()));
 		}
+		this._killerMoneyFixes = new KillerMoneyFixes();
 	}
 
 	void disable() {
@@ -153,6 +155,10 @@ public class Controller {
 		verbose("secondsLeftOfCoolDown", "Player \"%s\" added to cooldown.", player.getName());
 		verbose("secondsLeftOfCoolDown", "return 0.");
 		return 0;
+	}
+
+	public double getReductedMoney(Player player, double money) {
+		return this._killerMoneyFixes.getReductedMoney(player, money);
 	}
 
 	private CoolDown getCoolDown(String command) {
