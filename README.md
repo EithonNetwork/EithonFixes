@@ -4,8 +4,9 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
-### 1.2 (2015-07-08)
+### 1.2 (2015-07-09)
 
+* NEW: Added cooldown for KillerMoney rewards.
 * CHANGE: Now verifies that the player inventory has room for what to buy.
 * BUG: Now shows subcommands if no subcommand was given.
 
