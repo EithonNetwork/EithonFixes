@@ -72,6 +72,10 @@ messages:
   SuccessfulPurchase: You successfully purchased %d item(s) of %s.
 
   #
+  # Parameters: -
+  InventoryFull: Your inventory is full.
+
+  #
   # Parameters: <balance> (%f)
   CurrentBalance: Your balance is %.2f E-Coins.
 
