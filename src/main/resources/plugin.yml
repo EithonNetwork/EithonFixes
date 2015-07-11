@@ -1,14 +1,14 @@
 name: EithonFixes
 main: net.eithon.plugin.fixes.Plugin
-version: 1.2
+version: 1.3
 author: vanbrayne
-softdepend: [Essentials, KillerMoney]
+softdepend: [Essentials, KillerMoney, WorldEdit]
 depend: [EithonLibrary]
 description: A Minecraft plugin for Eithon fixes
 commands:
   eithonfixes:
     description: Fix things other plugins fail to do
-    usage: /eithonfixes buy | balance | join
+    usage: /eithonfixes buy | balance | join | rcadd | rcedit | rclist | rcdelete | rcgoto
     permission-message: You don't have <permission>
 permissions:
   eithonfixes.*:
@@ -17,6 +17,11 @@ permissions:
     eithonfixes.buy: true
     eithonfixes.balance: true
     eithonfixes.join: true
+    eithonfixes.rcadd: true
+    eithonfixes.rcedit: true
+    eithonfixes.rclist: true
+    eithonfixes.rcgoto: true
+    eithonfixes.rcdelete: true
   eithonfixes.buy:
     description: Access to /eithonfixes buy command
     default: op
@@ -25,6 +30,21 @@ permissions:
     default: op
   eithonfixes.join:
     description: Access to /eithonfixes join command
+    default: op
+  eithonfixes.rcadd:
+    description: Access to /eithonfixes rcadd command
+    default: op
+  eithonfixes.rcedit:
+    description: Access to /eithonfixes rcedit command
+    default: op
+  eithonfixes.rclist:
+    description: Access to /eithonfixes rclist command
+    default: op
+  eithonfixes.rcdelete:
+    description: Access to /eithonfixes rcdelete command
+    default: op
+  eithonfixes.rcgoto:
+    description: Access to /eithonfixes rcgoto command
     default: op
   eithonfixes.nocooldown:
     description: Avoid cool down period between commands.
