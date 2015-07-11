@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.3 (2015-07-11)
+
+* NEW: RegionCommands
+
 ### 1.2 (2015-07-09)
 
 * NEW: Added cooldown for KillerMoney rewards.

@@ -8,6 +8,7 @@ import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.CoolDown;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.Controller;
+import net.eithon.plugin.fixes.logic.KillerMoneyFixes;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -20,14 +21,12 @@ public class EventListener implements Listener {
 
 	private Controller _controller;
 	private Logger _eithonLogger;
-	private CoolDown _rewardCoolDown;
-	private PlayerCollection<Double> _lastRewardFactor;
+	private KillerMoneyFixes _killerMoneyFixes;
 
 	public EventListener(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
 		this._eithonLogger = eithonPlugin.getEithonLogger();
-		this._rewardCoolDown = new CoolDown("KillerMoneyReward", Config.V.rewardCoolDownInSeconds);
-		this._lastRewardFactor = new PlayerCollection<Double>();
+		this._killerMoneyFixes = new KillerMoneyFixes();
 	}
 
 	@EventHandler
@@ -53,16 +52,7 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onMoneyRewardEvent(KillerMoneyMoneyRewardEvent event) {
 		if (event.isCancelled()) return;
-		Player player = event.getPlayer();
-		if (this._rewardCoolDown.isInCoolDownPeriod(player)) {
-			Double rewardReduction = this._lastRewardFactor.get(player);
-			if (rewardReduction == null) rewardReduction = new Double(1.0);
-			double rewardFactor = rewardReduction*Config.V.rewardReduction;
-			this._lastRewardFactor.put(player, new Double(rewardFactor));
-			event.setMoney(rewardFactor*event.getMoney());
-		} else {
-			this._lastRewardFactor.remove(player);
-		}
-		this._rewardCoolDown.addPlayer(player);
+		double money = this._killerMoneyFixes.getReductedMoney(event.getPlayer(), event.getMoney());
+		event.setMoney(money);
 	}
 }

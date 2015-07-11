@@ -12,6 +12,12 @@ import org.bukkit.entity.Player;
 public class CommandHandler implements ICommandHandler {
 	private static final String BUY_COMMAND = "/eithonfixes buy <player> <item> <price> <amount>";
 	private static final String BALANCE_COMMAND = "/eithonfixes balance";
+	private static final String JOIN_COMMAND = "/eithonfixes join <channel>";
+	private static final String RCADD_COMMAND = "/eithonfixes rcadd <name> <command>";
+	private static final String RCEDIT_COMMAND = "/eithonfixes rcedit <name> <command>";
+	private static final String RCDELETE_COMMAND = "/eithonfixes rcdelete <name>";
+	private static final String RCGOTO_COMMAND = "/eithonfixes rcgoto <name>";
+	private static final String RCLIST_COMMAND = "/eithonfixes rclist";
 	private Controller _controller;
 
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
@@ -28,6 +34,16 @@ public class CommandHandler implements ICommandHandler {
 			balanceCommand(commandParser);
 		} else if (command.equals("join")) {
 			joinCommand(commandParser);
+		} else if (command.equals("rcadd")) {
+			rcAddCommand(commandParser);
+		} else if (command.equals("rcedit")) {
+			rcEditCommand(commandParser);
+		} else if (command.equals("rcdelete")) {
+			rcDeleteCommand(commandParser);
+		} else if (command.equals("rcgoto")) {
+			rcGotoCommand(commandParser);
+		} else if (command.equals("rclist")) {
+			rcListCommand(commandParser);
 		} else {
 			commandParser.showCommandSyntax();
 		}
@@ -72,12 +88,77 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.joinChannel(player, channel);
 	}
 
+	void rcAddCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcadd")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(3)) return;
+		
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+		
+		String name = commandParser.getArgumentString();
+		String command = commandParser.getArgumentRest();
+		this._controller.rcAdd(player, name, command);
+	}
+
+	void rcEditCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcedit")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(3)) return;
+		
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+		
+		String name = commandParser.getArgumentString();
+		String command = commandParser.getArgumentRest();
+		this._controller.rcEdit(player, name, command);
+	}
+
+	void rcDeleteCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcdelete")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
+		
+		String name = commandParser.getArgumentString();
+		this._controller.rcDelete(commandParser.getSender(), name);
+	}
+
+	void rcGotoCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcgoto")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
+		
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+		
+		String name = commandParser.getArgumentString();
+		this._controller.rcGoto(player, name);
+	}
+
+	void rcListCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rclist")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
+
+		this._controller.rcList(commandParser.getSender());
+	}
+
 	@Override
 	public void showCommandSyntax(CommandSender sender, String command) {
 		if (command.equals("buy")) {
 			sender.sendMessage(BUY_COMMAND);
 		} else if (command.equals("balance")) {
 			sender.sendMessage(BALANCE_COMMAND);
+		} else if (command.equals("join")) {
+			sender.sendMessage(JOIN_COMMAND);
+		} else if (command.equals("rcadd")) {
+			sender.sendMessage(RCADD_COMMAND);
+		} else if (command.equals("rcdelete")) {
+			sender.sendMessage(RCDELETE_COMMAND);
+		} else if (command.equals("rcgoto")) {
+			sender.sendMessage(RCGOTO_COMMAND);
+		} else if (command.equals("rclist")) {
+			sender.sendMessage(RCLIST_COMMAND);
 		} else {
 			sender.sendMessage(String.format("Unknown command: %s.", command));
 		}

@@ -23,6 +23,8 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 public class Controller {
 	private HashMap<UUID, CoolDown> _coolDownHashMap;
 	private Logger _eithonLogger;
+	private KillerMoneyFixes _killerMoneyFixes;
+	private RegionCommands _regionCommands;
 
 	public Controller(EithonPlugin plugin){
 		CoolDownInfo.initialize(plugin);
@@ -35,6 +37,8 @@ public class Controller {
 		for (CoolDownInfo info : Config.V.coolDownInfos) {
 			this._coolDownHashMap.put(info.getId(), new CoolDown(info.getName(), info.getCoolDownPeriodInSeconds()));
 		}
+		this._killerMoneyFixes = new KillerMoneyFixes();
+		this._regionCommands = new RegionCommands(plugin);
 	}
 
 	void disable() {
@@ -155,6 +159,10 @@ public class Controller {
 		return 0;
 	}
 
+	public double getReductedMoney(Player player, double money) {
+		return this._killerMoneyFixes.getReductedMoney(player, money);
+	}
+
 	private CoolDown getCoolDown(String command) {
 		verbose("getCoolDown", "Enter");
 		CoolDownInfo info = getCoolDownInfo(command);
@@ -173,6 +181,26 @@ public class Controller {
 			if (info.isSame(command)) return info;
 		}
 		return null;
+	}
+
+	public void rcAdd(Player player, String name, String command) {
+		this._regionCommands.updateOrCreateRegionCommand(player, name, command, true);
+	}
+
+	public void rcEdit(Player player, String name, String command) {
+		this._regionCommands.editRegionCommand(player, name, command, true);
+	}
+
+	public void rcDelete(CommandSender sender, String name) {
+		this._regionCommands.deleteRegionCommand(sender, name);
+	}
+
+	public void rcGoto(Player player, String name) {
+		this._regionCommands.gotoRegionCommand(player, name);
+	}
+
+	public void rcList(CommandSender sender) {
+		this._regionCommands.listRegionCommands(sender);
 	}
 	
 	private void verbose(String method, String format, Object... args)
