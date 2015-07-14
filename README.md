@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.4 (2015-07-13)
+
+* CHANGE: Money is rounded to closest two decimals.
+
 ### 1.3 (2015-07-11)
 
 * NEW: RegionCommands

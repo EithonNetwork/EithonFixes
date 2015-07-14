@@ -23,6 +23,7 @@ public class KillerMoneyFixes {
 			double rewardFactor = rewardReduction*Config.V.rewardReduction;
 			this._lastRewardFactor.put(player, new Double(rewardFactor));
 			money = rewardFactor*money;
+			money = Math.round(money*100)/100.0;
 		} else {
 			this._lastRewardFactor.remove(player);
 		}
