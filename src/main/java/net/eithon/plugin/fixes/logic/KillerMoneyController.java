@@ -6,11 +6,11 @@ import net.eithon.plugin.fixes.Config;
 
 import org.bukkit.entity.Player;
 
-public class KillerMoneyFixes {
+public class KillerMoneyController {
 	private CoolDown _rewardCoolDown;
 	private PlayerCollection<Double> _lastRewardFactor;
 	
-	public KillerMoneyFixes()
+	KillerMoneyController()
 	{
 		this._rewardCoolDown = new CoolDown("KillerMoneyReward", Config.V.rewardCoolDownInSeconds);
 		this._lastRewardFactor = new PlayerCollection<Double>();

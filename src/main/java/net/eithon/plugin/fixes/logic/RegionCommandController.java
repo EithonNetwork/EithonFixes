@@ -28,16 +28,15 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class RegionCommands implements IBlockMoverFollower {
+public class RegionCommandController implements IBlockMoverFollower {
 	private WorldEditPlugin _worldEditPlugin;	
 	private HashMap<String, RegionCommand> _regionCommandsByName = null;
 	private EithonPlugin _eithonPlugin;
 
-	public RegionCommands(EithonPlugin eithonPlugin)
+	public RegionCommandController(EithonPlugin eithonPlugin)
 	{
 		this._eithonPlugin = eithonPlugin;
 		this._regionCommandsByName = new HashMap<String, RegionCommand>();
-		RegionCommand.initialize(eithonPlugin);
 		if (!PluginMisc.isPluginEnabled("WorldEdit")) {
 			eithonPlugin.getEithonLogger().error("Expected WorldEdit to be enabled");
 			return;
@@ -131,8 +130,7 @@ public class RegionCommands implements IBlockMoverFollower {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "EithonFixes.RegionCommandController";
 	}
 
 	public void delayedSave(JavaPlugin plugin, double seconds)

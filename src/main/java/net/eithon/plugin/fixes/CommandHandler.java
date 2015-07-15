@@ -73,8 +73,11 @@ public class CommandHandler implements ICommandHandler {
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.balance")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
+		
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return ;
 
-		this._controller.balance(commandParser.getSender());
+		this._controller.displayBalance(player);
 	}
 
 	void joinCommand(CommandParser commandParser)
@@ -153,6 +156,8 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(JOIN_COMMAND);
 		} else if (command.equals("rcadd")) {
 			sender.sendMessage(RCADD_COMMAND);
+		} else if (command.equals("rcedit")) {
+			sender.sendMessage(RCEDIT_COMMAND);
 		} else if (command.equals("rcdelete")) {
 			sender.sendMessage(RCDELETE_COMMAND);
 		} else if (command.equals("rcgoto")) {

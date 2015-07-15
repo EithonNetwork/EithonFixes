@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.4.2 (2015-07-15)
+
+* CHANGE: Added printout when not finding a material.
+
 ### 1.4.1 (2015-07-14)
 
 * CHANGE: Money is rounded to closest integer.
