@@ -4,8 +4,12 @@ import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.CommandParser;
 import net.eithon.library.plugin.ICommandHandler;
+import net.eithon.library.time.CountDown;
+import net.eithon.library.time.ICountDownListener;
+import net.eithon.library.title.Title;
 import net.eithon.plugin.fixes.logic.Controller;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -19,9 +23,11 @@ public class CommandHandler implements ICommandHandler {
 	private static final String RCGOTO_COMMAND = "/eithonfixes rcgoto <name>";
 	private static final String RCLIST_COMMAND = "/eithonfixes rclist";
 	private Controller _controller;
+	private EithonPlugin _eithonPlugin;
 
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
+		this._eithonPlugin = eithonPlugin;
 	}
 
 	public boolean onCommand(CommandParser commandParser) {
@@ -44,6 +50,8 @@ public class CommandHandler implements ICommandHandler {
 			rcGotoCommand(commandParser);
 		} else if (command.equals("rclist")) {
 			rcListCommand(commandParser);
+		} else if (command.equals("test")) {
+			testCommand(commandParser);
 		} else {
 			commandParser.showCommandSyntax();
 		}
@@ -144,6 +152,35 @@ public class CommandHandler implements ICommandHandler {
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
 
 		this._controller.rcList(commandParser.getSender());
+	}
+
+	void testCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.test")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 3)) return;
+
+		long counts = commandParser.getArgumentInteger(3);
+		int intervalLengthInTicks = commandParser.getArgumentInteger(20);
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+		
+		CountDown countDown = new CountDown(this._eithonPlugin, counts, intervalLengthInTicks*50, new ICountDownListener() {
+			public boolean isCancelled(long remainingIntervals) {
+				Title.get().sendActionbarMessage(player, String.format("%d", remainingIntervals));
+				return false;
+			}
+			public void afterDoneTask() {
+				Title.get().sendFloatingText(player, "Done", 0, 20, 20);
+				Title.get().sendActionbarMessage(player, "");
+			}
+			@Override
+			public void afterCancelTask() {
+				Title.get().sendFloatingText(player, "Cancelled", 0, 20, 20);
+				Title.get().sendActionbarMessage(player, "");
+			}
+		});
+		
+		countDown.start(Bukkit.getScheduler());
 	}
 
 	@Override
