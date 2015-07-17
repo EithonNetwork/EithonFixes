@@ -1,7 +1,5 @@
 package net.eithon.plugin.fixes;
 
-import java.util.Date;
-
 import net.diecode.KillerMoney.CustomEvents.KillerMoneyMoneyRewardEvent;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
@@ -41,19 +39,12 @@ public class EventListener implements Listener {
 		Player player = event.getPlayer();
 		if (player == null) return;
 		verbose("onPlayerJoinEvent", "Enter Player %s", player.getName());
-		long timeSinceFirstPlayedSeconds = 0;
-		long firstPlayed = player.getFirstPlayed();
-		if (firstPlayed > 0) {
-			long now = System.currentTimeMillis();
-			timeSinceFirstPlayedSeconds = (now-firstPlayed)/1000;
-		}
-		verbose("onPlayerJoinEvent", "Player %s was first spotted %d seconds ago", player.getName(), timeSinceFirstPlayedSeconds);
-		if (timeSinceFirstPlayedSeconds > 10) {
-			verbose("onPlayerJoinEvent", "%s is not a new player (%d > 10 s).", player.getName(), timeSinceFirstPlayedSeconds);
+		if (player.hasPlayedBefore()) {
+			verbose("onPlayerJoinEvent", "%s is not a new player.", player.getName());
 			verbose("onPlayerJoinEvent", "Leave");
 			return;
 		}
-		verbose("onPlayerJoinEvent", "%s is a new player (%d <= 10 s).", player.getName(), timeSinceFirstPlayedSeconds);
+		verbose("onPlayerJoinEvent", "%s is a new player.", player.getName());
 		verbose("onPlayerJoinEvent", "Broadcast");
 		event.setJoinMessage(Config.M.joinedServerFirstTime.getMessage(player.getName()));
 		Config.M.pleaseWelcomeNewPlayer.broadcastMessage(player.getName());
