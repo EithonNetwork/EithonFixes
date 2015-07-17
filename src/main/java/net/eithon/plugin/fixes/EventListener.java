@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 public class EventListener implements Listener {
 
@@ -30,6 +31,16 @@ public class EventListener implements Listener {
 		if (!(entity instanceof Player)) return;
 		Player player = (Player) entity;
 		this._controller.playerDied(player);
+	}
+
+	// Inform everyone that we have a new player on the server
+	@EventHandler
+	public void onPlayerJoinEvent(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if (player == null) return;
+		if (player.getFirstPlayed() > 10*1000) return;
+		event.setJoinMessage(Config.M.joinedServerFirstTime.getMessage(player.getName()));
+		Config.M.pleaseWelcomeNewPlayer.broadcastMessage(player.getName());
 	}
 
 	@EventHandler

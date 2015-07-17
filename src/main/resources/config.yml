@@ -99,3 +99,15 @@ messages:
   # Parameters: <remaining time> (%s)
   #
   WaitForCoolDown: "In cool down. Remaining time: %s."
+
+  #
+  # This message is broadcasted when someone logs in to the server for the first time
+  # Parameters: <player name> (%s)
+  #
+  JoinedServerFirstTime: "%s joined for the first time!"
+
+  #
+  # This message is broadcasted to members with rankup 
+  # Parameters: <player name> (%s)
+  #
+  PleaseWelcomeNewPlayer: "Welcome %s to the server!"
