@@ -13,7 +13,7 @@ public class Controller {
 	private CoolDownController _coolDownController;
 
 	public Controller(EithonPlugin plugin){
-		this._killerMoneyController = new KillerMoneyController();
+		this._killerMoneyController = new KillerMoneyController(plugin);
 		this._buyController = new BuyController(plugin);
 		this._regionCommandController = new RegionCommandController(plugin);
 		this._coolDownController = new CoolDownController(plugin);
