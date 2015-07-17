@@ -46,7 +46,7 @@ public class EventListener implements Listener {
 		}
 		verbose("onPlayerJoinEvent", "%s is a new player.", player.getName());
 		verbose("onPlayerJoinEvent", "Broadcast");
-		event.setJoinMessage(Config.M.joinedServerFirstTime.getMessage(player.getName()));
+		event.setJoinMessage(Config.M.joinedServerFirstTime.getMessageWithColorCoding(player.getName()));
 		Config.M.pleaseWelcomeNewPlayer.broadcastMessage(player.getName());
 		verbose("onPlayerJoinEvent", "Leave");
 	}
