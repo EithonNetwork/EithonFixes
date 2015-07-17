@@ -38,9 +38,19 @@ public class EventListener implements Listener {
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (player == null) return;
-		if (player.getFirstPlayed() > 10*1000) return;
+		verbose("onPlayerJoinEvent", "Enter Player %s", player.getName());
+		long playedSeconds = player.getFirstPlayed()/1000;
+		verbose("onPlayerJoinEvent", "Player %s has played %d seconds", player.getName(), playedSeconds);
+		if (playedSeconds > 10) {
+			verbose("onPlayerJoinEvent", "%s is not a new player (%d > 10).", player.getName(), playedSeconds);
+			verbose("onPlayerJoinEvent", "Leave");
+			return;
+		}
+		verbose("onPlayerJoinEvent", "%s is a new player (%d <= 10).", player.getName(), playedSeconds);
+		verbose("onPlayerJoinEvent", "Broadcast");
 		event.setJoinMessage(Config.M.joinedServerFirstTime.getMessage(player.getName()));
 		Config.M.pleaseWelcomeNewPlayer.broadcastMessage(player.getName());
+		verbose("onPlayerJoinEvent", "Leave");
 	}
 
 	@EventHandler
@@ -60,5 +70,10 @@ public class EventListener implements Listener {
 		if (event.isCancelled()) return;
 		double money = this._controller.getReductedMoney(event.getPlayer(), event.getMoney());
 		event.setMoney(money);
+	}
+
+	private void verbose(String method, String format, Object... args) {
+		String message = String.format(format, args);
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "%s: %s", method, message);
 	}
 }
