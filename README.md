@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.6.1 (2015-07-18)
+
+* BUG: Wrong time for first login.
+
 ### 1.6 (2015-07-17)
 
 * NEW: Detects new players.
