@@ -75,6 +75,8 @@ public class Config {
 		public static ConfigurableMessage penaltyOnDeath;
 		public static ConfigurableMessage joinedChat;
 		public static ConfigurableMessage waitForCoolDown;
+		public static ConfigurableMessage joinedServerFirstTime;
+		public static ConfigurableMessage pleaseWelcomeNewPlayer;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -91,6 +93,10 @@ public class Config {
 					"You have joined chat channel %s.");
 			waitForCoolDown = config.getConfigurableMessage("messages.WaitForCoolDown", 1,
 					"In cool down. Remaining time: %s.");
+			joinedServerFirstTime = config.getConfigurableMessage("messages.JoinedServerFirstTime", 1,
+					"%s joined for the first time!");
+			pleaseWelcomeNewPlayer = config.getConfigurableMessage("messages.PleaseWelcomeNewPlayer", 1,
+					"Welcome %s to the server!");
 		}		
 	}
 

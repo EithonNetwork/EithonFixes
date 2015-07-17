@@ -1,14 +1,11 @@
 package net.eithon.plugin.fixes;
 
 import net.diecode.KillerMoney.CustomEvents.KillerMoneyMoneyRewardEvent;
-import net.eithon.library.core.PlayerCollection;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
-import net.eithon.library.time.CoolDown;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.Controller;
-import net.eithon.plugin.fixes.logic.KillerMoneyFixes;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -16,17 +13,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 public class EventListener implements Listener {
 
 	private Controller _controller;
 	private Logger _eithonLogger;
-	private KillerMoneyFixes _killerMoneyFixes;
 
 	public EventListener(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
 		this._eithonLogger = eithonPlugin.getEithonLogger();
-		this._killerMoneyFixes = new KillerMoneyFixes();
 	}
 
 	@EventHandler
@@ -35,6 +31,16 @@ public class EventListener implements Listener {
 		if (!(entity instanceof Player)) return;
 		Player player = (Player) entity;
 		this._controller.playerDied(player);
+	}
+
+	// Inform everyone that we have a new player on the server
+	@EventHandler
+	public void onPlayerJoinEvent(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if (player == null) return;
+		if (player.getFirstPlayed() > 10*1000) return;
+		event.setJoinMessage(Config.M.joinedServerFirstTime.getMessage(player.getName()));
+		Config.M.pleaseWelcomeNewPlayer.broadcastMessage(player.getName());
 	}
 
 	@EventHandler
@@ -52,7 +58,7 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onMoneyRewardEvent(KillerMoneyMoneyRewardEvent event) {
 		if (event.isCancelled()) return;
-		double money = this._killerMoneyFixes.getReductedMoney(event.getPlayer(), event.getMoney());
+		double money = this._controller.getReductedMoney(event.getPlayer(), event.getMoney());
 		event.setMoney(money);
 	}
 }

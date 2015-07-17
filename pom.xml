@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.eithon.plugin</groupId>
 	<artifactId>EithonFixes</artifactId>
-	<version>1.4.1</version>
+	<version>1.6</version>
 	<name>EithonFixes</name>
 	<build>
 		<plugins>
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>[1.8-R0.1-SNAPSHOT,)</version>
+			<version>[1.8.7-R0.1-SNAPSHOT,)</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>

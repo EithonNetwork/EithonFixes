@@ -2,23 +2,18 @@ package net.eithon.plugin.fixes.logic;
 
 import java.util.UUID;
 
+import net.eithon.library.extensions.EithonBlock;
+import net.eithon.library.extensions.EithonLocation;
+import net.eithon.library.extensions.EithonPlayer;
+import net.eithon.library.json.IJson;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
-import net.eithon.library.core.CoreMisc;
-import net.eithon.library.extensions.EithonBlock;
-import net.eithon.library.extensions.EithonLocation;
-import net.eithon.library.extensions.EithonPlayer;
-import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.json.IJson;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
-
 public class RegionCommand implements IJson<RegionCommand> {
-	private static EithonPlugin eithonPlugin;
-
 	private UUID _id;
 	private String _name;
 	private String _command;
@@ -27,10 +22,6 @@ public class RegionCommand implements IJson<RegionCommand> {
 	private EithonBlock _min;
 	private EithonBlock _max;
 	private boolean _onEnter;
-
-	public static void initialize(EithonPlugin plugin) {
-		eithonPlugin = plugin;
-	}
 
 	public RegionCommand(Player player, String name, String command, boolean onEnter, Block min, Block max)
 	{
@@ -134,12 +125,5 @@ public class RegionCommand implements IJson<RegionCommand> {
 	
 	public String toString() {
 		return String.format("%s: \"/%s\" (%s)", this._name, this._command, this._onEnter?"enter":"leave");
-	}
-	
-	private void verbose(String method, String format, Object... args)
-	{
-		if (eithonPlugin == null) return;
-		String message = CoreMisc.safeFormat(format, args);
-		eithonPlugin.getEithonLogger().debug(DebugPrintLevel.VERBOSE, "%s: %s", method, message);
 	}
 }

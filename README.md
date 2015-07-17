@@ -4,6 +4,18 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.6 (2015-07-17)
+
+* NEW: Detects new players.
+
+### 1.5 (2015-07-16)
+
+* NEW: Added a test command to test different things. Currently for testing CountDown.
+
+### 1.4.2 (2015-07-15)
+
+* CHANGE: Added printout when not finding a material.
+
 ### 1.4.1 (2015-07-14)
 
 * CHANGE: Money is rounded to closest integer.
