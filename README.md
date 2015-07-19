@@ -1,8 +1,12 @@
-# EithonFixesPlugin
+# EithonFixes
 
 A EithonFixes plugin for Minecraft.
 
 ## Release history
+
+### 1.7 (2015-07-19)
+
+* NEW: RegionCommand can now be run as console user by adding a '*' at the beginning of the command (but only if your are op).
 
 ### 1.6.1 (2015-07-18)
 
