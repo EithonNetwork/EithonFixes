@@ -7,9 +7,11 @@ import net.eithon.library.extensions.EithonLocation;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.json.IJson;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
@@ -21,23 +23,25 @@ public class RegionCommand implements IJson<RegionCommand> {
 	private EithonPlayer _creator;
 	private EithonBlock _min;
 	private EithonBlock _max;
+	private boolean _runCommandAsSuperUser;
 	private boolean _onEnter;
 
-	public RegionCommand(Player player, String name, String command, boolean onEnter, Block min, Block max)
+	public RegionCommand(Player player, String name, String command, boolean onEnter, boolean runCommandAsSuperUser, Block min, Block max)
 	{
 		this._id = UUID.randomUUID();
 		this._name = name;
-		edit(player, command, onEnter);
+		edit(player, command, onEnter, runCommandAsSuperUser);
 		this._createdFrom = new EithonLocation(player.getLocation());
 		this._min = new EithonBlock(min);
 		this._max = new EithonBlock(max);
 	}
 
-	public void edit(Player player, String command, boolean onEnter) {
+	public void edit(Player player, String command, boolean onEnter, boolean runCommandAsSuperUser) {
 		if (command.startsWith("/")) command = command.substring(1);
 		this._creator = new EithonPlayer(player);
 		this._command = command;
 		this._onEnter = onEnter;
+		this._runCommandAsSuperUser = runCommandAsSuperUser;
 	}
 
 	public boolean maybeExecuteCommand(Player player, Location from, Location to) {
@@ -52,7 +56,9 @@ public class RegionCommand implements IJson<RegionCommand> {
 			if (!inRegion(from)) return false;
 			if (inRegion(to)) return false;
 		}
-		player.getServer().dispatchCommand(player, this._command);
+		CommandSender commandSender = player;
+		if (this._runCommandAsSuperUser) commandSender = Bukkit.getConsoleSender();
+		Bukkit.getServer().dispatchCommand(commandSender, this._command);
 		return true;
 	}
 

@@ -64,6 +64,12 @@ public class RegionCommandController implements IBlockMoverFollower {
 		}
 		
 		if (command.startsWith("/")) command = command.substring(1);
+		
+		boolean runCommandAsSuperUser = false;
+		if (command.startsWith("*")) {
+			command = command.substring(1);
+			if (player.isOp()) runCommandAsSuperUser = true;
+		}
 
 		Vector minVector = selection.getNativeMinimumPoint();
 		Vector maxVector = selection.getNativeMaximumPoint();
@@ -74,7 +80,7 @@ public class RegionCommandController implements IBlockMoverFollower {
 		Block minBlock = minLocation.getBlock();
 		Block maxBlock = maxLocation.getBlock();
 		
-		RegionCommand regionCommand = new RegionCommand(player, name, command, onEnter, minBlock, maxBlock);
+		RegionCommand regionCommand = new RegionCommand(player, name, command, onEnter, runCommandAsSuperUser, minBlock, maxBlock);
 		this._regionCommandsByName.put(name, regionCommand);
 		delayedSave(this._eithonPlugin, 0);
 		player.sendMessage(String.format("Added RegionCommand %s", regionCommand.toString()));
@@ -85,7 +91,12 @@ public class RegionCommandController implements IBlockMoverFollower {
 				name);
 		if (regionCommand == null) return;
 		if (command.startsWith("/")) command = command.substring(1);
-		regionCommand.edit(player, command, onEnter);
+		boolean runCommandAsSuperUser = false;
+		if (command.startsWith("*")) {
+			command = command.substring(1);
+			if (player.isOp()) runCommandAsSuperUser = true;
+		}
+		regionCommand.edit(player, command, onEnter, runCommandAsSuperUser);
 		delayedSave(this._eithonPlugin, 0);
 		player.sendMessage(String.format("Edited RegionCommand %s", regionCommand.toString()));
 	}
