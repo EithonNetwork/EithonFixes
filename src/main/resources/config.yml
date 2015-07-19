@@ -7,7 +7,7 @@ RewardReduction: 0.85
 #
 # Time for reward reduction after latest reward.
 #
-RewardCoolDownInSeconds: 10
+RewardCoolDownInSeconds: 5
 
 #
 # Worlds where there is a penalty for dying
@@ -17,8 +17,8 @@ PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
 #
 # Commands that should have a cooldown period
 #
-CoolDownCommands: ["/broadcast", "/estats player"]
-CoolDownTimeInSeconds: [30, 10]
+CoolDownCommands: ["/broadcast"]
+CoolDownTimeInSeconds: [30]
 
 #
 # The cost of dying in one of the worlds in PenaltyOnDeathWorlds
@@ -35,7 +35,7 @@ BuyWorlds: [W_SurvivalFreebuild]
 ChatChannelsToLeave: [1, 2, 3, 4]
 
 eithon:
-  UseMarkUpForMessages: 0
+  UseMarkUpForMessages: 1
   UseWrappingForMessages: 0
   
   #
@@ -45,7 +45,7 @@ eithon:
   #  2 = MINOR (also minor messages)
   #  3 = VERBOSE (all messages)
   #
-  DebugLevel: 1
+  DebugLevel: 2
 
 commands:
 
@@ -66,6 +66,17 @@ commands:
   JoinChannel: ch enter %s
 
 messages:
+  #
+  # This message is broadcasted when someone logs in to the server for the first time
+  # Parameters: <player name> (%s)
+  #
+  JoinedServerFirstTime: "[color=green]+ [/color][color=lightpurple]%s[/color] [color=darkaqua]joined for the first time![/color]"
+
+  #
+  # This message is broadcasted to members with rankup
+  # Parameters: <player name> (%s)
+  #
+  PleaseWelcomeNewPlayer: "[subtitle/]Welcome [color=lightpurple]%s[/color] [color=white]to the server![/color]"
 
   #
   # Message after death cost
@@ -84,8 +95,8 @@ messages:
 
   #
   # Parameters: -
-  InventoryFull: Your inventory is full.
-
+  InventoryFull: Your inventory is full.  
+  
   #
   # Parameters: <balance> (%f)
   CurrentBalance: Your balance is %.2f E-Coins.
@@ -99,15 +110,3 @@ messages:
   # Parameters: <remaining time> (%s)
   #
   WaitForCoolDown: "In cool down. Remaining time: %s."
-
-  #
-  # This message is broadcasted when someone logs in to the server for the first time
-  # Parameters: <player name> (%s)
-  #
-  JoinedServerFirstTime: "%s joined for the first time!"
-
-  #
-  # This message is broadcasted to members with rankup 
-  # Parameters: <player name> (%s)
-  #
-  PleaseWelcomeNewPlayer: "Welcome %s to the server!"
