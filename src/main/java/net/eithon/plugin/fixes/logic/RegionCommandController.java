@@ -51,7 +51,7 @@ public class RegionCommandController implements IBlockMoverFollower {
 		MoveEventHandler.addBlockMover(this); 
 	}
 	
-	public void updateOrCreateRegionCommand(Player player, String name, String command, boolean onEnter) {
+	public void updateOrCreateRegionCommand(Player player, String name, String commands, boolean onEnter) {
 		Selection selection =  this._worldEditPlugin.getSelection(player);
 		if (selection == null) {
 			player.sendMessage("No selection found");
@@ -61,14 +61,6 @@ public class RegionCommandController implements IBlockMoverFollower {
 		if (!(selection instanceof CuboidSelection)) {
 			player.sendMessage("Selection was not a cuboid selection.");
 			return;
-		}
-		
-		if (command.startsWith("/")) command = command.substring(1);
-		
-		boolean runCommandAsSuperUser = false;
-		if (command.startsWith("*")) {
-			command = command.substring(1);
-			if (player.isOp()) runCommandAsSuperUser = true;
 		}
 
 		Vector minVector = selection.getNativeMinimumPoint();
@@ -80,23 +72,17 @@ public class RegionCommandController implements IBlockMoverFollower {
 		Block minBlock = minLocation.getBlock();
 		Block maxBlock = maxLocation.getBlock();
 		
-		RegionCommand regionCommand = new RegionCommand(player, name, command, onEnter, runCommandAsSuperUser, minBlock, maxBlock);
+		RegionCommand regionCommand = new RegionCommand(player, name, commands, onEnter, minBlock, maxBlock);
 		this._regionCommandsByName.put(name, regionCommand);
 		delayedSave(this._eithonPlugin, 0);
 		player.sendMessage(String.format("Added RegionCommand %s", regionCommand.toString()));
 	}
 
-	public void editRegionCommand(Player player, String name, String command, boolean onEnter) {
+	public void editRegionCommand(Player player, String name, String commands, boolean onEnter) {
 		RegionCommand regionCommand = getRegionCommandOrInformPlayer(player,
 				name);
 		if (regionCommand == null) return;
-		if (command.startsWith("/")) command = command.substring(1);
-		boolean runCommandAsSuperUser = false;
-		if (command.startsWith("*")) {
-			command = command.substring(1);
-			if (player.isOp()) runCommandAsSuperUser = true;
-		}
-		regionCommand.edit(player, command, onEnter, runCommandAsSuperUser);
+		regionCommand.edit(player, commands, onEnter);
 		delayedSave(this._eithonPlugin, 0);
 		player.sendMessage(String.format("Edited RegionCommand %s", regionCommand.toString()));
 	}
