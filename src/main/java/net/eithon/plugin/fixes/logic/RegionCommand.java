@@ -36,7 +36,6 @@ public class RegionCommand implements IJson<RegionCommand> {
 	}
 
 	public void edit(Player player, String command, boolean onEnter) {
-		if (command.startsWith("/")) command = command.substring(1);
 		this._creator = new EithonPlayer(player);
 		this._commands = command;
 		this._onEnter = onEnter;
@@ -54,19 +53,29 @@ public class RegionCommand implements IJson<RegionCommand> {
 			if (!inRegion(from)) return false;
 			if (inRegion(to)) return false;
 		}
-		CommandSender commandSender = player;
+		executeCommands(player);
+		return true;
+	}
+
+	private void executeCommands(Player player) {
 		String[] commands = this._commands.split(";");
 		for (String command : commands) {
+			boolean setOp = false;
+			CommandSender commandSender = player;
 			if (command.startsWith("/")) command = command.substring(1);
-			boolean runCommandAsSuperUser = false;
-			if (command.startsWith("*")) {
+			if (command.startsWith("#")) {
 				command = command.substring(1);
-				if (this._creator.isOp()) runCommandAsSuperUser = true;
+				if (this._creator.isOp()) commandSender = Bukkit.getConsoleSender();
+			} else if (command.startsWith("*")) {
+				command = command.substring(1);
+				setOp = !player.isOp();			}
+			try {
+				if (setOp) player.setOp(true);
+				Bukkit.getServer().dispatchCommand(commandSender, command);
+			} finally {
+				if (setOp) player.setOp(false);
 			}
-			if (runCommandAsSuperUser) commandSender = Bukkit.getConsoleSender();
-			Bukkit.getServer().dispatchCommand(commandSender, this._commands);
 		}
-		return true;
 	}
 
 	private boolean inRegion(Block block) {
