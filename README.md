@@ -4,6 +4,17 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.8.1 (2015-07-24)
+
+* CHANGE: If a command starts with * it will be executed with the user in Op mode.
+* CHANGE: If a command starts with # it will be executed with by the console.
+* BUG: RegionCommand was sending all commands at once.
+
+### 1.8 (2015-07-20)
+
+* NEW: RegionCommand can now be a serie of commands, separated by ';'
+* BUG: After a restart, a superuser command was no longer run as a superuser.
+
 ### 1.7 (2015-07-19)
 
 * NEW: RegionCommand can now be run as console user by adding a '*' at the beginning of the command (but only if your are op).

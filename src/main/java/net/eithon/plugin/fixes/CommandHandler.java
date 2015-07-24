@@ -108,8 +108,8 @@ public class CommandHandler implements ICommandHandler {
 		if (player == null) return;
 		
 		String name = commandParser.getArgumentString();
-		String command = commandParser.getArgumentRest();
-		this._controller.rcAdd(player, name, command);
+		String commands = commandParser.getArgumentRest();
+		this._controller.rcAdd(player, name, commands);
 	}
 
 	void rcEditCommand(CommandParser commandParser)
@@ -121,8 +121,8 @@ public class CommandHandler implements ICommandHandler {
 		if (player == null) return;
 		
 		String name = commandParser.getArgumentString();
-		String command = commandParser.getArgumentRest();
-		this._controller.rcEdit(player, name, command);
+		String commands = commandParser.getArgumentRest();
+		this._controller.rcEdit(player, name, commands);
 	}
 
 	void rcDeleteCommand(CommandParser commandParser)

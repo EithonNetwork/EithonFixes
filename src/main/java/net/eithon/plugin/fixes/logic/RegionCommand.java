@@ -18,30 +18,27 @@ import org.json.simple.JSONObject;
 public class RegionCommand implements IJson<RegionCommand> {
 	private UUID _id;
 	private String _name;
-	private String _command;
+	private String _commands;
 	private EithonLocation _createdFrom;
 	private EithonPlayer _creator;
 	private EithonBlock _min;
 	private EithonBlock _max;
-	private boolean _runCommandAsSuperUser;
 	private boolean _onEnter;
 
-	public RegionCommand(Player player, String name, String command, boolean onEnter, boolean runCommandAsSuperUser, Block min, Block max)
+	public RegionCommand(Player player, String name, String commands, boolean onEnter, Block min, Block max)
 	{
 		this._id = UUID.randomUUID();
 		this._name = name;
-		edit(player, command, onEnter, runCommandAsSuperUser);
+		edit(player, commands, onEnter);
 		this._createdFrom = new EithonLocation(player.getLocation());
 		this._min = new EithonBlock(min);
 		this._max = new EithonBlock(max);
 	}
 
-	public void edit(Player player, String command, boolean onEnter, boolean runCommandAsSuperUser) {
-		if (command.startsWith("/")) command = command.substring(1);
+	public void edit(Player player, String command, boolean onEnter) {
 		this._creator = new EithonPlayer(player);
-		this._command = command;
+		this._commands = command;
 		this._onEnter = onEnter;
-		this._runCommandAsSuperUser = runCommandAsSuperUser;
 	}
 
 	public boolean maybeExecuteCommand(Player player, Location from, Location to) {
@@ -56,10 +53,29 @@ public class RegionCommand implements IJson<RegionCommand> {
 			if (!inRegion(from)) return false;
 			if (inRegion(to)) return false;
 		}
-		CommandSender commandSender = player;
-		if (this._runCommandAsSuperUser) commandSender = Bukkit.getConsoleSender();
-		Bukkit.getServer().dispatchCommand(commandSender, this._command);
+		executeCommands(player);
 		return true;
+	}
+
+	private void executeCommands(Player player) {
+		String[] commands = this._commands.split(";");
+		for (String command : commands) {
+			boolean setOp = false;
+			CommandSender commandSender = player;
+			if (command.startsWith("/")) command = command.substring(1);
+			if (command.startsWith("#")) {
+				command = command.substring(1);
+				if (this._creator.isOp()) commandSender = Bukkit.getConsoleSender();
+			} else if (command.startsWith("*")) {
+				command = command.substring(1);
+				setOp = !player.isOp();			}
+			try {
+				if (setOp) player.setOp(true);
+				Bukkit.getServer().dispatchCommand(commandSender, command);
+			} finally {
+				if (setOp) player.setOp(false);
+			}
+		}
 	}
 
 	private boolean inRegion(Block block) {
@@ -94,7 +110,7 @@ public class RegionCommand implements IJson<RegionCommand> {
 		JSONObject json = new JSONObject();
 		json.put("id", this._id.toString());
 		json.put("name", this._name);
-		json.put("command", this._command);
+		json.put("command", this._commands);
 		json.put("creator", this._creator.toJson());
 		json.put("createdFrom", this._createdFrom.toJson());
 		json.put("min", this._min.toJson());
@@ -108,7 +124,7 @@ public class RegionCommand implements IJson<RegionCommand> {
 		JSONObject jsonObject = (JSONObject) json;
 		this._id = UUID.fromString((String) jsonObject.get("id"));
 		this._name = (String) jsonObject.get("name");
-		this._command = (String) jsonObject.get("command");
+		this._commands = (String) jsonObject.get("command");
 		this._creator = EithonPlayer.getFromJson(jsonObject.get("creator"));
 		this._createdFrom = EithonLocation.getFromJson(jsonObject.get("createdFrom"));
 		this._min = EithonBlock.getFromJson(jsonObject.get("min"));
@@ -123,13 +139,13 @@ public class RegionCommand implements IJson<RegionCommand> {
 
 	public String getName() { return this._name; }
 
-	public Object getCommand() { return this._command; }
+	public Object getCommand() { return this._commands; }
 
 	public void teleportTo(Player player) {
 		player.teleport(this._createdFrom.getLocation());
 	}
-	
+
 	public String toString() {
-		return String.format("%s: \"/%s\" (%s)", this._name, this._command, this._onEnter?"enter":"leave");
+		return String.format("%s: \"/%s\" (%s)", this._name, this._commands, this._onEnter?"enter":"leave");
 	}
 }
