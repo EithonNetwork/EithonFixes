@@ -21,7 +21,7 @@ class CoolDownController {
 		CoolDownInfo.initialize(plugin);
 		this._coolDownHashMap = new HashMap<UUID, CoolDown>();
 		for (CoolDownInfo info : Config.V.coolDownInfos) {
-			this._coolDownHashMap.put(info.getId(), new CoolDown(info.getName(), info.getCoolDownPeriodInSeconds()));
+			this._coolDownHashMap.put(info.getId(), new CoolDown(info.getName(), info.getCoolDownPeriodInSeconds(), info.getAllowedIncidents()));
 		}
 	}
 

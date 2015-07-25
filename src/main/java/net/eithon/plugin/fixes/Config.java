@@ -31,17 +31,24 @@ public class Config {
 			rewardCoolDownInSeconds = config.getInt("RewardCoolDownInSeconds", 10);
 			rewardReduction = config.getDouble("RewardReduction", 0.85);
 			ArrayList<String> coolDownCommands = new ArrayList<String>(config.getStringList("CoolDownCommands"));
-			ArrayList<String> integersAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeInSeconds"));
-			if (coolDownCommands.size() != integersAsStrings.size()) {
+			ArrayList<String> secondsAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeInSeconds"));
+			if (coolDownCommands.size() != secondsAsStrings.size()) {
 				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownTimeInSeconds. Should be the same number.",
-						coolDownCommands.size(), integersAsStrings.size());
+						coolDownCommands.size(), secondsAsStrings.size());
+			}
+			ArrayList<String> incidentsAsStrings = new ArrayList<String>(config.getStringList("CoolDownAllowedIncidents"));
+			if (coolDownCommands.size() != incidentsAsStrings.size()) {
+				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownAllowedIncidents. Should be the same number.",
+						coolDownCommands.size(), incidentsAsStrings.size());
 			}
 			coolDownInfos = new ArrayList<CoolDownInfo>();
 			for (int i = 0; i < coolDownCommands.size(); i++) {
 				String command = coolDownCommands.get(i);
-				String integerAsString = integersAsStrings.get(i);
-				int time = Integer.parseInt(integerAsString);
-				coolDownInfos.add(new CoolDownInfo(command, time));
+				String seoncdsAsString = secondsAsStrings.get(i);
+				long time = Long.parseLong(seoncdsAsString);
+				String incidentsAsString = incidentsAsStrings.get(i);
+				int incidents = Integer.parseInt(incidentsAsString);
+				coolDownInfos.add(new CoolDownInfo(command, time, incidents));
 			}
 			buyWorlds = config.getStringList("BuyWorlds");
 			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");

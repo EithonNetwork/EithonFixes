@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.9 (2015-07-25)
+
+* NEW: CoolDown for commands can now specify how many incidents that are allowed during the cooldown period.
+
 ### 1.8.1 (2015-07-24)
 
 * CHANGE: If a command starts with * it will be executed with the user in Op mode.

@@ -17,8 +17,9 @@ PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
 #
 # Commands that should have a cooldown period
 #
-CoolDownCommands: ["/broadcast"]
-CoolDownTimeInSeconds: [30]
+CoolDownCommands: ["/broadcast", "/me"]
+CoolDownTimeInSeconds: [30, 60]
+CoolDownAllowedIncidents: [1, 3]
 
 #
 # The cost of dying in one of the worlds in PenaltyOnDeathWorlds
