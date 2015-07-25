@@ -72,6 +72,6 @@ public class EventListener implements Listener {
 
 	private void verbose(String method, String format, Object... args) {
 		String message = String.format(format, args);
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "%s: %s", method, message);
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
 	}
 }

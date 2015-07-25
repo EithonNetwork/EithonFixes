@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.10 (2015-07-25)
+
+* NEW: Added restart command.
+
 ### 1.9 (2015-07-25)
 
 * NEW: CoolDown for commands can now specify how many incidents that are allowed during the cooldown period.

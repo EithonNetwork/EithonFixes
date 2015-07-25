@@ -19,6 +19,9 @@ public class Config {
 
 	}
 	public static class V {
+		public static List<Integer> showEarlyWarningMessageMinutesBeforeRestart;
+		public static List<Integer> showMiddleWarningMessageSecondsBeforeRestart;
+		public static List<Integer> showFinalWarningMessageSecondsBeforeRestart;
 		public static int rewardCoolDownInSeconds;
 		public static double rewardReduction;
 		public static List<CoolDownInfo> coolDownInfos;
@@ -30,6 +33,12 @@ public class Config {
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getInt("RewardCoolDownInSeconds", 10);
 			rewardReduction = config.getDouble("RewardReduction", 0.85);
+			showEarlyWarningMessageMinutesBeforeRestart = 
+					new ArrayList<Integer>(config.getIntegerList("ShowEarlyWarningMessageMinutesBeforeRestart"));
+			showMiddleWarningMessageSecondsBeforeRestart = 
+					new ArrayList<Integer>(config.getIntegerList("ShowMiddleWarningMessageSecondsBeforeRestart"));
+			showFinalWarningMessageSecondsBeforeRestart = 
+					new ArrayList<Integer>(config.getIntegerList("ShowFinalWarningMessageSecondsBeforeRestart"));
 			ArrayList<String> coolDownCommands = new ArrayList<String>(config.getStringList("CoolDownCommands"));
 			ArrayList<String> secondsAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeInSeconds"));
 			if (coolDownCommands.size() != secondsAsStrings.size()) {
@@ -84,6 +93,10 @@ public class Config {
 		public static ConfigurableMessage waitForCoolDown;
 		public static ConfigurableMessage joinedServerFirstTime;
 		public static ConfigurableMessage pleaseWelcomeNewPlayer;
+		public static ConfigurableMessage earlyWarningMessage;
+		public static ConfigurableMessage middleWarningMessage;
+		public static ConfigurableMessage finalWarningMessage;
+		public static ConfigurableMessage restartingServer;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -104,6 +117,14 @@ public class Config {
 					"%s joined for the first time!");
 			pleaseWelcomeNewPlayer = config.getConfigurableMessage("messages.PleaseWelcomeNewPlayer", 1,
 					"Welcome %s to the server!");
+			earlyWarningMessage = config.getConfigurableMessage("messages.EarlyWarningMessage", 1,
+					"The server will be restarted in %d minutes.");
+			middleWarningMessage = config.getConfigurableMessage("messages.MiddleWarningMessage", 1,
+					"[subtitle/]Server restart in %d seconds.");
+			finalWarningMessage = config.getConfigurableMessage("messages.FinalWarningMessage", 1,
+					"[title/]%d");
+			restartingServer = config.getConfigurableMessage("messages.RestartingServer", 0,
+					"[title/]Server restarting");
 		}		
 	}
 
