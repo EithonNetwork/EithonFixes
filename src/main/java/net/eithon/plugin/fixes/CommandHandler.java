@@ -1,5 +1,7 @@
 package net.eithon.plugin.fixes;
 
+import java.time.LocalDateTime;
+
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.CommandParser;
@@ -22,6 +24,7 @@ public class CommandHandler implements ICommandHandler {
 	private static final String RCDELETE_COMMAND = "/eithonfixes rcdelete <name>";
 	private static final String RCGOTO_COMMAND = "/eithonfixes rcgoto <name>";
 	private static final String RCLIST_COMMAND = "/eithonfixes rclist";
+	private static final String RESTART_COMMAND = "/eithonfixes restart [cancel | [<minutes>]]";
 	private Controller _controller;
 	private EithonPlugin _eithonPlugin;
 
@@ -50,6 +53,8 @@ public class CommandHandler implements ICommandHandler {
 			rcGotoCommand(commandParser);
 		} else if (command.equals("rclist")) {
 			rcListCommand(commandParser);
+		} else if (command.equals("restart")) {
+			restartCommand(commandParser);
 		} else if (command.equals("test")) {
 			testCommand(commandParser);
 		} else {
@@ -81,7 +86,7 @@ public class CommandHandler implements ICommandHandler {
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.balance")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
-		
+
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return ;
 
@@ -92,7 +97,7 @@ public class CommandHandler implements ICommandHandler {
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.join")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
-		
+
 		String channel = commandParser.getArgumentString();
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
@@ -103,10 +108,10 @@ public class CommandHandler implements ICommandHandler {
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcadd")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(3)) return;
-		
+
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
-		
+
 		String name = commandParser.getArgumentString();
 		String commands = commandParser.getArgumentRest();
 		this._controller.rcAdd(player, name, commands);
@@ -116,10 +121,10 @@ public class CommandHandler implements ICommandHandler {
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcedit")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(3)) return;
-		
+
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
-		
+
 		String name = commandParser.getArgumentString();
 		String commands = commandParser.getArgumentRest();
 		this._controller.rcEdit(player, name, commands);
@@ -129,7 +134,7 @@ public class CommandHandler implements ICommandHandler {
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcdelete")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
-		
+
 		String name = commandParser.getArgumentString();
 		this._controller.rcDelete(commandParser.getSender(), name);
 	}
@@ -138,10 +143,10 @@ public class CommandHandler implements ICommandHandler {
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcgoto")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
-		
+
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
-		
+
 		String name = commandParser.getArgumentString();
 		this._controller.rcGoto(player, name);
 	}
@@ -154,6 +159,32 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.rcList(commandParser.getSender());
 	}
 
+	void restartCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.restart")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1,2)) return;
+
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+		
+		long minutes = 10;
+		String cancel = commandParser.getArgumentString();
+		if (cancel != null) {
+			try {
+				minutes = Long.parseLong(cancel);
+			} catch (Exception e) {
+				boolean success = this._controller.cancelRestart(player);
+				if (success) player.sendMessage("The server restart has been cancelled.");
+				else player.sendMessage("Too late to cancel server restart.");
+				return;
+			}
+		}
+
+		LocalDateTime when = this._controller.initiateRestart(player, minutes);
+		if (when == null) player.sendMessage("Could not initiate a restart.");
+		else player.sendMessage(String.format("The server will be restarted %s", when.toString()));
+	}
+
 	void testCommand(CommandParser commandParser)
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.test")) return;
@@ -163,7 +194,7 @@ public class CommandHandler implements ICommandHandler {
 		int intervalLengthInTicks = commandParser.getArgumentInteger(20);
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
-		
+
 		CountDown countDown = new CountDown(this._eithonPlugin, counts, intervalLengthInTicks*50, new ICountDownListener() {
 			public boolean isCancelled(long remainingIntervals) {
 				Title.get().sendActionbarMessage(player, String.format("%d", remainingIntervals));
@@ -179,7 +210,7 @@ public class CommandHandler implements ICommandHandler {
 				Title.get().sendActionbarMessage(player, "");
 			}
 		});
-		
+
 		countDown.start(Bukkit.getScheduler());
 	}
 
@@ -201,6 +232,8 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(RCGOTO_COMMAND);
 		} else if (command.equals("rclist")) {
 			sender.sendMessage(RCLIST_COMMAND);
+		} else if (command.equals("restart")) {
+			sender.sendMessage(RESTART_COMMAND);
 		} else {
 			sender.sendMessage(String.format("Unknown command: %s.", command));
 		}

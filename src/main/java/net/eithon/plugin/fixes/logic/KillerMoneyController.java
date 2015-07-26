@@ -34,7 +34,7 @@ public class KillerMoneyController {
 		} else {
 			this._lastRewardFactor.remove(player);
 		}
-		this._rewardCoolDown.addPlayer(player);
+		this._rewardCoolDown.addIncident(player);
 		return money;
 	}
 

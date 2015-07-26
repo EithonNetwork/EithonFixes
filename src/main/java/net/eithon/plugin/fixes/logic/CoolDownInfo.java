@@ -10,15 +10,17 @@ public class CoolDownInfo {
 	private int _length;
 	private String _command;
 	private UUID _id;
-	private int _coolDownInSeconds;
+	private long _coolDownInSeconds;
+	private int _allowedIncidents;
 	private static EithonPlugin eithonPlugin;
 	
-	public CoolDownInfo(String command, int time) {
+	public CoolDownInfo(String command, long time, int incidents) {
 		this._command = command;
 		this._coolDownInSeconds = time;
 		this._id = UUID.randomUUID();
 		this._comparableString = makeComparable(command);
 		this._length = this._comparableString.length();
+		this._allowedIncidents = incidents;
 	}
 	
 	public static void initialize(EithonPlugin plugin) {
@@ -26,7 +28,8 @@ public class CoolDownInfo {
 	}
 	
 	public String getName() { return this._command;	}
-	public int getCoolDownPeriodInSeconds() { return this._coolDownInSeconds; }
+	public long getCoolDownPeriodInSeconds() { return this._coolDownInSeconds; }
+	public int getAllowedIncidents() { return this._allowedIncidents; }
 	public UUID getId() { return this._id; }
 	public String getComparableString() { return this._comparableString; }
 	public boolean isSame(String command) {

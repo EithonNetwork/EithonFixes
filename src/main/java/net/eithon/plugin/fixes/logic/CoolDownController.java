@@ -21,7 +21,7 @@ class CoolDownController {
 		CoolDownInfo.initialize(plugin);
 		this._coolDownHashMap = new HashMap<UUID, CoolDown>();
 		for (CoolDownInfo info : Config.V.coolDownInfos) {
-			this._coolDownHashMap.put(info.getId(), new CoolDown(info.getName(), info.getCoolDownPeriodInSeconds()));
+			this._coolDownHashMap.put(info.getId(), new CoolDown(info.getName(), info.getCoolDownPeriodInSeconds(), info.getAllowedIncidents()));
 		}
 	}
 
@@ -45,7 +45,7 @@ class CoolDownController {
 			verbose("secondsLeftOfCoolDown", "return secondsLeft.");
 			return secondsLeft;
 		}
-		coolDown.addPlayer(player);
+		coolDown.addIncident(player);
 		verbose("secondsLeftOfCoolDown", "Player \"%s\" added to cooldown.", player.getName());
 		verbose("secondsLeftOfCoolDown", "return 0.");
 		return 0;

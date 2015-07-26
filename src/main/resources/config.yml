@@ -17,8 +17,9 @@ PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
 #
 # Commands that should have a cooldown period
 #
-CoolDownCommands: ["/broadcast"]
-CoolDownTimeInSeconds: [30]
+CoolDownCommands: ["/broadcast", "/me"]
+CoolDownTimeInSeconds: [30, 60]
+CoolDownAllowedIncidents: [1, 3]
 
 #
 # The cost of dying in one of the worlds in PenaltyOnDeathWorlds
@@ -29,10 +30,26 @@ CostOfDeath: 30.0
 # Worlds where you can buy stuff
 #
 BuyWorlds: [W_SurvivalFreebuild]
+
 #
 # Chat channels. Used to leave all other channels.
 #
 ChatChannelsToLeave: [1, 2, 3, 4]
+
+#
+# When doing a restart, the RestartEarlyWarningMessage will be shown at this defined intervals (minutes)
+#
+ShowEarlyWarningMessageMinutesBeforeRestart: [120, 60, 45, 30, 20, 10, 5, 4, 3]
+
+#
+# When doing a restart, the RestartFinalWarningMessage will be shown at this defined intervals (seconds)
+#
+ShowMiddleWarningMessageSecondsBeforeRestart: [120, 90, 60, 45, 30, 20, 10]
+
+#
+# When doing a restart, the RestartFinalWarningMessage will be shown at this defined intervals (seconds)
+#
+ShowFinalWarningMessageSecondsBeforeRestart: [5, 4, 3, 2, 1]
 
 eithon:
   UseMarkUpForMessages: 1
@@ -110,3 +127,27 @@ messages:
   # Parameters: <remaining time> (%s)
   #
   WaitForCoolDown: "In cool down. Remaining time: %s."
+  
+  #
+  # This message is displayed before server restart @ ShowEarlyWarningMessageMinutesBeforeRestart
+  # Parameters: <remaining minutes> (%d)
+  #
+  EarlyWarningMessage: "The server will be restarted in %d minutes."
+  
+  #
+  # This message is displayed before server restart @ ShowMiddleWarningMessageMinutesBeforeRestart
+  # Parameters: <remaining seconds> (%d)
+  #  
+  MiddleWarningMessage: "[subtitle/]Server restart in %d seconds."
+  
+  #
+  # This message is displayed before server restart @ ShowMFinalWarningMessageMinutesBeforeRestart
+  # Parameters: <remaining seconds> (%d)
+  #  
+  FinalWarningMessage: "[title/]%d"
+  
+  #
+  # This message is displayed after the last FinalWarningMessage.
+  # Parameters: -
+  #    
+  RestartingServer: "[title/]Restarting server"
