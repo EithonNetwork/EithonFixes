@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 public class EventListener implements Listener {
 
@@ -68,6 +69,37 @@ public class EventListener implements Listener {
 		if (event.isCancelled()) return;
 		double money = this._controller.getReductedMoney(event.getPlayer(), event.getMoney());
 		event.setMoney(money);
+	}
+	
+	// Only allow fly in certain worlds
+	@EventHandler
+	public void onPlayerToggleFlightEvent(PlayerToggleFlightEvent event) {
+		verbose("onPlayerToggleFlightEvent", "Enter");
+		if (event.isCancelled()) {
+			verbose("onPlayerToggleFlightEvent", "Event has already been cancelled. Return.");
+			return;
+		}
+		if (!event.isFlying()) {
+			verbose("onPlayerToggleFlightEvent", "Not flying, rather landing. Return.");
+			return;
+		}
+		
+		Player player = event.getPlayer();
+		if (this._controller.isInWorldWhereFlyIsAllowed(player)) {
+			verbose("onPlayerToggleFlightEvent", "Player %s is in world where flying is allowed. Return.", player.getName());
+			return;
+		}
+		
+		// Allow players with permission freebuild.canfly to fly
+		if (player.hasPermission("eithonfixes.canfly")) {
+			verbose("onPlayerToggleFlightEvent", "Player %s has eithonfixes.canfly permission. Return.", player.getName());
+			return;
+		}
+		
+		verbose("onPlayerToggleFlightEvent", "The player %s is not allowed to fly in world %s. Cancels the event and return.");
+		player.sendMessage("You are currently not allowed to fly.");
+		event.setCancelled(true);
+		Config.C.stopFly.executeAs(event.getPlayer());
 	}
 
 	private void verbose(String method, String format, Object... args) {

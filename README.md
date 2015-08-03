@@ -4,6 +4,11 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.11 (2015-08-03)
+
+* NEW: Flying is now only allowed in specific worlds
+* BUG: Command settings where not read from the config file.
+
 ### 1.10 (2015-07-25)
 
 * NEW: Added restart command.

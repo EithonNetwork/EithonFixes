@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 
+import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
@@ -22,6 +23,7 @@ public class Controller {
 	private RegionCommandController _regionCommandController;
 	private CoolDownController _coolDownController;
 	UUID _restartAlarmIdentity;
+	private LocalDateTime _whenRestart;
 	private Logger _eithonLogger;
 	private EithonPlugin _eithonPlugin;
 
@@ -93,19 +95,17 @@ public class Controller {
 	}
 
 	public LocalDateTime initiateRestart(Player player, long minutes) {
-		LocalDateTime whenRestart = initiateRestartInternally(player, minutes*60+5);
-		if (whenRestart == null) return null;
-		setNextMessageAlarm(this._eithonPlugin, whenRestart);
-		return whenRestart;
+		UUID alarmId = initiateRestartInternally(player, minutes*60+5);
+		if (alarmId == null) return null;
+		setNextMessageAlarm(alarmId);
+		return this._whenRestart;
 	}
 
-	private LocalDateTime initiateRestartInternally(Player player, long seconds) {
+	private UUID initiateRestartInternally(Player player, long seconds) {
 		LocalDateTime whenRestart = LocalDateTime.now().plusSeconds(seconds);
 		if (this._restartAlarmIdentity != null) {
-			boolean done = AlarmTrigger.get().resetAlarm(this._restartAlarmIdentity, whenRestart);
-			if (done) return whenRestart;
+			AlarmTrigger.get().removeAlarm(this._restartAlarmIdentity);
 			this._restartAlarmIdentity = null;
-			return null;
 		}
 
 		this._restartAlarmIdentity = AlarmTrigger.get().setAlarm("restart", whenRestart, new Runnable() {
@@ -114,7 +114,8 @@ public class Controller {
 				server.dispatchCommand(server.getConsoleSender(), "restart");			
 			}
 		});
-		return whenRestart;
+		this._whenRestart = whenRestart;
+		return this._restartAlarmIdentity;
 	}
 
 	public boolean cancelRestart(Player player) {
@@ -124,45 +125,51 @@ public class Controller {
 		return success;
 	}
 
-	private void setNextMessageAlarm(EithonPlugin plugin, LocalDateTime whenRestart) {
+	private void setNextMessageAlarm(UUID alarmId) {
+		if (!alarmId.equals(this._restartAlarmIdentity)) return;
+		EithonPlugin plugin = this._eithonPlugin;
 		Controller thisObject = this;
-		verbose("setNextMessageAlarm", "Enter, whenRestart = %s", whenRestart);
-		long secondsLeft = whenRestart.toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+		verbose("setNextMessageAlarm", "Enter, whenRestart = %s", this._whenRestart);
+		long secondsLeft = this._whenRestart.toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
 		long minutesLeft = secondsLeft/60;
 		verbose("setNextMessageAlarm", "Left = %d seconds (%d minutes)", secondsLeft, minutesLeft);
 		for (long minutes : Config.V.showEarlyWarningMessageMinutesBeforeRestart) {
-			if (minutes < minutesLeft) {
-				verbose("setNextMessageAlarm", "Found early = %d minutes, in %d seconds", minutes, (secondsLeft- minutes*60));
+			long seconds = minutes*60;
+			long secondsRemainingToMessage = secondsLeft- seconds;
+			if (secondsRemainingToMessage > 0) {
+				verbose("setNextMessageAlarm", "Found early = %d minutes, in %d seconds", minutes, secondsRemainingToMessage);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 					public void run() {
 						if (thisObject._restartAlarmIdentity == null) return;
-						earlyWarningMessage(plugin, whenRestart, minutes);
+						earlyWarningMessage(alarmId, minutes);
 					}
-				}, TimeMisc.secondsToTicks((secondsLeft- minutes*60)));
+				}, TimeMisc.secondsToTicks(secondsRemainingToMessage));
 				return;
 			}
 		}
 		for (long seconds : Config.V.showMiddleWarningMessageSecondsBeforeRestart) {
-			if (seconds < secondsLeft) {
-				verbose("setNextMessageAlarm", "Found middle = %d seconds, in %d seconds", seconds, (secondsLeft-seconds));
+			long secondsRemainingToMessage = secondsLeft- seconds;
+			if (secondsRemainingToMessage > 0) {
+				verbose("setNextMessageAlarm", "Found middle = %d seconds, in %d seconds", seconds, secondsRemainingToMessage);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 					public void run() {
 						if (thisObject._restartAlarmIdentity == null) return;
-						middleWarningMessage(plugin, whenRestart, seconds);
+						middleWarningMessage(alarmId, seconds);
 					}
-				}, TimeMisc.secondsToTicks(secondsLeft-seconds));
+				}, TimeMisc.secondsToTicks(secondsRemainingToMessage));
 				return;
 			}
 		}
 		for (long seconds : Config.V.showFinalWarningMessageSecondsBeforeRestart) {
-			if (seconds < secondsLeft) {
-				verbose("setNextMessageAlarm", "Found final = %d seconds, in %d seconds", seconds, (secondsLeft-seconds));
+			long secondsRemainingToMessage = secondsLeft- seconds;
+			if (secondsRemainingToMessage > 0) {
+				verbose("setNextMessageAlarm", "Found final = %d seconds, in %d seconds", seconds, secondsRemainingToMessage);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 					public void run() {
 						if (thisObject._restartAlarmIdentity == null) return;
-						finalWarningMessage(plugin, whenRestart, seconds);
+						finalWarningMessage(alarmId, seconds);
 					}
-				}, TimeMisc.secondsToTicks(secondsLeft-seconds));
+				}, TimeMisc.secondsToTicks(secondsRemainingToMessage));
 				return;
 			}
 		}
@@ -175,26 +182,35 @@ public class Controller {
 		}, TimeMisc.secondsToTicks(secondsLeft));
 	}
 
-	void earlyWarningMessage(EithonPlugin plugin, LocalDateTime whenRestart, long minutes) {
+	void earlyWarningMessage(UUID alarmId, long minutes) {
+		if (!alarmId.equals(this._restartAlarmIdentity)) return;
 		verbose("earlyWarningMessage", " %d minutes", minutes);
 		Config.M.earlyWarningMessage.broadcastMessage(minutes);
-		setNextMessageAlarm(plugin, whenRestart);
+		setNextMessageAlarm(alarmId);
 	}
 
-	void middleWarningMessage(EithonPlugin plugin, LocalDateTime whenRestart, long seconds) {
+	void middleWarningMessage(UUID alarmId, long seconds) {
+		if (!alarmId.equals(this._restartAlarmIdentity)) return;
 		verbose("middleWarningMessage", "%d seconds", seconds);
 		Config.M.middleWarningMessage.broadcastMessage(seconds);
-		setNextMessageAlarm(plugin, whenRestart);
+		setNextMessageAlarm(alarmId);
 	}
 
-	void finalWarningMessage(EithonPlugin plugin, LocalDateTime whenRestart, long seconds) {
+	void finalWarningMessage(UUID alarmId, long seconds) {
+		if (!alarmId.equals(this._restartAlarmIdentity)) return;
 		verbose("finalWarningMessage", "%d seconds", seconds);
 		Config.M.finalWarningMessage.broadcastMessage(seconds);
-		setNextMessageAlarm(plugin, whenRestart);
+		setNextMessageAlarm(alarmId);
 	}
 
 	private void verbose(String method, String format, Object... args) {
 		String message = String.format(format, args);
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
+	}
+
+	public boolean isInWorldWhereFlyIsAllowed(Player player) {
+		if (player == null) return false;
+		EithonPlayer eithonPlayer = new EithonPlayer(player);
+		return eithonPlayer.isInAcceptableWorld(Config.V.flyWorlds);
 	}
 }

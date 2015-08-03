@@ -32,6 +32,11 @@ CostOfDeath: 30.0
 BuyWorlds: [W_SurvivalFreebuild]
 
 #
+# Worlds where you can fly (set eithonfixes.canfly to fly in all worlds)
+#
+FlyWorlds: [W_SurvivalFreebuild]
+
+#
 # Chat channels. Used to leave all other channels.
 #
 ChatChannelsToLeave: [1, 2, 3, 4]
@@ -81,6 +86,12 @@ commands:
   #
   # LeaveChannel has 1 parameters: <channel name> (%s)
   JoinChannel: ch enter %s
+  
+  #
+  # This command is dispatched when a player tries to fly when not supposed to.
+  # Parameters: -
+  #
+  StopFly: fly
 
 messages:
   #

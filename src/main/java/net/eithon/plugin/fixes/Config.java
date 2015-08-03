@@ -26,6 +26,7 @@ public class Config {
 		public static double rewardReduction;
 		public static List<CoolDownInfo> coolDownInfos;
 		public static List<String> buyWorlds;
+		public static List<String> flyWorlds;
 		public static List<String> penaltyOnDeathWorlds;
 		public static List<String> chatChannelsToLeave;
 		public static double costOfDeath;
@@ -60,6 +61,7 @@ public class Config {
 				coolDownInfos.add(new CoolDownInfo(command, time, incidents));
 			}
 			buyWorlds = config.getStringList("BuyWorlds");
+			flyWorlds = config.getStringList("FlyWorlds");
 			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
 			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
 			costOfDeath = config.getDouble("CostOfDeath", 30.0);
@@ -70,16 +72,19 @@ public class Config {
 		public static ConfigurableCommand take;
 		public static ConfigurableCommand joinChat;
 		public static ConfigurableCommand leaveChat;
+		public static ConfigurableCommand stopFly;
 
 		static void load(Configuration config) {
-			give = config.getConfigurableCommand("GiveCommand", 3,
+			give = config.getConfigurableCommand("commands.GiveCommand", 3,
 					"give %s %s %d");
-			take = config.getConfigurableCommand("TakeCommand", 2,
+			take = config.getConfigurableCommand("commands.TakeCommand", 2,
 					"eco take %s %f");
-			joinChat = config.getConfigurableCommand("JoinChannel", 1,
+			joinChat = config.getConfigurableCommand("commands.JoinChannel", 1,
 					"ch enter %s");
-			leaveChat = config.getConfigurableCommand("LeaveChannel", 1,
+			leaveChat = config.getConfigurableCommand("commands.LeaveChannel", 1,
 					"ch leave %s");
+			stopFly = config.getConfigurableCommand("commands.StopFly", 0,
+					"fly");
 		}
 
 	}

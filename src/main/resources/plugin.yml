@@ -1,6 +1,6 @@
 name: EithonFixes
 main: net.eithon.plugin.fixes.Plugin
-version: 1.10
+version: 1.11
 author: vanbrayne
 softdepend: [Essentials, WorldEdit]
 depend: [EithonLibrary, KillerMoney]
@@ -24,6 +24,7 @@ permissions:
     eithonfixes.rcdelete: true
     eithonfixes.restart: true
     eithonfixes.test: true
+    eithonfixes.canfly: true
   eithonfixes.buy:
     description: Access to /eithonfixes buy command
     default: op
@@ -56,4 +57,7 @@ permissions:
     default: op
   eithonfixes.nocooldown:
     description: Avoid cool down period between commands.
+    default: op
+  eithonfixes.canfly:
+    description: Can fly even in freebuild mode
     default: op
