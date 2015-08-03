@@ -96,7 +96,8 @@ public class EventListener implements Listener {
 			return;
 		}
 		
-		verbose("onPlayerToggleFlightEvent", "The player %s is not allowed to fly in world %s. Cancels the event and return.", player.getName());
+		verbose("onPlayerToggleFlightEvent", "The player %s is not allowed to fly in world %s. Cancels the event and return."
+				, player.getName(), player.getWorld().getName());
 		player.sendMessage("You are currently not allowed to fly.");
 		event.setCancelled(true);
 		Config.C.stopFly.executeAs(event.getPlayer());
