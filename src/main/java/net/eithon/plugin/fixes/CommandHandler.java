@@ -24,7 +24,7 @@ public class CommandHandler implements ICommandHandler {
 	private static final String RCDELETE_COMMAND = "/eithonfixes rcdelete <name>";
 	private static final String RCGOTO_COMMAND = "/eithonfixes rcgoto <name>";
 	private static final String RCLIST_COMMAND = "/eithonfixes rclist";
-	private static final String RESTART_COMMAND = "/eithonfixes restart [cancel | [<minutes>]]";
+	private static final String RESTART_COMMAND = "/eithonfixes restart [cancel | [<time to restart>]]";
 	private Controller _controller;
 	private EithonPlugin _eithonPlugin;
 
@@ -167,20 +167,16 @@ public class CommandHandler implements ICommandHandler {
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 		
-		long minutes = 10;
 		String cancel = commandParser.getArgumentString();
-		if (cancel != null) {
-			try {
-				minutes = Long.parseLong(cancel);
-			} catch (Exception e) {
-				boolean success = this._controller.cancelRestart(player);
-				if (success) player.sendMessage("The server restart has been cancelled.");
-				else player.sendMessage("Too late to cancel server restart.");
-				return;
-			}
+		if (cancel.startsWith("ca")) {
+			boolean success = this._controller.cancelRestart(player);
+			if (success) player.sendMessage("The server restart has been cancelled.");
+			else player.sendMessage("Too late to cancel server restart.");
+			return;
 		}
-
-		LocalDateTime when = this._controller.initiateRestart(player, minutes);
+		
+		long secondsToRestart = commandParser.getArgumentTimeAsSeconds(1, 10*60);
+		LocalDateTime when = this._controller.initiateRestart(player, secondsToRestart);
 		if (when == null) player.sendMessage("Could not initiate a restart.");
 		else player.sendMessage(String.format("The server will be restarted %s", when.toString()));
 	}

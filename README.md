@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.12 ()
+
+* CHANGE: The restart command now takes the time in the general time format (10 or 10s means 10 seconds, 5:00 or 5m means 5 minutes, 1:00:00 or 1h means 1 hour).
+
 ### 1.11 (2015-08-03)
 
 * NEW: Flying is now only allowed in specific worlds
