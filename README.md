@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.13 (2010-08-10)
+
+* CHANGE: All time span configuration values are now in the general TimeSpan format instead of hard coded to seconds or minutes or hours.
+
 ### 1.12 ()
 
 * CHANGE: The restart command now takes the time in the general time format (10 or 10s means 10 seconds, 5:00 or 5m means 5 minutes, 1:00:00 or 1h means 1 hour).
