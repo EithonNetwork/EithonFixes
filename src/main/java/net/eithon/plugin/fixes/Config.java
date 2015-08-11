@@ -7,6 +7,7 @@ import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.ConfigurableCommand;
 import net.eithon.library.plugin.ConfigurableMessage;
 import net.eithon.library.plugin.Configuration;
+import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.CoolDownInfo;
 
 public class Config {
@@ -22,7 +23,7 @@ public class Config {
 		public static List<Integer> showEarlyWarningMessageMinutesBeforeRestart;
 		public static List<Integer> showMiddleWarningMessageSecondsBeforeRestart;
 		public static List<Integer> showFinalWarningMessageSecondsBeforeRestart;
-		public static int rewardCoolDownInSeconds;
+		public static long rewardCoolDownInSeconds;
 		public static double rewardReduction;
 		public static List<CoolDownInfo> coolDownInfos;
 		public static List<String> buyWorlds;
@@ -32,7 +33,7 @@ public class Config {
 		public static double costOfDeath;
 
 		static void load(Configuration config, EithonPlugin plugin) {
-			rewardCoolDownInSeconds = config.getInt("RewardCoolDownInSeconds", 10);
+			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
 			rewardReduction = config.getDouble("RewardReduction", 0.85);
 			showEarlyWarningMessageMinutesBeforeRestart = 
 					new ArrayList<Integer>(config.getIntegerList("ShowEarlyWarningMessageMinutesBeforeRestart"));
@@ -41,10 +42,10 @@ public class Config {
 			showFinalWarningMessageSecondsBeforeRestart = 
 					new ArrayList<Integer>(config.getIntegerList("ShowFinalWarningMessageSecondsBeforeRestart"));
 			ArrayList<String> coolDownCommands = new ArrayList<String>(config.getStringList("CoolDownCommands"));
-			ArrayList<String> secondsAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeInSeconds"));
-			if (coolDownCommands.size() != secondsAsStrings.size()) {
+			ArrayList<String> timeSpansAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeSpan"));
+			if (coolDownCommands.size() != timeSpansAsStrings.size()) {
 				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownTimeInSeconds. Should be the same number.",
-						coolDownCommands.size(), secondsAsStrings.size());
+						coolDownCommands.size(), timeSpansAsStrings.size());
 			}
 			ArrayList<String> incidentsAsStrings = new ArrayList<String>(config.getStringList("CoolDownAllowedIncidents"));
 			if (coolDownCommands.size() != incidentsAsStrings.size()) {
@@ -54,8 +55,8 @@ public class Config {
 			coolDownInfos = new ArrayList<CoolDownInfo>();
 			for (int i = 0; i < coolDownCommands.size(); i++) {
 				String command = coolDownCommands.get(i);
-				String seoncdsAsString = secondsAsStrings.get(i);
-				long time = Long.parseLong(seoncdsAsString);
+				String timeSpansAsString = timeSpansAsStrings.get(i);
+				long time = TimeMisc.stringToSeconds(timeSpansAsString);
 				String incidentsAsString = incidentsAsStrings.get(i);
 				int incidents = Integer.parseInt(incidentsAsString);
 				coolDownInfos.add(new CoolDownInfo(command, time, incidents));

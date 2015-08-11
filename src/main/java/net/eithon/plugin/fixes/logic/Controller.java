@@ -94,8 +94,8 @@ public class Controller {
 		this._regionCommandController.listRegionCommands(sender);
 	}
 
-	public LocalDateTime initiateRestart(Player player, long minutes) {
-		UUID alarmId = initiateRestartInternally(player, minutes*60+5);
+	public LocalDateTime initiateRestart(Player player, long seconds) {
+		UUID alarmId = initiateRestartInternally(player, seconds+1);
 		if (alarmId == null) return null;
 		setNextMessageAlarm(alarmId);
 		return this._whenRestart;

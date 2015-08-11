@@ -52,6 +52,7 @@ public class EventListener implements Listener {
 		verbose("onPlayerJoinEvent", "Leave");
 	}
 
+	// CoolDown for commands
 	@EventHandler
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) return;
@@ -64,6 +65,7 @@ public class EventListener implements Listener {
 		}
 	}
 
+	// Reduce money reward if killing in fast succession
 	@EventHandler
 	public void onMoneyRewardEvent(KillerMoneyMoneyRewardEvent event) {
 		if (event.isCancelled()) return;
