@@ -7,6 +7,7 @@ import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.ConfigurableCommand;
 import net.eithon.library.plugin.ConfigurableMessage;
 import net.eithon.library.plugin.Configuration;
+import net.eithon.library.plugin.PermissionBasedMultiplier;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.CoolDownInfo;
 
@@ -20,9 +21,9 @@ public class Config {
 
 	}
 	public static class V {
-		public static List<Integer> showEarlyWarningMessageMinutesBeforeRestart;
-		public static List<Integer> showMiddleWarningMessageSecondsBeforeRestart;
-		public static List<Integer> showFinalWarningMessageSecondsBeforeRestart;
+		public static List<Long> showEarlyWarningMessageTimeSpanList;
+		public static List<Long> showMiddleWarningMessageTimeSpanList;
+		public static List<Long> showFinalWarningMessageTimeSpanList;
 		public static long rewardCoolDownInSeconds;
 		public static double rewardReduction;
 		public static List<CoolDownInfo> coolDownInfos;
@@ -31,16 +32,14 @@ public class Config {
 		public static List<String> penaltyOnDeathWorlds;
 		public static List<String> chatChannelsToLeave;
 		public static double costOfDeath;
+		public static PermissionBasedMultiplier killerMoneyMultiplier;
 
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
 			rewardReduction = config.getDouble("RewardReduction", 0.85);
-			showEarlyWarningMessageMinutesBeforeRestart = 
-					new ArrayList<Integer>(config.getIntegerList("ShowEarlyWarningMessageMinutesBeforeRestart"));
-			showMiddleWarningMessageSecondsBeforeRestart = 
-					new ArrayList<Integer>(config.getIntegerList("ShowMiddleWarningMessageSecondsBeforeRestart"));
-			showFinalWarningMessageSecondsBeforeRestart = 
-					new ArrayList<Integer>(config.getIntegerList("ShowFinalWarningMessageSecondsBeforeRestart"));
+			showEarlyWarningMessageTimeSpanList = config.getSecondsList("ShowEarlyWarningMessageTimeSpanList");
+			showMiddleWarningMessageTimeSpanList = config.getSecondsList("ShowMiddleWarningMessageTimeSpanList");
+			showFinalWarningMessageTimeSpanList = config.getSecondsList("ShowFinalWarningMessageTimeSpanList");
 			ArrayList<String> coolDownCommands = new ArrayList<String>(config.getStringList("CoolDownCommands"));
 			ArrayList<String> timeSpansAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeSpan"));
 			if (coolDownCommands.size() != timeSpansAsStrings.size()) {
@@ -66,6 +65,7 @@ public class Config {
 			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
 			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
 			costOfDeath = config.getDouble("CostOfDeath", 30.0);
+			killerMoneyMultiplier = PermissionBasedMultiplier.getFromConfig(config, "multipliers.donationboard.mobKill");
 		}
 	}
 	public static class C {

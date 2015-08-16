@@ -4,7 +4,17 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
-### 1.13 (2010-08-10)
+### 1.14.1 (2015-08-16)
+
+* BUG: "/eithonfixes restart" throws exception
+* BUG: Could not read PermissionBasedMultiplier
+
+### 1.14 (2015-08-16)
+
+* NEW: Permission based multipliers for killing mobs
+* CHANGE: Now uses TimeSpan for restart countdown.
+
+### 1.13 (2015-08-10)
 
 * CHANGE: All time span configuration values are now in the general TimeSpan format instead of hard coded to seconds or minutes or hours.
 
