@@ -65,7 +65,7 @@ public class Config {
 			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
 			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
 			costOfDeath = config.getDouble("CostOfDeath", 30.0);
-			killerMoneyMultiplier = (PermissionBasedMultiplier) config.getObject("multipliers.donationboard.mobKill", new PermissionBasedMultiplier());
+			killerMoneyMultiplier = PermissionBasedMultiplier.getFromConfig(config, "multipliers.donationboard.mobKill");
 		}
 	}
 	public static class C {

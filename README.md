@@ -4,6 +4,11 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.14.1 (2015-08-16)
+
+* BUG: "/eithonfixes restart" throws exception
+* BUG: Could not read PermissionBasedMultiplier
+
 ### 1.14 (2015-08-16)
 
 * NEW: Permission based multipliers for killing mobs

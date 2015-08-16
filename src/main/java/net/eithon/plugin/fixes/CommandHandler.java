@@ -168,7 +168,7 @@ public class CommandHandler implements ICommandHandler {
 		if (player == null) return;
 		
 		String cancel = commandParser.getArgumentString();
-		if (cancel.startsWith("ca")) {
+		if ((cancel != null) && cancel.startsWith("ca")) {
 			boolean success = this._controller.cancelRestart(player);
 			if (success) player.sendMessage("The server restart has been cancelled.");
 			else player.sendMessage("Too late to cancel server restart.");
