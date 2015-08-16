@@ -69,7 +69,15 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onMoneyRewardEvent(KillerMoneyMoneyRewardEvent event) {
 		if (event.isCancelled()) return;
-		double money = this._controller.getReductedMoney(event.getPlayer(), event.getMoney());
+		Player player = event.getPlayer();
+		double money = this._controller.getReductedMoney(player, event.getMoney());
+		double factor = Config.V.killerMoneyMultiplier.getMultiplier(player);
+		verbose("getReductedMoney", "Money before permission based multiplier: %.4f", money);
+		money = money * factor;
+		verbose("getReductedMoney", "Money after permission based multiplier: %.4f", money);
+		money = Math.round(money*4)/4.0;
+		verbose("getReductedMoney", "Money after round off: %.2f", money);
+
 		event.setMoney(money);
 	}
 	

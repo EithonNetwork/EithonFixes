@@ -6,7 +6,7 @@ A EithonFixes plugin for Minecraft.
 
 ### 1.14 ()
 
-* NEW: Introducing permission based multipliers
+* NEW: Permission based multipliers for killing mobs
 
 ### 1.13 (2015-08-10)
 

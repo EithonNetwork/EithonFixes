@@ -29,8 +29,6 @@ public class KillerMoneyController {
 			verbose("getReductedMoney", "Money before reduction: %.4f", money);
 			money = rewardFactor*money;
 			verbose("getReductedMoney", "Money after reduction: %.4f", money);
-			money = Math.round(money);
-			verbose("getReductedMoney", "Money after round to integer: %.4f", money);
 		} else {
 			this._lastRewardFactor.remove(player);
 		}

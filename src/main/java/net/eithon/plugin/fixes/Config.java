@@ -32,9 +32,7 @@ public class Config {
 		public static List<String> penaltyOnDeathWorlds;
 		public static List<String> chatChannelsToLeave;
 		public static double costOfDeath;
-		public static PermissionBasedMultiplier flySpeedMultiplier;
-		public static PermissionBasedMultiplier walkSpeedMultiplier;
-		public static PermissionBasedMultiplier mobKillMultiplier;
+		public static PermissionBasedMultiplier killerMoneyMultiplier;
 
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
@@ -70,9 +68,7 @@ public class Config {
 			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
 			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
 			costOfDeath = config.getDouble("CostOfDeath", 30.0);
-			flySpeedMultiplier = (PermissionBasedMultiplier) config.getObject("multipliers.donationboard.flySpeed", new PermissionBasedMultiplier());
-			walkSpeedMultiplier = (PermissionBasedMultiplier) config.getObject("multipliers.donationboard.walkSpeed", new PermissionBasedMultiplier());
-			mobKillMultiplier = (PermissionBasedMultiplier) config.getObject("multipliers.donationboard.mobKill", new PermissionBasedMultiplier());
+			killerMoneyMultiplier = (PermissionBasedMultiplier) config.getObject("multipliers.donationboard.mobKill", new PermissionBasedMultiplier());
 		}
 	}
 	public static class C {
