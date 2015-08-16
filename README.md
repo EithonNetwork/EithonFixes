@@ -4,7 +4,11 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
-### 1.13 (2010-08-10)
+### 1.14 ()
+
+* NEW: Introducing permission based multipliers
+
+### 1.13 (2015-08-10)
 
 * CHANGE: All time span configuration values are now in the general TimeSpan format instead of hard coded to seconds or minutes or hours.
 

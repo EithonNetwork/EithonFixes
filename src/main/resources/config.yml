@@ -18,7 +18,7 @@ PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
 # Commands that should have a cooldown period
 #
 CoolDownCommands: ["/broadcast", "/me"]
-CoolDownTimeInSeconds: [30, 60]
+CoolDownTimeSpan: [30, 60]
 CoolDownAllowedIncidents: [1, 3]
 
 #

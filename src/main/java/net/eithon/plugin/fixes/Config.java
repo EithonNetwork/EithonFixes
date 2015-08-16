@@ -7,6 +7,7 @@ import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.ConfigurableCommand;
 import net.eithon.library.plugin.ConfigurableMessage;
 import net.eithon.library.plugin.Configuration;
+import net.eithon.library.plugin.PermissionBasedMultiplier;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.CoolDownInfo;
 
@@ -31,6 +32,9 @@ public class Config {
 		public static List<String> penaltyOnDeathWorlds;
 		public static List<String> chatChannelsToLeave;
 		public static double costOfDeath;
+		public static PermissionBasedMultiplier flySpeedMultiplier;
+		public static PermissionBasedMultiplier walkSpeedMultiplier;
+		public static PermissionBasedMultiplier mobKillMultiplier;
 
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
@@ -66,6 +70,9 @@ public class Config {
 			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
 			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
 			costOfDeath = config.getDouble("CostOfDeath", 30.0);
+			flySpeedMultiplier = PermissionBasedMultiplier.loadFromConfiguration(plugin, "multipliers.donationboard.flySpeed");
+			walkSpeedMultiplier = PermissionBasedMultiplier.loadFromConfiguration(plugin, "multipliers.donationboard.walkSpeed");
+			mobKillMultiplier = PermissionBasedMultiplier.loadFromConfiguration(plugin, "multipliers.donationboard.mobKill");
 		}
 	}
 	public static class C {
