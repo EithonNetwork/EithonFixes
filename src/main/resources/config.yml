@@ -42,19 +42,19 @@ FlyWorlds: [W_SurvivalFreebuild]
 ChatChannelsToLeave: [1, 2, 3, 4]
 
 #
-# When doing a restart, the RestartEarlyWarningMessage will be shown at this defined intervals (minutes)
+# When doing a restart, the ShowEarlyWarningMessageTimeSpanList will be shown at this defined intervals before restart
 #
-ShowEarlyWarningMessageMinutesBeforeRestart: [120, 60, 45, 30, 20, 10, 5, 4, 3]
+ShowEarlyWarningMessageTimeSpanList: [2h, 1h, 45m, 30m, 20m, 10m, 5m, 4m, 3m]
 
 #
-# When doing a restart, the RestartFinalWarningMessage will be shown at this defined intervals (seconds)
+# When doing a restart, the ShowMiddleWarningMessageTimeSpanList will be shown at this defined intervals before restart
 #
-ShowMiddleWarningMessageSecondsBeforeRestart: [120, 90, 60, 45, 30, 20, 10]
+ShowMiddleWarningMessageTimeSpanList: [2m, 90s, 60s, 45s, 30s, 20s, 10s]
 
 #
-# When doing a restart, the RestartFinalWarningMessage will be shown at this defined intervals (seconds)
+# When doing a restart, the ShowFinalWarningMessageTimeSpanList will be shown at this defined intervals before restart
 #
-ShowFinalWarningMessageSecondsBeforeRestart: [5, 4, 3, 2, 1]
+ShowFinalWarningMessageTimeSpanList: [5s, 4s, 3s, 2s, 1s]
 
 multipliers:
   donationboard:
@@ -86,7 +86,7 @@ eithon:
   #  2 = MINOR (also minor messages)
   #  3 = VERBOSE (all messages)
   #
-  DebugLevel: 2
+  DebugLevel: 3
 
 commands:
 

@@ -133,21 +133,21 @@ public class Controller {
 		long secondsLeft = this._whenRestart.toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
 		long minutesLeft = secondsLeft/60;
 		verbose("setNextMessageAlarm", "Left = %d seconds (%d minutes)", secondsLeft, minutesLeft);
-		for (long minutes : Config.V.showEarlyWarningMessageMinutesBeforeRestart) {
-			long seconds = minutes*60;
+		for (long seconds : Config.V.showEarlyWarningMessageTimeSpanList) {
 			long secondsRemainingToMessage = secondsLeft- seconds;
 			if (secondsRemainingToMessage > 0) {
-				verbose("setNextMessageAlarm", "Found early = %d minutes, in %d seconds", minutes, secondsRemainingToMessage);
+				verbose("setNextMessageAlarm", "Found early = %d minutes, in %d seconds",
+						TimeMisc.secondsToString(seconds), secondsRemainingToMessage);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 					public void run() {
 						if (thisObject._restartAlarmIdentity == null) return;
-						earlyWarningMessage(alarmId, minutes);
+						earlyWarningMessage(alarmId, seconds);
 					}
 				}, TimeMisc.secondsToTicks(secondsRemainingToMessage));
 				return;
 			}
 		}
-		for (long seconds : Config.V.showMiddleWarningMessageSecondsBeforeRestart) {
+		for (long seconds : Config.V.showMiddleWarningMessageTimeSpanList) {
 			long secondsRemainingToMessage = secondsLeft- seconds;
 			if (secondsRemainingToMessage > 0) {
 				verbose("setNextMessageAlarm", "Found middle = %d seconds, in %d seconds", seconds, secondsRemainingToMessage);
@@ -160,7 +160,7 @@ public class Controller {
 				return;
 			}
 		}
-		for (long seconds : Config.V.showFinalWarningMessageSecondsBeforeRestart) {
+		for (long seconds : Config.V.showFinalWarningMessageTimeSpanList) {
 			long secondsRemainingToMessage = secondsLeft- seconds;
 			if (secondsRemainingToMessage > 0) {
 				verbose("setNextMessageAlarm", "Found final = %d seconds, in %d seconds", seconds, secondsRemainingToMessage);
@@ -182,10 +182,10 @@ public class Controller {
 		}, TimeMisc.secondsToTicks(secondsLeft));
 	}
 
-	void earlyWarningMessage(UUID alarmId, long minutes) {
+	void earlyWarningMessage(UUID alarmId, long seconds) {
 		if (!alarmId.equals(this._restartAlarmIdentity)) return;
-		verbose("earlyWarningMessage", " %d minutes", minutes);
-		Config.M.earlyWarningMessage.broadcastMessage(minutes);
+		verbose("earlyWarningMessage", " %d seconds", seconds);
+		Config.M.earlyWarningMessage.broadcastMessage(seconds/60);
 		setNextMessageAlarm(alarmId);
 	}
 

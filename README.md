@@ -4,9 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
-### 1.14 ()
+### 1.14 (2015-08-16)
 
 * NEW: Permission based multipliers for killing mobs
+* CHANGE: Now uses TimeSpan for restart countdown.
 
 ### 1.13 (2015-08-10)
 

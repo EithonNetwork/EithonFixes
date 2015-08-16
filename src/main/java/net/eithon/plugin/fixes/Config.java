@@ -21,9 +21,9 @@ public class Config {
 
 	}
 	public static class V {
-		public static List<Integer> showEarlyWarningMessageMinutesBeforeRestart;
-		public static List<Integer> showMiddleWarningMessageSecondsBeforeRestart;
-		public static List<Integer> showFinalWarningMessageSecondsBeforeRestart;
+		public static List<Long> showEarlyWarningMessageTimeSpanList;
+		public static List<Long> showMiddleWarningMessageTimeSpanList;
+		public static List<Long> showFinalWarningMessageTimeSpanList;
 		public static long rewardCoolDownInSeconds;
 		public static double rewardReduction;
 		public static List<CoolDownInfo> coolDownInfos;
@@ -37,12 +37,9 @@ public class Config {
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
 			rewardReduction = config.getDouble("RewardReduction", 0.85);
-			showEarlyWarningMessageMinutesBeforeRestart = 
-					new ArrayList<Integer>(config.getIntegerList("ShowEarlyWarningMessageMinutesBeforeRestart"));
-			showMiddleWarningMessageSecondsBeforeRestart = 
-					new ArrayList<Integer>(config.getIntegerList("ShowMiddleWarningMessageSecondsBeforeRestart"));
-			showFinalWarningMessageSecondsBeforeRestart = 
-					new ArrayList<Integer>(config.getIntegerList("ShowFinalWarningMessageSecondsBeforeRestart"));
+			showEarlyWarningMessageTimeSpanList = config.getSecondsList("ShowEarlyWarningMessageTimeSpanList");
+			showMiddleWarningMessageTimeSpanList = config.getSecondsList("ShowMiddleWarningMessageTimeSpanList");
+			showFinalWarningMessageTimeSpanList = config.getSecondsList("ShowFinalWarningMessageTimeSpanList");
 			ArrayList<String> coolDownCommands = new ArrayList<String>(config.getStringList("CoolDownCommands"));
 			ArrayList<String> timeSpansAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeSpan"));
 			if (coolDownCommands.size() != timeSpansAsStrings.size()) {
