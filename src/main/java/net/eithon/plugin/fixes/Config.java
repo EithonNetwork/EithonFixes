@@ -70,9 +70,9 @@ public class Config {
 			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
 			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
 			costOfDeath = config.getDouble("CostOfDeath", 30.0);
-			flySpeedMultiplier = PermissionBasedMultiplier.loadFromConfiguration(plugin, "multipliers.donationboard.flySpeed");
-			walkSpeedMultiplier = PermissionBasedMultiplier.loadFromConfiguration(plugin, "multipliers.donationboard.walkSpeed");
-			mobKillMultiplier = PermissionBasedMultiplier.loadFromConfiguration(plugin, "multipliers.donationboard.mobKill");
+			flySpeedMultiplier = (PermissionBasedMultiplier) config.getObject("multipliers.donationboard.flySpeed", new PermissionBasedMultiplier());
+			walkSpeedMultiplier = (PermissionBasedMultiplier) config.getObject("multipliers.donationboard.walkSpeed", new PermissionBasedMultiplier());
+			mobKillMultiplier = (PermissionBasedMultiplier) config.getObject("multipliers.donationboard.mobKill", new PermissionBasedMultiplier());
 		}
 	}
 	public static class C {

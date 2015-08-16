@@ -34,9 +34,6 @@ public class Controller {
 		this._buyController = new BuyController(plugin);
 		this._regionCommandController = new RegionCommandController(plugin);
 		this._coolDownController = new CoolDownController(plugin);
-		Config.V.flySpeedMultiplier.test();
-		Config.V.walkSpeedMultiplier.test();
-		Config.V.mobKillMultiplier.test();
 	}
 
 	void disable() {
