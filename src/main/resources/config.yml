@@ -56,6 +56,40 @@ ShowMiddleWarningMessageSecondsBeforeRestart: [120, 90, 60, 45, 30, 20, 10]
 #
 ShowFinalWarningMessageSecondsBeforeRestart: [5, 4, 3, 2, 1]
 
+multipliers:
+  donationboard:
+    flySpeed:
+      '1':
+        permission: donationboard.multipliers.1
+        value: 1.1
+      '2':
+        permission: donationboard.multipliers.2
+        value: 1.2
+      '3':
+        permission: donationboard.multipliers.3
+        value: 1.3
+    walkSpeed:
+      ==: PermissionBasedMultiplier
+      '1':
+        permission: donationboard.multipliers.1
+        value: 1.2
+      '2':
+        permission: donationboard.multipliers.2
+        value: 1.4
+      '3':
+        permission: donationboard.multipliers.3
+        value: 1.8
+    mobKill:
+      '1':
+        permission: donationboard.multipliers.1
+        value: 1.3
+      '2':
+        permission: donationboard.multipliers.2
+        value: 1.6
+      '3':
+        permission: donationboard.multipliers.3
+        value: 1.9
+
 eithon:
   UseMarkUpForMessages: 1
   UseWrappingForMessages: 0
