@@ -1,6 +1,6 @@
 #
-# How much each reward is reduced within RewardCoolDownTimeSpan.
-# First reward = 1.0, next 0.85, next 0.85*0,85, etc, until no reward for RewardCoolDownTimeSpan, where reward is restored to 1.0
+# How much each reward is reduced within RewardCoolDownInSeconds.
+# First reward = 1.0, next 0.85, next 0.85*0,85, etc, until no reward for RewardCoolDownInSeconds seconds, where reward is restored to 1.0
 #
 RewardReduction: 0.85
 
@@ -34,7 +34,7 @@ BuyWorlds: [W_SurvivalFreebuild]
 #
 # Worlds where you can fly (set eithonfixes.canfly to fly in all worlds)
 #
-FlyWorlds: [W_SurvivalFreebuild]
+FlyWorlds: [W_SurvivalFreebuild,W_CreativePlots,W_Builder,W_DonationBoard]
 
 #
 # Chat channels. Used to leave all other channels.
@@ -181,3 +181,4 @@ messages:
   # Parameters: -
   #    
   RestartingServer: "[title/]Restarting server"
+
