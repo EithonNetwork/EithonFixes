@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 
+import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
@@ -136,7 +137,7 @@ public class Controller {
 		for (long seconds : Config.V.showEarlyWarningMessageTimeSpanList) {
 			long secondsRemainingToMessage = secondsLeft- seconds;
 			if (secondsRemainingToMessage > 0) {
-				verbose("setNextMessageAlarm", "Found early = %d minutes, in %d seconds",
+				verbose("setNextMessageAlarm", "Found early = %s, in %d seconds",
 						TimeMisc.secondsToString(seconds), secondsRemainingToMessage);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 					public void run() {
@@ -150,7 +151,8 @@ public class Controller {
 		for (long seconds : Config.V.showMiddleWarningMessageTimeSpanList) {
 			long secondsRemainingToMessage = secondsLeft- seconds;
 			if (secondsRemainingToMessage > 0) {
-				verbose("setNextMessageAlarm", "Found middle = %d seconds, in %d seconds", seconds, secondsRemainingToMessage);
+				verbose("setNextMessageAlarm", "Found middle = %s, in %d seconds", 
+						TimeMisc.secondsToString(seconds), secondsRemainingToMessage);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 					public void run() {
 						if (thisObject._restartAlarmIdentity == null) return;
@@ -163,7 +165,8 @@ public class Controller {
 		for (long seconds : Config.V.showFinalWarningMessageTimeSpanList) {
 			long secondsRemainingToMessage = secondsLeft- seconds;
 			if (secondsRemainingToMessage > 0) {
-				verbose("setNextMessageAlarm", "Found final = %d seconds, in %d seconds", seconds, secondsRemainingToMessage);
+				verbose("setNextMessageAlarm", "Found final = %s, in %d seconds", 
+						TimeMisc.secondsToString(seconds), secondsRemainingToMessage);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 					public void run() {
 						if (thisObject._restartAlarmIdentity == null) return;
@@ -203,14 +206,14 @@ public class Controller {
 		setNextMessageAlarm(alarmId);
 	}
 
-	private void verbose(String method, String format, Object... args) {
-		String message = String.format(format, args);
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
-	}
-
 	public boolean isInWorldWhereFlyIsAllowed(Player player) {
 		if (player == null) return false;
 		EithonPlayer eithonPlayer = new EithonPlayer(player);
 		return eithonPlayer.isInAcceptableWorld(Config.V.flyWorlds);
+	}
+
+	private void verbose(String method, String format, Object... args) {
+		String message = CoreMisc.safeFormat(format, args);
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
 	}
 }
