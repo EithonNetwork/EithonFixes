@@ -55,15 +55,15 @@ public class Config {
 				EithonPlugin plugin) {
 			List<CoolDownInfo> coolDownInfos = new ArrayList<CoolDownInfo>();
 			ArrayList<String> coolDownCommands = new ArrayList<String>(config.getStringList("CoolDownCommands"));
-			ArrayList<String> timeSpansAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeSpans"));
+			ArrayList<String> timeSpansAsStrings = new ArrayList<String>(config.getStringList("CoolDownCommandTimeSpans"));
 			if (coolDownCommands.size() != timeSpansAsStrings.size()) {
-				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownTimeSpans. Should be the same number.",
+				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownCommandTimeSpans. Should be the same number.",
 						coolDownCommands.size(), timeSpansAsStrings.size());
 				return coolDownInfos;
 			}
-			ArrayList<String> incidentsAsStrings = new ArrayList<String>(config.getStringList("CoolDownAllowedIncidents"));
+			ArrayList<String> incidentsAsStrings = new ArrayList<String>(config.getStringList("CoolDownCommandAllowedIncidents"));
 			if (coolDownCommands.size() != incidentsAsStrings.size()) {
-				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownAllowedIncidents. Should be the same number.",
+				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownCommandAllowedIncidents. Should be the same number.",
 						coolDownCommands.size(), incidentsAsStrings.size());
 				return coolDownInfos;
 			}
