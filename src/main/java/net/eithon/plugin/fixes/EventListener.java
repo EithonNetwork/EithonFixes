@@ -7,6 +7,7 @@ import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.Controller;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 public class EventListener implements Listener {
@@ -57,12 +59,38 @@ public class EventListener implements Listener {
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) return;
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "Intercepted command \"%s\".", event.getMessage());
-		long secondsLeftOfCoolDown = this._controller.secondsLeftOfCoolDown(event.getPlayer(), event.getMessage());
+		long secondsLeftOfCoolDown = this._controller.secondsLeftOfCommandCoolDown(event.getPlayer(), event.getMessage());
 		if (secondsLeftOfCoolDown > 0) {
 			this._eithonLogger.debug(DebugPrintLevel.MAJOR, "Command \"%s\" will be cancelled.", event.getMessage());
 			event.setCancelled(true);
-			Config.M.waitForCoolDown.sendMessage(event.getPlayer(), TimeMisc.secondsToString(secondsLeftOfCoolDown));
+			Config.M.waitForCommandCoolDown.sendMessage(event.getPlayer(), TimeMisc.secondsToString(secondsLeftOfCoolDown));
 		}
+	}
+
+	// CoolDown for worlds
+	@EventHandler
+	public void onPlayerCommandPreprocessEvent(PlayerTeleportEvent event) {
+		if (event.isCancelled()) return;
+		Player player = event.getPlayer();
+		String fromWorld = safeGetWorldName(event.getFrom());
+		String toWorld = safeGetWorldName(event.getTo());
+		if ((fromWorld == null) || (toWorld == null)) return;
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "Player %s started teleport from %s to %s", 
+				player.getName(), fromWorld, toWorld);
+		long secondsLeftOfCoolDown = this._controller.secondsLeftOfWorldCoolDown(player, toWorld);
+		if (secondsLeftOfCoolDown > 0) {
+			this._eithonLogger.debug(DebugPrintLevel.MAJOR, "Teleport for player %s will be cancelled.", player.getName());
+			event.setCancelled(true);
+			Config.M.waitForWorldCoolDown.sendMessage(player, TimeMisc.secondsToString(secondsLeftOfCoolDown));
+			return;
+		}
+		this._controller.secondsLeftOfWorldCoolDown(player, toWorld);
+	}
+
+	private String safeGetWorldName(Location location) {
+		if (location == null) return null;
+		if (location.getWorld() == null) return null;
+		return location.getWorld().getName();
 	}
 
 	// Reduce money reward if killing in fast succession

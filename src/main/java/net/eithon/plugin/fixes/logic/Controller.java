@@ -22,7 +22,8 @@ public class Controller {
 	private KillerMoneyController _killerMoneyController;
 	private BuyController _buyController;
 	private RegionCommandController _regionCommandController;
-	private CoolDownController _coolDownController;
+	private CoolDownCommandController _coolDownCommandController;
+	private CoolDownWorldController _coolDownWorldController;
 	UUID _restartAlarmIdentity;
 	private LocalDateTime _whenRestart;
 	private Logger _eithonLogger;
@@ -34,7 +35,8 @@ public class Controller {
 		this._killerMoneyController = new KillerMoneyController(plugin);
 		this._buyController = new BuyController(plugin);
 		this._regionCommandController = new RegionCommandController(plugin);
-		this._coolDownController = new CoolDownController(plugin);
+		this._coolDownCommandController = new CoolDownCommandController(plugin);
+		this._coolDownWorldController = new CoolDownWorldController(plugin);
 	}
 
 	void disable() {
@@ -67,8 +69,12 @@ public class Controller {
 		this._buyController.displayBalance(player);
 	}
 
-	public long secondsLeftOfCoolDown(Player player, String command) {
-		return this._coolDownController.secondsLeftOfCoolDown(player, command);
+	public long secondsLeftOfCommandCoolDown(Player player, String command) {
+		return this._coolDownCommandController.secondsLeftOfCoolDown(player, command);
+	}
+
+	public long secondsLeftOfWorldCoolDown(Player player, String world) {
+		return this._coolDownWorldController.secondsLeftOfCoolDown(player, world);
 	}
 
 	public double getReductedMoney(Player player, double money) {

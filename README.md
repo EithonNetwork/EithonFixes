@@ -4,8 +4,9 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
-### 1.14.2 (2015-08-19)
+### 1.15 (2015-08-19)
 
+* NEW: Added cooldown for teleporting to worlds.
 * BUG: "/eithonfixes restart" throws exception
 
 ### 1.14.1 (2015-08-16)

@@ -12,15 +12,15 @@ import net.eithon.plugin.fixes.Config;
 
 import org.bukkit.entity.Player;
 
-class CoolDownController {
+class CoolDownWorldController {
 	private HashMap<UUID, CoolDown> _coolDownHashMap;
 	private Logger _eithonLogger;
 
-	public CoolDownController(EithonPlugin plugin){
+	public CoolDownWorldController(EithonPlugin plugin){
 		this._eithonLogger = plugin.getEithonLogger();
 		CoolDownInfo.initialize(plugin);
 		this._coolDownHashMap = new HashMap<UUID, CoolDown>();
-		for (CoolDownInfo info : Config.V.coolDownInfos) {
+		for (CoolDownInfo info : Config.V.coolDownWorldInfos) {
 			this._coolDownHashMap.put(info.getId(), new CoolDown(info.getName(), info.getCoolDownPeriodInSeconds(), info.getAllowedIncidents()));
 		}
 	}
@@ -65,7 +65,7 @@ class CoolDownController {
 	}
 
 	private CoolDownInfo getCoolDownInfo(String command) {
-		for (CoolDownInfo info : Config.V.coolDownInfos) {
+		for (CoolDownInfo info : Config.V.coolDownCommandInfos) {
 			if (info.isSame(command)) return info;
 		}
 		return null;
