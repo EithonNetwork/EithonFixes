@@ -64,9 +64,9 @@ class CoolDownWorldController {
 		return this._coolDownHashMap.get(info.getId());
 	}
 
-	private CoolDownInfo getCoolDownInfo(String command) {
+	private CoolDownInfo getCoolDownInfo(String world) {
 		for (CoolDownInfo info : Config.V.coolDownWorldInfos) {
-			if (info.isSame(command)) return info;
+			if (info.isSame(world)) return info;
 		}
 		return null;
 	}

@@ -24,7 +24,7 @@ CoolDownCommandAllowedIncidents: [1, 3]
 #
 # Worlds that should have a cooldown period before you can reenter them
 #
-CoolDownWorlds: [W_TheEnd"]
+CoolDownWorlds: [W_TheEnd]
 CoolDownWorldTimeSpans: [30m]
 
 #

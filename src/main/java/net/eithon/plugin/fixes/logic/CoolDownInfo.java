@@ -8,17 +8,17 @@ import net.eithon.library.plugin.Logger.DebugPrintLevel;
 public class CoolDownInfo {
 	private String _comparableString;
 	private int _length;
-	private String _command;
+	private String _stringToCompare;
 	private UUID _id;
 	private long _coolDownInSeconds;
 	private int _allowedIncidents;
 	private static EithonPlugin eithonPlugin;
 	
-	public CoolDownInfo(String command, long time, int incidents) {
-		this._command = command;
+	public CoolDownInfo(String string, long time, int incidents) {
+		this._stringToCompare = string;
 		this._coolDownInSeconds = time;
 		this._id = UUID.randomUUID();
-		this._comparableString = makeComparable(command);
+		this._comparableString = makeComparable(string);
 		this._length = this._comparableString.length();
 		this._allowedIncidents = incidents;
 	}
@@ -27,19 +27,19 @@ public class CoolDownInfo {
 		eithonPlugin = plugin;
 	}
 	
-	public String getName() { return this._command;	}
+	public String getName() { return this._stringToCompare;	}
 	public long getCoolDownPeriodInSeconds() { return this._coolDownInSeconds; }
 	public int getAllowedIncidents() { return this._allowedIncidents; }
 	public UUID getId() { return this._id; }
 	public String getComparableString() { return this._comparableString; }
-	public boolean isSame(String command) {
-		String comparable = makeComparable(command);
+	public boolean isSame(String string) {
+		String comparable = makeComparable(string);
 		eithonPlugin.getEithonLogger().debug(DebugPrintLevel.VERBOSE, "isSame: %s, %s", this._comparableString, comparable);
 		if (comparable.length() < this._comparableString.length()) return false;
 		return (comparable.substring(0, this._length).equals(this._comparableString));
 	}
 	
-	private String makeComparable(String command) {
-		return command.trim().replace(" ", "").toLowerCase();
+	private String makeComparable(String string) {
+		return string.trim().replace(" ", "").toLowerCase();
 	}
 }
