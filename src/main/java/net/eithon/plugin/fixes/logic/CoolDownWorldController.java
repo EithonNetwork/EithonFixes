@@ -12,22 +12,22 @@ import net.eithon.plugin.fixes.Config;
 
 import org.bukkit.entity.Player;
 
-class CoolDownController {
+class CoolDownWorldController {
 	private HashMap<UUID, CoolDown> _coolDownHashMap;
 	private Logger _eithonLogger;
 
-	public CoolDownController(EithonPlugin plugin){
+	public CoolDownWorldController(EithonPlugin plugin){
 		this._eithonLogger = plugin.getEithonLogger();
 		CoolDownInfo.initialize(plugin);
 		this._coolDownHashMap = new HashMap<UUID, CoolDown>();
-		for (CoolDownInfo info : Config.V.coolDownInfos) {
+		for (CoolDownInfo info : Config.V.coolDownWorldInfos) {
 			this._coolDownHashMap.put(info.getId(), new CoolDown(info.getName(), info.getCoolDownPeriodInSeconds(), info.getAllowedIncidents()));
 		}
 	}
 
-	public long secondsLeftOfCoolDown(Player player, String command) {
+	public long secondsLeftOfCoolDown(Player player, String world) {
 		verbose("secondsLeftOfCoolDown", "Enter");
-		CoolDown coolDown = getCoolDown(command);
+		CoolDown coolDown = getCoolDown(world);
 		if (coolDown == null) {
 			verbose("secondsLeftOfCoolDown", "No cooldown found.");
 			verbose("secondsLeftOfCoolDown", "return 0.");
@@ -51,21 +51,21 @@ class CoolDownController {
 		return 0;
 	}
 
-	private CoolDown getCoolDown(String command) {
+	private CoolDown getCoolDown(String world) {
 		verbose("getCoolDown", "Enter");
-		CoolDownInfo info = getCoolDownInfo(command);
+		CoolDownInfo info = getCoolDownInfo(world);
 		if (info == null) {
-			verbose("getCoolDown", "Command \"%s\" not found.", command);
+			verbose("getCoolDown", "World \"%s\" not found.", world);
 			verbose("getCoolDown", "return null");
 			return null;
 		}
-		verbose("getCoolDown", "Command \"%s\" found.", command);
+		verbose("getCoolDown", "World \"%s\" found.", world);
 		verbose("getCoolDown", "return CoolDown object.");
 		return this._coolDownHashMap.get(info.getId());
 	}
 
 	private CoolDownInfo getCoolDownInfo(String command) {
-		for (CoolDownInfo info : Config.V.coolDownInfos) {
+		for (CoolDownInfo info : Config.V.coolDownWorldInfos) {
 			if (info.isSame(command)) return info;
 		}
 		return null;

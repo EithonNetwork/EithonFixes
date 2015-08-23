@@ -26,7 +26,8 @@ public class Config {
 		public static List<Long> showFinalWarningMessageTimeSpanList;
 		public static long rewardCoolDownInSeconds;
 		public static double rewardReduction;
-		public static List<CoolDownInfo> coolDownInfos;
+		public static List<CoolDownInfo> coolDownCommandInfos;
+		public static List<CoolDownInfo> coolDownWorldInfos;
 		public static List<String> buyWorlds;
 		public static List<String> flyWorlds;
 		public static List<String> penaltyOnDeathWorlds;
@@ -40,18 +41,32 @@ public class Config {
 			showEarlyWarningMessageTimeSpanList = config.getSecondsList("ShowEarlyWarningMessageTimeSpanList");
 			showMiddleWarningMessageTimeSpanList = config.getSecondsList("ShowMiddleWarningMessageTimeSpanList");
 			showFinalWarningMessageTimeSpanList = config.getSecondsList("ShowFinalWarningMessageTimeSpanList");
+			coolDownCommandInfos = loadCoolDownCommandsConfig(config, plugin);
+			coolDownWorldInfos = loadCoolDownWorldsConfig(config, plugin);
+			buyWorlds = config.getStringList("BuyWorlds");
+			flyWorlds = config.getStringList("FlyWorlds");
+			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
+			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
+			costOfDeath = config.getDouble("CostOfDeath", 30.0);
+			killerMoneyMultiplier = PermissionBasedMultiplier.getFromConfig(config, "multipliers.donationboard.mobKill");
+		}
+
+		private static List<CoolDownInfo> loadCoolDownCommandsConfig(Configuration config,
+				EithonPlugin plugin) {
+			List<CoolDownInfo> coolDownInfos = new ArrayList<CoolDownInfo>();
 			ArrayList<String> coolDownCommands = new ArrayList<String>(config.getStringList("CoolDownCommands"));
-			ArrayList<String> timeSpansAsStrings = new ArrayList<String>(config.getStringList("CoolDownTimeSpan"));
+			ArrayList<String> timeSpansAsStrings = new ArrayList<String>(config.getStringList("CoolDownCommandTimeSpans"));
 			if (coolDownCommands.size() != timeSpansAsStrings.size()) {
-				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownTimeInSeconds. Should be the same number.",
+				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownCommandTimeSpans. Should be the same number.",
 						coolDownCommands.size(), timeSpansAsStrings.size());
+				return coolDownInfos;
 			}
-			ArrayList<String> incidentsAsStrings = new ArrayList<String>(config.getStringList("CoolDownAllowedIncidents"));
+			ArrayList<String> incidentsAsStrings = new ArrayList<String>(config.getStringList("CoolDownCommandAllowedIncidents"));
 			if (coolDownCommands.size() != incidentsAsStrings.size()) {
-				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownAllowedIncidents. Should be the same number.",
+				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownCommandAllowedIncidents. Should be the same number.",
 						coolDownCommands.size(), incidentsAsStrings.size());
+				return coolDownInfos;
 			}
-			coolDownInfos = new ArrayList<CoolDownInfo>();
 			for (int i = 0; i < coolDownCommands.size(); i++) {
 				String command = coolDownCommands.get(i);
 				String timeSpansAsString = timeSpansAsStrings.get(i);
@@ -60,12 +75,27 @@ public class Config {
 				int incidents = Integer.parseInt(incidentsAsString);
 				coolDownInfos.add(new CoolDownInfo(command, time, incidents));
 			}
-			buyWorlds = config.getStringList("BuyWorlds");
-			flyWorlds = config.getStringList("FlyWorlds");
-			penaltyOnDeathWorlds = config.getStringList("PenaltyOnDeathWorlds");
-			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
-			costOfDeath = config.getDouble("CostOfDeath", 30.0);
-			killerMoneyMultiplier = PermissionBasedMultiplier.getFromConfig(config, "multipliers.donationboard.mobKill");
+			
+			return coolDownInfos;
+		}
+
+		private static List<CoolDownInfo> loadCoolDownWorldsConfig(Configuration config, EithonPlugin plugin) {
+			List<CoolDownInfo> coolDownInfos = new ArrayList<CoolDownInfo>();
+			ArrayList<String> coolDownWorlds = new ArrayList<String>(config.getStringList("CoolDownWorlds"));
+			ArrayList<String> timeSpansAsStrings = new ArrayList<String>(config.getStringList("CoolDownWorldTimeSpans"));
+			if (coolDownWorlds.size() != timeSpansAsStrings.size()) {
+				plugin.getEithonLogger().error("%d CoolDownWorlds, but %d CoolDownWorldTimeSpans. Should be the same number.",
+						coolDownWorlds.size(), timeSpansAsStrings.size());
+				return coolDownInfos;
+			}
+			for (int i = 0; i < coolDownWorlds.size(); i++) {
+				String command = coolDownWorlds.get(i);
+				String timeSpansAsString = timeSpansAsStrings.get(i);
+				long time = TimeMisc.stringToSeconds(timeSpansAsString);
+				coolDownInfos.add(new CoolDownInfo(command, time, 1));
+			}
+			
+			return coolDownInfos;
 		}
 	}
 	public static class C {
@@ -96,7 +126,8 @@ public class Config {
 		public static ConfigurableMessage currentBalance;
 		public static ConfigurableMessage penaltyOnDeath;
 		public static ConfigurableMessage joinedChat;
-		public static ConfigurableMessage waitForCoolDown;
+		public static ConfigurableMessage waitForCommandCoolDown;
+		public static ConfigurableMessage waitForWorldCoolDown;
 		public static ConfigurableMessage joinedServerFirstTime;
 		public static ConfigurableMessage pleaseWelcomeNewPlayer;
 		public static ConfigurableMessage earlyWarningMessage;
@@ -117,7 +148,9 @@ public class Config {
 					"Your balance is %.2f E-Coins.");
 			joinedChat = config.getConfigurableMessage("messages.JoinedChat", 1,
 					"You have joined chat channel %s.");
-			waitForCoolDown = config.getConfigurableMessage("messages.WaitForCoolDown", 1,
+			waitForCommandCoolDown = config.getConfigurableMessage("messages.WaitForCoolDown", 1,
+					"In cool down. Remaining time: %s.");
+			waitForWorldCoolDown = config.getConfigurableMessage("messages.WaitForWorldDown", 1,
 					"In cool down. Remaining time: %s.");
 			joinedServerFirstTime = config.getConfigurableMessage("messages.JoinedServerFirstTime", 1,
 					"%s joined for the first time!");

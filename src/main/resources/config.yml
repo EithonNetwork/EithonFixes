@@ -18,8 +18,14 @@ PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
 # Commands that should have a cooldown period
 #
 CoolDownCommands: ["/broadcast", "/me"]
-CoolDownTimeSpan: [30, 60]
-CoolDownAllowedIncidents: [1, 3]
+CoolDownCommandTimeSpans: [30, 60]
+CoolDownCommandAllowedIncidents: [1, 3]
+
+#
+# Worlds that should have a cooldown period before you can reenter them
+#
+CoolDownWorlds: [W_TheEnd"]
+CoolDownWorldTimeSpans: [30m]
 
 #
 # The cost of dying in one of the worlds in PenaltyOnDeathWorlds
@@ -162,7 +168,13 @@ messages:
   # This message is displayed when someone tries to use a command again too fast
   # Parameters: <remaining time> (%s)
   #
-  WaitForCoolDown: "In cool down. Remaining time: %s."
+  WaitForCommandCoolDown: "In cool down. Remaining time: %s."
+
+  #
+  # This message is displayed when someone tries to enter a world again too fast
+  # Parameters: <remaining time> (%s)
+  #
+  WaitForWorldCoolDown: "In cool down. Remaining time: %s."
   
   #
   # This message is displayed before server restart @ ShowEarlyWarningMessageMinutesBeforeRestart
@@ -187,4 +199,5 @@ messages:
   # Parameters: -
   #    
   RestartingServer: "[title/]Restarting server"
+
 
