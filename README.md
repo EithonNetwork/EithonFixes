@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.17 (2015-08-29)
+
+* NEW: Adds money to user that has consecutive days on the server.
+
 ### 1.16 (2015-08-29)
 
 * NEW: When a flying player teleports to a world where flying is not allowed, we try to stop the flying.
