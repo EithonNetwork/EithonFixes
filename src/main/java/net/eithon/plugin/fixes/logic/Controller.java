@@ -15,6 +15,7 @@ import net.eithon.plugin.fixes.Config;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -210,6 +211,11 @@ public class Controller {
 		verbose("finalWarningMessage", "%d seconds", seconds);
 		Config.M.finalWarningMessage.broadcastMessage(seconds);
 		setNextMessageAlarm(alarmId);
+	}
+
+	public boolean isWorldWhereFlyIsAllowed(World world) {
+		if (world == null) return false;
+		return CoreMisc.isStringInCollectionIgnoreCase(world.getName(), Config.V.flyWorlds);
 	}
 
 	public boolean isInWorldWhereFlyIsAllowed(Player player) {

@@ -140,6 +140,39 @@ public class EventListener implements Listener {
 		event.setCancelled(true);
 		Config.C.stopFly.executeAs(event.getPlayer());
 	}
+	
+	// Only allow fly in certain worlds
+	@EventHandler
+	public void onPlayerTeleportEvent(PlayerTeleportEvent event) {
+		verbose("onPlayerTeleportEvent", "Enter");
+		if (event.isCancelled()) {
+			verbose("onPlayerTeleportEvent", "Event has already been cancelled. Return.");
+			return;
+		}
+		
+		Player player = event.getPlayer();
+		
+		if (!player.isFlying()) {
+			verbose("onPlayerTeleportEvent", "Not flying. Return.");
+			return;
+		}
+		
+		if (this._controller.isWorldWhereFlyIsAllowed(event.getTo().getWorld())) {
+			verbose("onPlayerTeleportEvent", "Player %s is in world where flying is allowed. Return.", player.getName());
+			return;
+		}
+		
+		// Allow players with permission eithonfixes.canfly to fly
+		if (player.hasPermission("eithonfixes.canfly")) {
+			verbose("onPlayerTeleportEvent", "Player %s has eithonfixes.canfly permission. Return.", player.getName());
+			return;
+		}
+		
+		verbose("onPlayerTeleportEvent", "The player %s is not allowed to fly in world %s. Stop fly."
+				, player.getName(), player.getWorld().getName());
+		player.sendMessage(String.format("You are currently not allowed to fly in world %s.", event.getTo().getWorld()));
+		Config.C.stopFly.executeAs(event.getPlayer());
+	}
 
 	private void verbose(String method, String format, Object... args) {
 		String message = String.format(format, args);

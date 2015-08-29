@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.16 (2015-08-29)
+
+* NEW: When a flying player teleports to a world where flying is not allowed, we try to stop the flying.
+
 ### 1.15.1 (2015-08-23)
 
 * BUG: Cooldown for teleporting to worlds tried to find the world name among the cool down commands.
