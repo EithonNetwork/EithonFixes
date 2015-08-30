@@ -164,21 +164,21 @@ public class CommandHandler implements ICommandHandler {
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.restart")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1,2)) return;
 
-		Player player = commandParser.getPlayerOrInformSender();
-		if (player == null) return;
+		CommandSender sender = commandParser.getSender();
+		if (sender == null) return;
 		
 		String cancel = commandParser.getArgumentString();
 		if ((cancel != null) && cancel.startsWith("ca")) {
-			boolean success = this._controller.cancelRestart(player);
-			if (success) player.sendMessage("The server restart has been cancelled.");
-			else player.sendMessage("Too late to cancel server restart.");
+			boolean success = this._controller.cancelRestart();
+			if (success) sender.sendMessage("The server restart has been cancelled.");
+			else sender.sendMessage("Too late to cancel server restart.");
 			return;
 		}
 		
 		long secondsToRestart = commandParser.getArgumentTimeAsSeconds(1, 10*60);
-		LocalDateTime when = this._controller.initiateRestart(player, secondsToRestart);
-		if (when == null) player.sendMessage("Could not initiate a restart.");
-		else player.sendMessage(String.format("The server will be restarted %s", when.toString()));
+		LocalDateTime when = this._controller.initiateRestart(secondsToRestart);
+		if (when == null) sender.sendMessage("Could not initiate a restart.");
+		else sender.sendMessage(String.format("The server will be restarted %s", when.toString()));
 	}
 
 	void testCommand(CommandParser commandParser)

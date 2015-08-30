@@ -102,14 +102,14 @@ public class Controller {
 		this._regionCommandController.listRegionCommands(sender);
 	}
 
-	public LocalDateTime initiateRestart(Player player, long seconds) {
-		UUID alarmId = initiateRestartInternally(player, seconds+1);
+	public LocalDateTime initiateRestart(long seconds) {
+		UUID alarmId = initiateRestartInternally(seconds+1);
 		if (alarmId == null) return null;
 		setNextMessageAlarm(alarmId);
 		return this._whenRestart;
 	}
 
-	private UUID initiateRestartInternally(Player player, long seconds) {
+	private UUID initiateRestartInternally(long seconds) {
 		LocalDateTime whenRestart = LocalDateTime.now().plusSeconds(seconds);
 		if (this._restartAlarmIdentity != null) {
 			AlarmTrigger.get().removeAlarm(this._restartAlarmIdentity);
@@ -126,7 +126,7 @@ public class Controller {
 		return this._restartAlarmIdentity;
 	}
 
-	public boolean cancelRestart(Player player) {
+	public boolean cancelRestart() {
 		if (this._restartAlarmIdentity == null) return true;
 		boolean success = AlarmTrigger.get().removeAlarm(this._restartAlarmIdentity);
 		this._restartAlarmIdentity = null;
