@@ -1,8 +1,8 @@
 name: EithonFixes
 main: net.eithon.plugin.fixes.Plugin
-version: 1.16
+version: 1.17
 author: vanbrayne
-softdepend: [Essentials, WorldEdit]
+softdepend: [Essentials, WorldEdit, EithonStats]
 depend: [EithonLibrary, KillerMoney]
 description: A Minecraft plugin for Eithon fixes
 commands:

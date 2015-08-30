@@ -34,6 +34,8 @@ public class Config {
 		public static List<String> chatChannelsToLeave;
 		public static double costOfDeath;
 		public static PermissionBasedMultiplier killerMoneyMultiplier;
+		public static double consecutiveDaysBaseAmount;
+		public static double consecutiveDaysMultiplyAmount;
 
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
@@ -49,6 +51,8 @@ public class Config {
 			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
 			costOfDeath = config.getDouble("CostOfDeath", 30.0);
 			killerMoneyMultiplier = PermissionBasedMultiplier.getFromConfig(config, "multipliers.donationboard.mobKill");
+			consecutiveDaysBaseAmount = config.getDouble("ConsecutiveDaysBaseAmount", 50);
+			consecutiveDaysMultiplyAmount = config.getDouble("ConsecutiveDaysMultiplyAmount", 25);
 		}
 
 		private static List<CoolDownInfo> loadCoolDownCommandsConfig(Configuration config,
@@ -134,6 +138,7 @@ public class Config {
 		public static ConfigurableMessage middleWarningMessage;
 		public static ConfigurableMessage finalWarningMessage;
 		public static ConfigurableMessage restartingServer;
+		public static ConfigurableMessage consecutiveDaysReward;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -164,6 +169,8 @@ public class Config {
 					"[title/]%d");
 			restartingServer = config.getConfigurableMessage("messages.RestartingServer", 0,
 					"[title/]Server restarting");
+			consecutiveDaysReward = config.getConfigurableMessage("messages.ConsecutiveDaysReward", 2,
+					"You were awarded %.2f E-Coins for using the server for %d consecutive days.");
 		}		
 	}
 

@@ -1,5 +1,7 @@
 package net.eithon.plugin.fixes.logic;
 
+import java.math.BigDecimal;
+
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.PluginMisc;
@@ -34,36 +36,33 @@ class BuyController {
 
 		Config.M.successfulPurchase.sendMessage(buyingPlayer, amount, item);
 	}
-
-	@SuppressWarnings("deprecation")
 	public void displayBalance(Player player) {
 		String playerName = player.getName();
-		double balance;
+		BigDecimal balance;
 		try {
-			balance = Economy.getMoney(playerName);
+			balance = Economy.getMoneyExact(playerName);
 		} catch (UserDoesNotExistException e) {
 			player.sendMessage(String.format("Could not find a user named \"%s\".", playerName));
 			return;
 		}
-		Config.M.currentBalance.sendMessage(player, balance);
+		Config.M.currentBalance.sendMessage(player, balance.doubleValue());
 	}
 
-	@SuppressWarnings("deprecation")
 	private boolean hasEnoughOrInformPlayer(Player buyingPlayer, String item, int amount,
 			double totalPrice) {
-		double balance;
+		BigDecimal balance;
 		boolean hasEnough;
 		String playerName = buyingPlayer.getName();
 		try {
-			balance = Economy.getMoney(playerName);
-			hasEnough = Economy.hasEnough(playerName, totalPrice);
+			balance = Economy.getMoneyExact(playerName);
+			hasEnough = Economy.hasEnough(playerName, new BigDecimal(totalPrice));
 		} catch (UserDoesNotExistException e) {
 			buyingPlayer.sendMessage(String.format("Could not find a user named \"%s\".", playerName));
 			return false;
 		}
 		if (!hasEnough) {
 			buyingPlayer.sendMessage(String.format(
-					Config.M.youNeedMoreMoney.getFormat(), totalPrice, amount, item, balance));
+					Config.M.youNeedMoreMoney.getFormat(), totalPrice, amount, item, balance.doubleValue()));
 			return false;
 		}
 		

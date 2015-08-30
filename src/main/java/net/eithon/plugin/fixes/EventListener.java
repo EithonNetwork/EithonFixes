@@ -1,11 +1,14 @@
 package net.eithon.plugin.fixes;
 
+import java.math.BigDecimal;
+
 import net.diecode.KillerMoney.CustomEvents.KillerMoneyMoneyRewardEvent;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.Controller;
+import net.eithon.plugin.stats.logic.ConsecutiveDaysEvent;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -17,6 +20,10 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+
+import com.earth2me.essentials.api.Economy;
+import com.earth2me.essentials.api.NoLoanPermittedException;
+import com.earth2me.essentials.api.UserDoesNotExistException;
 
 public class EventListener implements Listener {
 
@@ -107,6 +114,20 @@ public class EventListener implements Listener {
 		verbose("getReductedMoney", "Money after round off: %.2f", money);
 
 		event.setMoney(money);
+	}
+	
+	@EventHandler
+	public void onConsecutiveDaysEvent(ConsecutiveDaysEvent event) {
+		Player player = event.getPlayer();
+		long consecutiveDays = event.getConsecutiveDays();
+		double amount = Config.V.consecutiveDaysBaseAmount + consecutiveDays * Config.V.consecutiveDaysMultiplyAmount;
+		try {
+			Economy.add(player.getName(), new BigDecimal(amount));
+			Config.M.consecutiveDaysReward.sendMessage(player, amount, consecutiveDays);
+		} catch (NoLoanPermittedException | ArithmeticException
+				| UserDoesNotExistException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	// Only allow fly in certain worlds
