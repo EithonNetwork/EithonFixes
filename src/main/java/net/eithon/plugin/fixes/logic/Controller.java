@@ -38,6 +38,7 @@ public class Controller {
 		this._regionCommandController = new RegionCommandController(plugin);
 		this._coolDownCommandController = new CoolDownCommandController(plugin);
 		this._coolDownWorldController = new CoolDownWorldController(plugin);
+		Config.V.commandScheduler.start();
 	}
 
 	void disable() {
