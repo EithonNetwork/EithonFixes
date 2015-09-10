@@ -9,6 +9,7 @@ import net.eithon.library.plugin.ConfigurableMessage;
 import net.eithon.library.plugin.Configuration;
 import net.eithon.library.plugin.PermissionBasedMultiplier;
 import net.eithon.library.time.TimeMisc;
+import net.eithon.plugin.fixes.logic.CommandScheduler;
 import net.eithon.plugin.fixes.logic.CoolDownInfo;
 
 public class Config {
@@ -36,6 +37,7 @@ public class Config {
 		public static PermissionBasedMultiplier killerMoneyMultiplier;
 		public static double consecutiveDaysBaseAmount;
 		public static double consecutiveDaysMultiplyAmount;
+		public static CommandScheduler commandScheduler;
 
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
@@ -53,6 +55,7 @@ public class Config {
 			killerMoneyMultiplier = PermissionBasedMultiplier.getFromConfig(config, "multipliers.donationboard.mobKill");
 			consecutiveDaysBaseAmount = config.getDouble("ConsecutiveDaysBaseAmount", 50);
 			consecutiveDaysMultiplyAmount = config.getDouble("ConsecutiveDaysMultiplyAmount", 25);
+			commandScheduler = CommandScheduler.getFromConfig(config, "schedule");
 		}
 
 		private static List<CoolDownInfo> loadCoolDownCommandsConfig(Configuration config,

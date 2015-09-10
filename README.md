@@ -4,6 +4,11 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.18 (2015-09-10)
+
+* NEW: Added scheduler for weekly commands.
+* BUG: The reward formula for consecutive days award was off by 1.
+
 ### 1.17 (2015-08-30)
 
 * NEW: Adds money to user that has consecutive days on the server.

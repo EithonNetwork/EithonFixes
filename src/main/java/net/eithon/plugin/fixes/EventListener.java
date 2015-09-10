@@ -116,11 +116,12 @@ public class EventListener implements Listener {
 		event.setMoney(money);
 	}
 	
+	// Players should be encouraged to login on consecutive days
 	@EventHandler
 	public void onConsecutiveDaysEvent(ConsecutiveDaysEvent event) {
 		Player player = event.getPlayer();
 		long consecutiveDays = event.getConsecutiveDays();
-		double amount = Config.V.consecutiveDaysBaseAmount + consecutiveDays * Config.V.consecutiveDaysMultiplyAmount;
+		double amount = Config.V.consecutiveDaysBaseAmount + (consecutiveDays - 1) * Config.V.consecutiveDaysMultiplyAmount;
 		try {
 			Economy.add(player.getName(), new BigDecimal(amount));
 			Config.M.consecutiveDaysReward.sendMessage(player, amount, consecutiveDays);

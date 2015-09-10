@@ -1,5 +1,6 @@
 package net.eithon.plugin.fixes;
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.plugin.fixes.logic.CommandScheduler;
 import net.eithon.plugin.fixes.logic.Controller;
 
 import org.bukkit.event.Listener;
@@ -10,6 +11,7 @@ public final class Plugin extends EithonPlugin {
 	@Override
 	public void onEnable() {
 		super.onEnable();
+		CommandScheduler.initialize();
 		Config.load(this);
 		this._controller = new Controller(this);
 		CommandHandler commandHandler = new CommandHandler(this, this._controller);
