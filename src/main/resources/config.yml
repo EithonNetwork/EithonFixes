@@ -233,4 +233,4 @@ messages:
 
   #
   # Parameters: <amount> (%f), <consecutive days> (%d)
-  ConsecutiveDaysReward: You were awarded %.2f E-Coins for using the server for %d consecutive days.
+  ConsecutiveDaysReward: You were awarded %.2f E-Coins for playing on the server for %d consecutive days.
