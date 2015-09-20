@@ -10,8 +10,8 @@ public final class Plugin extends EithonPlugin {
 
 	@Override
 	public void onEnable() {
-		super.onEnable();
 		CommandScheduler.initialize();
+		super.onEnable();
 		Config.load(this);
 		this._controller = new Controller(this);
 		CommandHandler commandHandler = new CommandHandler(this, this._controller);

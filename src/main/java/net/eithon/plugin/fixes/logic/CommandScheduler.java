@@ -16,8 +16,8 @@ public class CommandScheduler implements ConfigurationSerializable  {
 	private HashMap<String, CommandSchedule> _commandScheduleList;
 	
 	public static void initialize() {
-		ConfigurationSerialization.registerClass(CommandScheduler.class, "CommandScheduler");
 		ConfigurationSerialization.registerClass(CommandSchedule.class, "CommandSchedule");
+		ConfigurationSerialization.registerClass(CommandScheduler.class, "CommandScheduler");
 	}
 
 	public CommandScheduler() {

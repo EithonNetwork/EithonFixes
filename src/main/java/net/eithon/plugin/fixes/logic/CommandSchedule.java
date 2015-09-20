@@ -4,10 +4,6 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalField;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -85,7 +81,7 @@ public class CommandSchedule implements ConfigurationSerializable  {
 	}
 	
 	public String toString() {
-		return String.format("%s %00d:%00d %s",
+		return String.format("%s %02d:%02d %s",
 				this._day.getDisplayName(TextStyle.FULL, Locale.ENGLISH), 
 				this._hour, this._minute, 
 				CoreMisc.collectionToString(this._commands));

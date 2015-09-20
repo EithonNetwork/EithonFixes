@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.18.1 (2015-09-17)
+
+* BUG: Could not read scheduler configuration
+
 ### 1.18 (2015-09-10)
 
 * NEW: Added scheduler for weekly commands.
