@@ -236,6 +236,11 @@ public class Controller {
 			return false;
 		}
 		
+		if (!playerCanConnectToServer(player, serverName)) {
+			player.sendMessage(String.format("You do not have access to server %s", serverName));
+			return false;
+		}
+		
 		if (!this._hasRegisteredOutgoingPluginChannel) {
 			Bukkit.getMessenger().registerOutgoingPluginChannel(this._eithonPlugin, "BungeeCord");
 			this._hasRegisteredOutgoingPluginChannel = true;
@@ -253,6 +258,11 @@ public class Controller {
 		}
 		player.sendPluginMessage(this._eithonPlugin, "BungeeCord", b.toByteArray());
 		return true;
+	}
+
+	private boolean playerCanConnectToServer(Player player, String serverName) {
+		if (player.hasPermission("eithonfixes.server.all")) return true;
+		return player.hasPermission(String.format("eithonfixes.server.%s", serverName));
 	}
 
 	private void verbose(String method, String format, Object... args) {
