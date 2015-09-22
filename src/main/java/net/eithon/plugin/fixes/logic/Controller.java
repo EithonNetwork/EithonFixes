@@ -1,5 +1,8 @@
 package net.eithon.plugin.fixes.logic;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
@@ -29,6 +32,7 @@ public class Controller {
 	private LocalDateTime _whenRestart;
 	private Logger _eithonLogger;
 	private EithonPlugin _eithonPlugin;
+	private boolean _hasRegisteredOutgoingPluginChannel;
 
 	public Controller(EithonPlugin plugin) {
 		this._eithonPlugin = plugin;
@@ -38,6 +42,7 @@ public class Controller {
 		this._regionCommandController = new RegionCommandController(plugin);
 		this._coolDownCommandController = new CoolDownCommandController(plugin);
 		this._coolDownWorldController = new CoolDownWorldController(plugin);
+		this._hasRegisteredOutgoingPluginChannel = false;
 		Config.V.commandScheduler.start();
 	}
 
@@ -223,6 +228,31 @@ public class Controller {
 		if (player == null) return false;
 		EithonPlayer eithonPlayer = new EithonPlayer(player);
 		return eithonPlayer.isInAcceptableWorld(Config.V.flyWorlds);
+	}
+
+	public boolean connectPlayerToServer(Player player, String serverName) {
+		if (player.getServer().getName().equalsIgnoreCase(serverName)) {
+			player.sendMessage(String.format("You are already connected to server %s", serverName));
+			return false;
+		}
+		
+		if (!this._hasRegisteredOutgoingPluginChannel) {
+			Bukkit.getMessenger().registerOutgoingPluginChannel(this._eithonPlugin, "BungeeCord");
+			this._hasRegisteredOutgoingPluginChannel = true;
+		}
+
+		ByteArrayOutputStream b = new ByteArrayOutputStream();
+		DataOutputStream out = new DataOutputStream(b);
+
+		try {
+			out.writeUTF("Connect");
+			out.writeUTF(serverName);
+		} catch (IOException ex) {
+			player.sendMessage(String.format("Could not connect to server %s: %s", serverName, ex.getMessage()));
+			return false;
+		}
+		player.sendPluginMessage(this._eithonPlugin, "BungeeCord", b.toByteArray());
+		return true;
 	}
 
 	private void verbose(String method, String format, Object... args) {

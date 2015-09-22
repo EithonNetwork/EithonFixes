@@ -6,12 +6,8 @@ import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.CommandParser;
 import net.eithon.library.plugin.ICommandHandler;
-import net.eithon.library.time.CountDown;
-import net.eithon.library.time.ICountDownListener;
-import net.eithon.library.title.Title;
 import net.eithon.plugin.fixes.logic.Controller;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,6 +20,7 @@ public class CommandHandler implements ICommandHandler {
 	private static final String RCDELETE_COMMAND = "/eithonfixes rcdelete <name>";
 	private static final String RCGOTO_COMMAND = "/eithonfixes rcgoto <name>";
 	private static final String RCLIST_COMMAND = "/eithonfixes rclist";
+	private static final String SERVER_COMMAND = "/eithonfixes server <server name>";
 	private static final String RESTART_COMMAND = "/eithonfixes restart [cancel | [<time to restart>]]";
 	private Controller _controller;
 	private EithonPlugin _eithonPlugin;
@@ -57,6 +54,8 @@ public class CommandHandler implements ICommandHandler {
 			restartCommand(commandParser);
 		} else if (command.equals("test")) {
 			testCommand(commandParser);
+		} else if (command.equals("server")) {
+			serverCommand(commandParser);
 		} else {
 			commandParser.showCommandSyntax();
 		}
@@ -166,7 +165,7 @@ public class CommandHandler implements ICommandHandler {
 
 		CommandSender sender = commandParser.getSender();
 		if (sender == null) return;
-		
+
 		String cancel = commandParser.getArgumentString();
 		if ((cancel != null) && cancel.startsWith("ca")) {
 			boolean success = this._controller.cancelRestart();
@@ -174,7 +173,7 @@ public class CommandHandler implements ICommandHandler {
 			else sender.sendMessage("Too late to cancel server restart.");
 			return;
 		}
-		
+
 		long secondsToRestart = commandParser.getArgumentTimeAsSeconds(1, 10*60);
 		LocalDateTime when = this._controller.initiateRestart(secondsToRestart);
 		if (when == null) sender.sendMessage("Could not initiate a restart.");
@@ -184,30 +183,21 @@ public class CommandHandler implements ICommandHandler {
 	void testCommand(CommandParser commandParser)
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.test")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 3)) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
+		Player player = commandParser.getPlayer();
+		player.sendMessage(String.format("TEST by player %s", player.getName()));
+	}
 
-		long counts = commandParser.getArgumentInteger(3);
-		int intervalLengthInTicks = commandParser.getArgumentInteger(20);
-		Player player = commandParser.getPlayerOrInformSender();
-		if (player == null) return;
+	void serverCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.server")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
 
-		CountDown countDown = new CountDown(this._eithonPlugin, counts, intervalLengthInTicks*50, new ICountDownListener() {
-			public boolean isCancelled(long remainingIntervals) {
-				Title.get().sendActionbarMessage(player, String.format("%d", remainingIntervals));
-				return false;
-			}
-			public void afterDoneTask() {
-				Title.get().sendFloatingText(player, "Done", 0, 20, 20);
-				Title.get().sendActionbarMessage(player, "");
-			}
-			@Override
-			public void afterCancelTask() {
-				Title.get().sendFloatingText(player, "Cancelled", 0, 20, 20);
-				Title.get().sendActionbarMessage(player, "");
-			}
-		});
-
-		countDown.start(Bukkit.getScheduler());
+		String serverName = commandParser.getArgumentStringAsLowercase();
+		Player player = commandParser.getPlayer();
+		boolean success = this._controller.connectPlayerToServer(player, serverName);
+		if (!success) return;
+		player.sendMessage(String.format("Connected to server %s", serverName));
 	}
 
 	@Override
@@ -230,6 +220,8 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(RCLIST_COMMAND);
 		} else if (command.equals("restart")) {
 			sender.sendMessage(RESTART_COMMAND);
+		} else if (command.equals("server")) {
+			sender.sendMessage(SERVER_COMMAND);
 		} else {
 			sender.sendMessage(String.format("Unknown command: %s.", command));
 		}
