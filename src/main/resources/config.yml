@@ -20,13 +20,13 @@ schedule:
       ==: CommandScheduler
       '1':
         ==: CommandSchedule
-        day: 1
+        day: 2
         hour: 17
         minute: 0
         command-list: ["/ir reset W_TheEnd"]
       '2':
         ==: CommandSchedule
-        day: 2
+        day: 5
         hour: 17
         minute: 0
         command-list: ["/ir reset W_TheEnd"]
@@ -41,7 +41,7 @@ RewardReduction: 0.85
 #
 # Time span for reward reduction after latest reward.
 #
-RewardCoolDownTimeSpan: 5
+RewardCoolDownTimeSpan: 7
 
 #
 # Worlds where there is a penalty for dying
