@@ -23,11 +23,9 @@ public class CommandHandler implements ICommandHandler {
 	private static final String SERVER_COMMAND = "/eithonfixes server <server name>";
 	private static final String RESTART_COMMAND = "/eithonfixes restart [cancel | [<time to restart>]]";
 	private Controller _controller;
-	private EithonPlugin _eithonPlugin;
 
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
-		this._eithonPlugin = eithonPlugin;
 	}
 
 	public boolean onCommand(CommandParser commandParser) {
@@ -197,7 +195,7 @@ public class CommandHandler implements ICommandHandler {
 		Player player = commandParser.getPlayer();
 		boolean success = this._controller.connectPlayerToServer(player, serverName);
 		if (!success) return;
-		player.sendMessage(String.format("Connected to server %s", serverName));
+		Config.M.connectedToServer.sendMessage(player, serverName);
 	}
 
 	@Override

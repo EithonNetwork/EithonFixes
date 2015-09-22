@@ -234,3 +234,19 @@ messages:
   #
   # Parameters: <amount> (%f), <consecutive days> (%d)
   ConsecutiveDaysReward: You were awarded %.2f E-Coins for playing on the server for %d consecutive days.
+
+  #
+  # Parameters: <server name> (%s)
+  AlreadyConnectedToServer: You are already connected to server %s.
+
+  #
+  # Parameters: <server name> (%s)
+  NoAccessToServer: You do not have access to server %s.
+
+  #
+  # Parameters: <server name> (%s), <error message> (%s)
+  CouldNotConnectToServer: Could not connect to server %s: %s
+
+  #
+  # Parameters: <server name> (%s)
+  ConnectedToServer: Connected to server %s.

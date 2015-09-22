@@ -232,12 +232,12 @@ public class Controller {
 
 	public boolean connectPlayerToServer(Player player, String serverName) {
 		if (player.getServer().getName().equalsIgnoreCase(serverName)) {
-			player.sendMessage(String.format("You are already connected to server %s", serverName));
+			Config.M.alreadyConnectedToServer.sendMessage(player, serverName);
 			return false;
 		}
 		
 		if (!playerCanConnectToServer(player, serverName)) {
-			player.sendMessage(String.format("You do not have access to server %s", serverName));
+			Config.M.noAccessToServer.sendMessage(player, serverName);
 			return false;
 		}
 		
@@ -253,7 +253,7 @@ public class Controller {
 			out.writeUTF("Connect");
 			out.writeUTF(serverName);
 		} catch (IOException ex) {
-			player.sendMessage(String.format("Could not connect to server %s: %s", serverName, ex.getMessage()));
+			Config.M.couldNotConnectToServer.sendMessage(player, serverName, ex.getMessage());
 			return false;
 		}
 		player.sendPluginMessage(this._eithonPlugin, "BungeeCord", b.toByteArray());
