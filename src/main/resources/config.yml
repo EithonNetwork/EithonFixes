@@ -245,7 +245,7 @@ messages:
 
   #
   # Parameters: <server name> (%s), <error message> (%s)
-  CouldNotConnectToServer: Could not connect to server %s: %s
+  CouldNotConnectToServer: "Could not connect to server %s: %s"
 
   #
   # Parameters: <server name> (%s)
