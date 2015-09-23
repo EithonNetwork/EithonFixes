@@ -166,6 +166,7 @@ public class RegionCommand implements IJson<RegionCommand> {
 	}
 
 	public String toString() {
-		return String.format("%s: \"/%s\" (%s)", this._name, this._commands, this._onEnter?"enter":"leave");
+		return String.format("%s: \"/%s\" (%s, %s)", this._name, this._commands,
+				this._onEnter?"enter":"leave", this._triggerForOtherWorld?"from other worlds":"within world");
 	}
 }

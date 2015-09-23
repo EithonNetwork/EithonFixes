@@ -26,6 +26,7 @@ public class Controller {
 	private KillerMoneyController _killerMoneyController;
 	private BuyController _buyController;
 	private RegionCommandController _regionCommandController;
+	private SpawnPointController _spawnPointController;
 	private CoolDownCommandController _coolDownCommandController;
 	private CoolDownWorldController _coolDownWorldController;
 	UUID _restartAlarmIdentity;
@@ -110,6 +111,26 @@ public class Controller {
 
 	public void rcList(CommandSender sender) {
 		this._regionCommandController.listRegionCommands(sender);
+	}
+
+	public void spAdd(Player player, String name, long distance) {
+		this._spawnPointController.updateOrCreateSpawnPoint(player, name, distance);
+	}
+
+	public void spEdit(Player player, String name, long distance) {
+		this._spawnPointController.editSpawnPoint(player, name, distance);
+	}
+
+	public void spDelete(CommandSender sender, String name) {
+		this._spawnPointController.deleteSpawnPoint(sender, name);
+	}
+
+	public void spGoto(Player player, String name) {
+		this._spawnPointController.gotoSpawnPoint(player, name);
+	}
+
+	public void spList(CommandSender sender) {
+		this._spawnPointController.listSpawnPoints(sender);
 	}
 
 	public LocalDateTime initiateRestart(long seconds) {

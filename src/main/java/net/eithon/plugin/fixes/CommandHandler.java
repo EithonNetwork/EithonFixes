@@ -21,6 +21,11 @@ public class CommandHandler implements ICommandHandler {
 	private static final String RCDELETE_COMMAND = "/eithonfixes rcdelete <name>";
 	private static final String RCGOTO_COMMAND = "/eithonfixes rcgoto <name>";
 	private static final String RCLIST_COMMAND = "/eithonfixes rclist";
+	private static final String SPADD_COMMAND = "/eithonfixes spadd <name> [<distance>]";
+	private static final String SPEDIT_COMMAND = "/eithonfixes spedit <name> [<distance>]";
+	private static final String SPDELETE_COMMAND = "/eithonfixes spdelete <name>";
+	private static final String SPGOTO_COMMAND = "/eithonfixes spgoto <name>";
+	private static final String SPLIST_COMMAND = "/eithonfixes splist";
 	private static final String SERVER_COMMAND = "/eithonfixes server <server name>";
 	private static final String RESTART_COMMAND = "/eithonfixes restart [cancel | [<time to restart>]]";
 	private Controller _controller;
@@ -51,6 +56,16 @@ public class CommandHandler implements ICommandHandler {
 			rcGotoCommand(commandParser);
 		} else if (command.equals("rclist")) {
 			rcListCommand(commandParser);
+		} else if (command.equals("spadd")) {
+			spAddCommand(commandParser);
+		} else if (command.equals("spedit")) {
+			spEditCommand(commandParser);
+		} else if (command.equals("spdelete")) {
+			spDeleteCommand(commandParser);
+		} else if (command.equals("spgoto")) {
+			spGotoCommand(commandParser);
+		} else if (command.equals("splist")) {
+			spListCommand(commandParser);
 		} else if (command.equals("restart")) {
 			restartCommand(commandParser);
 		} else if (command.equals("test")) {
@@ -173,6 +188,61 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.rcList(commandParser.getSender());
 	}
 
+	void spAddCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.spadd")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2,3)) return;
+
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+
+		String name = commandParser.getArgumentString();
+		long distance = commandParser.getArgumentInteger(10);
+		this._controller.spAdd(player, name, distance);
+	}
+
+	void spEditCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.spedit")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2,3)) return;
+
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+
+		String name = commandParser.getArgumentString();
+		long distance = commandParser.getArgumentInteger(10);
+		this._controller.spEdit(player, name, distance);
+	}
+
+	void spDeleteCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.spdelete")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
+
+		String name = commandParser.getArgumentString();
+		this._controller.spDelete(commandParser.getSender(), name);
+	}
+
+	void spGotoCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.spgoto")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
+
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+
+		String name = commandParser.getArgumentString();
+		this._controller.rcGoto(player, name);
+	}
+
+	void spListCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rclist")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
+
+		this._controller.spList(commandParser.getSender());
+	}
+
 	void restartCommand(CommandParser commandParser)
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.restart")) return;
@@ -235,6 +305,16 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(RCGOTO_COMMAND);
 		} else if (command.equals("rclist")) {
 			sender.sendMessage(RCLIST_COMMAND);
+		} else if (command.equals("spadd")) {
+			sender.sendMessage(SPADD_COMMAND);
+		} else if (command.equals("spedit")) {
+			sender.sendMessage(SPEDIT_COMMAND);
+		} else if (command.equals("spdelete")) {
+			sender.sendMessage(SPDELETE_COMMAND);
+		} else if (command.equals("spgoto")) {
+			sender.sendMessage(SPGOTO_COMMAND);
+		} else if (command.equals("splist")) {
+			sender.sendMessage(SPLIST_COMMAND);
 		} else if (command.equals("restart")) {
 			sender.sendMessage(RESTART_COMMAND);
 		} else if (command.equals("server")) {
