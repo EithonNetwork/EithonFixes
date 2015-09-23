@@ -48,17 +48,27 @@ public class EventListener implements Listener {
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (player == null) return;
-		verbose("onPlayerJoinEvent", "Enter Player %s", player.getName());
+		maybeTeleportToSpawnPoint(player);
+		maybeBroadcast(event, player);
+	}
+
+	private boolean maybeTeleportToSpawnPoint(Player player) {
+		return this._controller.maybeTeleportToSpawnPoint(player);
+	}
+
+	private boolean maybeBroadcast(PlayerJoinEvent event, Player player) {
+		verbose("maybeBroadcast", "Enter Player %s", player.getName());
 		if (player.hasPlayedBefore()) {
-			verbose("onPlayerJoinEvent", "%s is not a new player.", player.getName());
-			verbose("onPlayerJoinEvent", "Leave");
-			return;
+			verbose("maybeBroadcast", "%s is not a new player.", player.getName());
+			verbose("maybeBroadcast", "Leave false");
+			return false;
 		}
-		verbose("onPlayerJoinEvent", "%s is a new player.", player.getName());
-		verbose("onPlayerJoinEvent", "Broadcast");
+		verbose("maybeBroadcast", "%s is a new player.", player.getName());
+		verbose("maybeBroadcast", "Broadcast");
 		event.setJoinMessage(Config.M.joinedServerFirstTime.getMessageWithColorCoding(player.getName()));
 		Config.M.pleaseWelcomeNewPlayer.broadcastMessage(player.getName());
-		verbose("onPlayerJoinEvent", "Leave");
+		verbose("maybeBroadcast", "Leave true");
+		return true;
 	}
 
 	// CoolDown for commands

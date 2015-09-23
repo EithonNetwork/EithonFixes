@@ -41,6 +41,7 @@ public class Controller {
 		this._killerMoneyController = new KillerMoneyController(plugin);
 		this._buyController = new BuyController(plugin);
 		this._regionCommandController = new RegionCommandController(plugin);
+		this._spawnPointController = new SpawnPointController(plugin);
 		this._coolDownCommandController = new CoolDownCommandController(plugin);
 		this._coolDownWorldController = new CoolDownWorldController(plugin);
 		this._hasRegisteredOutgoingPluginChannel = false;
@@ -131,6 +132,10 @@ public class Controller {
 
 	public void spList(CommandSender sender) {
 		this._spawnPointController.listSpawnPoints(sender);
+	}
+
+	public boolean maybeTeleportToSpawnPoint(Player player) {
+		return this._spawnPointController.maybeTeleportToSpawnPoint(player);
 	}
 
 	public LocalDateTime initiateRestart(long seconds) {

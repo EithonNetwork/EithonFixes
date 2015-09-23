@@ -62,6 +62,13 @@ public class SpawnPointController {
 		return spawnPoint;
 	}
 
+	public boolean maybeTeleportToSpawnPoint(Player player) {
+		for (SpawnPoint spawnPoint : this._spawnPointsByName.values()) {
+			if (spawnPoint.maybeTeleportToSpawnPoint(player)) return true;
+		}
+		return false;
+	}
+
 	public void listSpawnPoints(CommandSender sender) {
 		for (SpawnPoint spawnPoint : this._spawnPointsByName.values()) {
 			sender.sendMessage(spawnPoint.toString());
