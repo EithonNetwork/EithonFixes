@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.eithon.plugin</groupId>
 	<artifactId>EithonFixes</artifactId>
-	<version>1.19</version>
+	<version>1.21</version>
 	<name>EithonFixes</name>
 	<build>
 		<plugins>

@@ -26,6 +26,7 @@ public class Controller {
 	private KillerMoneyController _killerMoneyController;
 	private BuyController _buyController;
 	private RegionCommandController _regionCommandController;
+	private SpawnPointController _spawnPointController;
 	private CoolDownCommandController _coolDownCommandController;
 	private CoolDownWorldController _coolDownWorldController;
 	UUID _restartAlarmIdentity;
@@ -40,6 +41,7 @@ public class Controller {
 		this._killerMoneyController = new KillerMoneyController(plugin);
 		this._buyController = new BuyController(plugin);
 		this._regionCommandController = new RegionCommandController(plugin);
+		this._spawnPointController = new SpawnPointController(plugin);
 		this._coolDownCommandController = new CoolDownCommandController(plugin);
 		this._coolDownWorldController = new CoolDownWorldController(plugin);
 		this._hasRegisteredOutgoingPluginChannel = false;
@@ -89,11 +91,15 @@ public class Controller {
 	}
 
 	public void rcAdd(Player player, String name, String command) {
-		this._regionCommandController.updateOrCreateRegionCommand(player, name, command, true);
+		this._regionCommandController.updateOrCreateRegionCommand(player, name, command, true, true);
 	}
 
 	public void rcEdit(Player player, String name, String command) {
-		this._regionCommandController.editRegionCommand(player, name, command, true);
+		this._regionCommandController.editRegionCommand(player, name, command, true, true);
+	}
+
+	public void rcSet(Player player, String name, boolean onEnter, boolean triggerOnEnterFromOtherWorld) {
+		this._regionCommandController.editRegionCommand(player, name, onEnter, triggerOnEnterFromOtherWorld);
 	}
 
 	public void rcDelete(CommandSender sender, String name) {
@@ -106,6 +112,30 @@ public class Controller {
 
 	public void rcList(CommandSender sender) {
 		this._regionCommandController.listRegionCommands(sender);
+	}
+
+	public void spAdd(Player player, String name, long distance) {
+		this._spawnPointController.updateOrCreateSpawnPoint(player, name, distance);
+	}
+
+	public void spEdit(Player player, String name, long distance) {
+		this._spawnPointController.editSpawnPoint(player, name, distance);
+	}
+
+	public void spDelete(CommandSender sender, String name) {
+		this._spawnPointController.deleteSpawnPoint(sender, name);
+	}
+
+	public void spGoto(Player player, String name) {
+		this._spawnPointController.gotoSpawnPoint(player, name);
+	}
+
+	public void spList(CommandSender sender) {
+		this._spawnPointController.listSpawnPoints(sender);
+	}
+
+	public boolean maybeTeleportToSpawnPoint(Player player) {
+		return this._spawnPointController.maybeTeleportToSpawnPoint(player);
 	}
 
 	public LocalDateTime initiateRestart(long seconds) {

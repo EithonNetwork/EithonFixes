@@ -1,6 +1,6 @@
 name: EithonFixes
 main: net.eithon.plugin.fixes.Plugin
-version: 1.19
+version: 1.21
 author: vanbrayne
 softdepend: [Essentials, WorldEdit, EithonStats, KillerMoney]
 depend: [EithonLibrary]
@@ -8,7 +8,7 @@ description: A Minecraft plugin for Eithon fixes
 commands:
   eithonfixes:
     description: Fix things other plugins fail to do
-    usage: /eithonfixes buy | balance | join | rcadd | rcedit | rclist | rcdelete | rcgoto | restart | server | test
+    usage: /eithonfixes buy | balance | join | rcadd | rcedit | rclist | rcdelete | rcgoto  | spadd | spedit | splist | spdelete | spgoto | restart | server | test
     permission-message: You don't have <permission>
 permissions:
   eithonfixes.*:
@@ -20,8 +20,14 @@ permissions:
     eithonfixes.rcadd: true
     eithonfixes.rcedit: true
     eithonfixes.rclist: true
+    eithonfixes.rcset: true
     eithonfixes.rcgoto: true
     eithonfixes.rcdelete: true
+    eithonfixes.spadd: true
+    eithonfixes.spedit: true
+    eithonfixes.splist: true
+    eithonfixes.spgoto: true
+    eithonfixes.spdelete: true
     eithonfixes.restart: true
     eithonfixes.test: true
     eithonfixes.server: true
@@ -41,6 +47,9 @@ permissions:
   eithonfixes.rcedit:
     description: Access to /eithonfixes rcedit command
     default: op
+  eithonfixes.rcset:
+    description: Access to /eithonfixes rcset command
+    default: op
   eithonfixes.rclist:
     description: Access to /eithonfixes rclist command
     default: op
@@ -49,6 +58,21 @@ permissions:
     default: op
   eithonfixes.rcgoto:
     description: Access to /eithonfixes rcgoto command
+    default: op
+  eithonfixes.spadd:
+    description: Access to /eithonfixes spadd command
+    default: op
+  eithonfixes.spedit:
+    description: Access to /eithonfixes spedit command
+    default: op
+  eithonfixes.splist:
+    description: Access to /eithonfixes splist command
+    default: op
+  eithonfixes.spdelete:
+    description: Access to /eithonfixes spdelete command
+    default: op
+  eithonfixes.spgoto:
+    description: Access to /eithonfixes spgoto command
     default: op
   eithonfixes.restart:
     description: Access to /eithonfixes restart command

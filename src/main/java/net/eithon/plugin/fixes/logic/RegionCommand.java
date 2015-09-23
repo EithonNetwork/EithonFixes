@@ -24,21 +24,30 @@ public class RegionCommand implements IJson<RegionCommand> {
 	private EithonBlock _min;
 	private EithonBlock _max;
 	private boolean _onEnter;
+	private boolean _triggerForOtherWorld;
 
-	public RegionCommand(Player player, String name, String commands, boolean onEnter, Block min, Block max)
+	public RegionCommand(Player player, String name, String commands, boolean onEnter, boolean triggerForOtherWorld, Block min, Block max)
 	{
 		this._id = UUID.randomUUID();
 		this._name = name;
-		edit(player, commands, onEnter);
+		edit(player, commands, onEnter, triggerForOtherWorld);
 		this._createdFrom = new EithonLocation(player.getLocation());
 		this._min = new EithonBlock(min);
 		this._max = new EithonBlock(max);
 	}
 
-	public void edit(Player player, String command, boolean onEnter) {
+	public void edit(Player player, String commands, boolean onEnter, boolean triggerForOtherWorld) {
 		this._creator = new EithonPlayer(player);
-		this._commands = command;
+		this._commands = commands;
 		this._onEnter = onEnter;
+		this._triggerForOtherWorld = triggerForOtherWorld;
+	}
+
+
+	public void edit(Player player, boolean onEnter, boolean triggerForOtherWorld) {
+		this._creator = new EithonPlayer(player);
+		this._onEnter = onEnter;
+		this._triggerForOtherWorld = triggerForOtherWorld;
 	}
 
 	public boolean maybeExecuteCommand(Player player, Location from, Location to) {
@@ -48,10 +57,14 @@ public class RegionCommand implements IJson<RegionCommand> {
 	public boolean maybeExecuteCommand(Player player, Block from, Block to) {
 		if (this._onEnter) {
 			if (!inRegion(to)) return false;
-			if (inRegion(from)) return false;
+			if (!isSameWorld(from)) {
+				if (!this._triggerForOtherWorld) return false;
+			} else if (inRegion(from)) return false;
 		} else {
 			if (!inRegion(from)) return false;
-			if (inRegion(to)) return false;
+			if (!isSameWorld(to)) {
+				if (!this._triggerForOtherWorld) return false;
+			} else if (inRegion(to)) return false;
 		}
 		executeCommands(player);
 		return true;
@@ -116,6 +129,7 @@ public class RegionCommand implements IJson<RegionCommand> {
 		json.put("min", this._min.toJson());
 		json.put("max", this._max.toJson());
 		json.put("onEnter", this._onEnter ? 1 : 0);
+		json.put("triggerOnEnterFromOtherWorld", this._triggerForOtherWorld ? 1 : 0);
 		return json;
 	}
 
@@ -130,6 +144,12 @@ public class RegionCommand implements IJson<RegionCommand> {
 		this._min = EithonBlock.getFromJson(jsonObject.get("min"));
 		this._max = EithonBlock.getFromJson(jsonObject.get("max"));
 		this._onEnter = ((long) jsonObject.get("onEnter")) == 1;
+		Object object = jsonObject.get("triggerOnEnterFromOtherWorld");
+		if (object == null) {
+			this._triggerForOtherWorld = true;
+		} else {
+			this._triggerForOtherWorld = ((long) object) == 1;
+		}
 		return this;	
 	}
 
@@ -146,6 +166,7 @@ public class RegionCommand implements IJson<RegionCommand> {
 	}
 
 	public String toString() {
-		return String.format("%s: \"/%s\" (%s)", this._name, this._commands, this._onEnter?"enter":"leave");
+		return String.format("%s: \"/%s\" (%s, %s)", this._name, this._commands,
+				this._onEnter?"enter":"leave", this._triggerForOtherWorld?"from other worlds":"within world");
 	}
 }

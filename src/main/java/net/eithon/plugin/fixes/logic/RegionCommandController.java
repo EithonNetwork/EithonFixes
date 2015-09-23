@@ -51,7 +51,7 @@ public class RegionCommandController implements IBlockMoverFollower {
 		MoveEventHandler.addBlockMover(this); 
 	}
 	
-	public void updateOrCreateRegionCommand(Player player, String name, String commands, boolean onEnter) {
+	public void updateOrCreateRegionCommand(Player player, String name, String commands, boolean onEnter, boolean triggerOnEnterFromOtherWorld) {
 		Selection selection =  this._worldEditPlugin.getSelection(player);
 		if (selection == null) {
 			player.sendMessage("No selection found");
@@ -72,17 +72,26 @@ public class RegionCommandController implements IBlockMoverFollower {
 		Block minBlock = minLocation.getBlock();
 		Block maxBlock = maxLocation.getBlock();
 		
-		RegionCommand regionCommand = new RegionCommand(player, name, commands, onEnter, minBlock, maxBlock);
+		RegionCommand regionCommand = new RegionCommand(player, name, commands, triggerOnEnterFromOtherWorld, onEnter, minBlock, maxBlock);
 		this._regionCommandsByName.put(name, regionCommand);
 		delayedSave(this._eithonPlugin, 0);
 		player.sendMessage(String.format("Added RegionCommand %s", regionCommand.toString()));
 	}
 
-	public void editRegionCommand(Player player, String name, String commands, boolean onEnter) {
+	public void editRegionCommand(Player player, String name, String commands, boolean onEnter, boolean triggerOnEnterFromOtherWorld) {
 		RegionCommand regionCommand = getRegionCommandOrInformPlayer(player,
 				name);
 		if (regionCommand == null) return;
-		regionCommand.edit(player, commands, onEnter);
+		regionCommand.edit(player, commands, onEnter, triggerOnEnterFromOtherWorld);
+		delayedSave(this._eithonPlugin, 0);
+		player.sendMessage(String.format("Edited RegionCommand %s", regionCommand.toString()));
+	}
+
+	public void editRegionCommand(Player player, String name, boolean onEnter, boolean onOtherWorld) {
+		RegionCommand regionCommand = getRegionCommandOrInformPlayer(player,
+				name);
+		if (regionCommand == null) return;
+		regionCommand.edit(player, onEnter, onOtherWorld);
 		delayedSave(this._eithonPlugin, 0);
 		player.sendMessage(String.format("Edited RegionCommand %s", regionCommand.toString()));
 	}
