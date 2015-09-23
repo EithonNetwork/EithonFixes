@@ -17,6 +17,7 @@ public class CommandHandler implements ICommandHandler {
 	private static final String JOIN_COMMAND = "/eithonfixes join <channel>";
 	private static final String RCADD_COMMAND = "/eithonfixes rcadd <name> <command>";
 	private static final String RCEDIT_COMMAND = "/eithonfixes rcedit <name> <command>";
+	private static final String RCSET_COMMAND = "/eithonfixes rcset <name> <onEnter> <onOtherWorld>";
 	private static final String RCDELETE_COMMAND = "/eithonfixes rcdelete <name>";
 	private static final String RCGOTO_COMMAND = "/eithonfixes rcgoto <name>";
 	private static final String RCLIST_COMMAND = "/eithonfixes rclist";
@@ -42,6 +43,8 @@ public class CommandHandler implements ICommandHandler {
 			rcAddCommand(commandParser);
 		} else if (command.equals("rcedit")) {
 			rcEditCommand(commandParser);
+		} else if (command.equals("rcset")) {
+			rcSetCommand(commandParser);
 		} else if (command.equals("rcdelete")) {
 			rcDeleteCommand(commandParser);
 		} else if (command.equals("rcgoto")) {
@@ -127,6 +130,20 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.rcEdit(player, name, commands);
 	}
 
+	void rcSetCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcedit")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(4)) return;
+
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+
+		String name = commandParser.getArgumentString();
+		boolean onEnter = commandParser.getArgumentBoolean(true);
+		boolean onOtherWorld = commandParser.getArgumentBoolean(true);
+		this._controller.rcSet(player, name, onEnter, onOtherWorld);
+	}
+
 	void rcDeleteCommand(CommandParser commandParser)
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcdelete")) return;
@@ -210,6 +227,8 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(RCADD_COMMAND);
 		} else if (command.equals("rcedit")) {
 			sender.sendMessage(RCEDIT_COMMAND);
+		} else if (command.equals("rcset")) {
+			sender.sendMessage(RCSET_COMMAND);
 		} else if (command.equals("rcdelete")) {
 			sender.sendMessage(RCDELETE_COMMAND);
 		} else if (command.equals("rcgoto")) {

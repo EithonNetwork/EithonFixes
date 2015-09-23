@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.20 (2015-09-23)
+
+* NEW: Region commands now has "/rcset" and an option for ignoring enter/leave from/to other world.
+
 ### 1.19 (2015-09-22)
 
 * NEW: Added "/eithonfixes server" command.

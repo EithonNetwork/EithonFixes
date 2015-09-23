@@ -89,11 +89,15 @@ public class Controller {
 	}
 
 	public void rcAdd(Player player, String name, String command) {
-		this._regionCommandController.updateOrCreateRegionCommand(player, name, command, true);
+		this._regionCommandController.updateOrCreateRegionCommand(player, name, command, true, true);
 	}
 
 	public void rcEdit(Player player, String name, String command) {
-		this._regionCommandController.editRegionCommand(player, name, command, true);
+		this._regionCommandController.editRegionCommand(player, name, command, true, true);
+	}
+
+	public void rcSet(Player player, String name, boolean onEnter, boolean triggerOnEnterFromOtherWorld) {
+		this._regionCommandController.editRegionCommand(player, name, onEnter, triggerOnEnterFromOtherWorld);
 	}
 
 	public void rcDelete(CommandSender sender, String name) {
