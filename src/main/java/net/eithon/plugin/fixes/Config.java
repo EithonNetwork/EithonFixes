@@ -11,6 +11,7 @@ import net.eithon.library.plugin.PermissionBasedMultiplier;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.CommandScheduler;
 import net.eithon.plugin.fixes.logic.CoolDownInfo;
+import net.eithon.plugin.fixes.logic.IndividualConfigurableMessage;
 
 public class Config {
 	public static void load(EithonPlugin plugin)
@@ -38,6 +39,7 @@ public class Config {
 		public static double consecutiveDaysBaseAmount;
 		public static double consecutiveDaysMultiplyAmount;
 		public static CommandScheduler commandScheduler;
+		
 
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
@@ -146,6 +148,7 @@ public class Config {
 		public static ConfigurableMessage noAccessToServer;
 		public static ConfigurableMessage couldNotConnectToServer;
 		public static ConfigurableMessage connectedToServer;
+		public static IndividualConfigurableMessage joinMessage;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -186,6 +189,7 @@ public class Config {
 					"Could not connect to server %s: %s");
 			connectedToServer = config.getConfigurableMessage("messages.ConnectedToServer", 1,
 					"Connected to server %s.");
+			joinMessage = new IndividualConfigurableMessage(config, "messages.join");
 		}		
 	}
 
