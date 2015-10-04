@@ -114,7 +114,8 @@ public class Config {
 		public static ConfigurableCommand joinChat;
 		public static ConfigurableCommand leaveChat;
 		public static ConfigurableCommand stopFly;
-		public static ConfigurableCommand bungeeBroadcast;
+		public static ConfigurableCommand bungeeJoin;
+		public static ConfigurableCommand bungeeQuit;
 
 		static void load(Configuration config) {
 			give = config.getConfigurableCommand("commands.GiveCommand", 3,
@@ -127,8 +128,10 @@ public class Config {
 					"ch leave %s");
 			stopFly = config.getConfigurableCommand("commands.StopFly", 0,
 					"fly");
-			bungeeBroadcast = config.getConfigurableCommand("commands.BungeeBroadcast", 1,
-					"ch leave %s");
+			bungeeJoin = config.getConfigurableCommand("commands.BungeeJoin", 3,
+					"sync console all eithonfixes join %s %s %s");
+			bungeeQuit = config.getConfigurableCommand("commands.BungeeQuit", 3,
+					"sync console all eithonfixes quit %s %s %s");
 		}
 
 	}
@@ -153,6 +156,7 @@ public class Config {
 		public static ConfigurableMessage couldNotConnectToServer;
 		public static ConfigurableMessage connectedToServer;
 		public static IndividualConfigurableMessage joinMessage;
+		public static IndividualConfigurableMessage quitMessage;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -194,6 +198,7 @@ public class Config {
 			connectedToServer = config.getConfigurableMessage("messages.ConnectedToServer", 1,
 					"Connected to server %s.");
 			joinMessage = new IndividualConfigurableMessage(config, "messages.join");
+			quitMessage = new IndividualConfigurableMessage(config, "messages.quit");
 		}		
 	}
 

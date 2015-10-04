@@ -2,13 +2,11 @@ package net.eithon.plugin.fixes.logic;
 
 import java.util.HashMap;
 
+import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.facades.ZPermissionsFacade;
 import net.eithon.library.plugin.ConfigurableMessage;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.plugin.fixes.Config;
-
-import org.bukkit.entity.Player;
 
 public class IndividualMessageController {
 	private EithonPlugin _eithonPlugin;
@@ -18,41 +16,27 @@ public class IndividualMessageController {
 		this._eithonPlugin = eithonPlugin;
 	}
 	
-	public void playerJoined(Player player) {
-		verbose("playerJoined", "Enter, Player = %s", player.getName());
+	public void playerJoined(String serverName, EithonPlayer player, String groupName) {
+		broadcastMessage(Config.M.joinMessage, serverName, player, groupName);
+	}
+	
+	public void playerQuit(String serverName, EithonPlayer player, String groupName) {
+		broadcastMessage(Config.M.quitMessage, serverName, player, groupName);
+	}
+	
+	private void broadcastMessage(IndividualConfigurableMessage message, String serverName, EithonPlayer player, String groupName) {
+		verbose("broadCastMessage", "Enter, serverName =%s, Player = %s", serverName, player.getName());
 		String playerName = player.getName();
-		String highestGroup = getHighestGroup(player);
-		ConfigurableMessage configurableMessage = Config.M.joinMessage.getMessage(playerName, highestGroup);
+		ConfigurableMessage configurableMessage = message.getMessage(playerName, groupName);
 		if (configurableMessage == null) {
-			verbose("playerJoined", "Leave, No configurable message", player.getName());
+			verbose("broadCastMessage", "Leave, No configurable message", player.getName());
 			return;
 		}
 		HashMap<String,String> namedArguments = new HashMap<String, String>();
 		namedArguments.put("PLAYER_NAME", playerName);
-		namedArguments.put("SERVER_NAME", player.getServer().getName());
-		String message = configurableMessage.getMessageWithColorCoding(namedArguments);
-		if (message == null) {
-			verbose("playerJoined", "Leave, No message", player.getName());
-			return;
-		}
-		verbose("playerJoined", "Execute bungee broadcast with message = \"%s\"", message);
-		Config.C.bungeeBroadcast.execute(message);
-		verbose("playerJoined", "Leave");
-	}
-
-	private String getHighestGroup(Player player) {
-		verbose("getHighestGroup", "Enter, Player = %s", player.getName());
-		String[] currentGroups = ZPermissionsFacade.getPlayerPermissionGroups(player);
-		for (String priorityGroup : Config.V.groupPriorities) {
-			for (String playerGroup : currentGroups) {
-				if (playerGroup.equalsIgnoreCase(priorityGroup)) {
-					verbose("getHighestGroup", "Leave, priorityGroup = %s", priorityGroup);
-					return priorityGroup;
-				}
-			}
-		}
-		verbose("getHighestGroup", "Leave, priorityGroup = null");
-		return null;
+		namedArguments.put("SERVER_NAME", serverName);
+		configurableMessage.broadcastMessage(namedArguments);
+		verbose("broadCastMessage", "Leave");
 	}
 
 	private void verbose(String method, String format, Object... args) {

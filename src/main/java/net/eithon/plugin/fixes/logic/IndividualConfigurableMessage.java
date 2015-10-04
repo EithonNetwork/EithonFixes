@@ -26,7 +26,7 @@ public class IndividualConfigurableMessage {
 	public ConfigurableMessage getMessage(String playerName, String groupName) {
 		ConfigurableMessage message = getPlayerMessage(playerName);
 		if (message != null) return message;
-		 message = getGroupMessage(groupName);
+		message = getGroupMessage(groupName);
 		if (message != null) return message;
 		return this._defaultMessage;
 	}
@@ -37,7 +37,7 @@ public class IndividualConfigurableMessage {
 		if (message != null) return message;
 		String playerPath = getPlayerPath(playerName);
 		message = this._config.getConfigurableMessage(playerPath, 0, null);
-		if (message == null) return null;
+		if (!message.hasContent()) return null;
 		this._playerMessages.put(playerName, message);
 		return message;
 	}
@@ -48,7 +48,7 @@ public class IndividualConfigurableMessage {
 		if (message != null) return message;
 		String groupPath = getGroupPath(groupName);
 		message = this._config.getConfigurableMessage(groupPath, 0, null);
-		if (message == null) return null;
+		if (!message.hasContent()) return null;
 		this._groupMessages.put(groupName, message);
 		return message;
 	}

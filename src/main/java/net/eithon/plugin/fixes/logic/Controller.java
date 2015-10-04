@@ -10,6 +10,7 @@ import java.util.UUID;
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.library.facades.ZPermissionsFacade;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.AlarmTrigger;
@@ -292,6 +293,37 @@ public class Controller {
 		return true;
 	}
 
+	public void bungeeJoin(Player player) {
+		Config.C.bungeeJoin.execute(player.getServer().getName(), player.getUniqueId(), getHighestGroup(player));
+	}
+
+	public void playerJoined(String serverName, EithonPlayer player, String groupName) {
+		this._individualMessageController.playerJoined(serverName, player, groupName);
+	}
+
+	public void bungeeQuit(Player player) {
+		Config.C.bungeeJoin.execute(player.getServer().getName(), player.getUniqueId(), getHighestGroup(player));
+	}
+
+	public void playerQuit(String serverName, EithonPlayer player, String groupName) {
+		this._individualMessageController.playerQuit(serverName, player, groupName);
+	}
+
+	private String getHighestGroup(Player player) {
+		verbose("getHighestGroup", "Enter, Player = %s", player.getName());
+		String[] currentGroups = ZPermissionsFacade.getPlayerPermissionGroups(player);
+		for (String priorityGroup : Config.V.groupPriorities) {
+			for (String playerGroup : currentGroups) {
+				if (playerGroup.equalsIgnoreCase(priorityGroup)) {
+					verbose("getHighestGroup", "Leave, priorityGroup = %s", priorityGroup);
+					return priorityGroup;
+				}
+			}
+		}
+		verbose("getHighestGroup", "Leave, priorityGroup = null");
+		return null;
+	}
+
 	private boolean playerCanConnectToServer(Player player, String serverName) {
 		if (player.hasPermission("eithonfixes.server.all")) return true;
 		return player.hasPermission(String.format("eithonfixes.server.%s", serverName));
@@ -300,10 +332,5 @@ public class Controller {
 	private void verbose(String method, String format, Object... args) {
 		String message = CoreMisc.safeFormat(format, args);
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
-	}
-
-	public void playerJoined(Player player) {
-		this._individualMessageController.playerJoined(player);
-		
 	}
 }

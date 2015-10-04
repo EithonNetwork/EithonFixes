@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class CommandHandler implements ICommandHandler {
 	private static final String BUY_COMMAND = "/eithonfixes buy <player> <item> <price> <amount>";
 	private static final String BALANCE_COMMAND = "/eithonfixes balance";
-	private static final String JOIN_COMMAND = "/eithonfixes join <channel>";
+	private static final String BUNGEE_JOIN_COMMAND = "/eithonfixes bungee join <server name> <player id or name> [<group name>]";
 	private static final String RCADD_COMMAND = "/eithonfixes rcadd <name> <command>";
 	private static final String RCEDIT_COMMAND = "/eithonfixes rcedit <name> <command>";
 	private static final String RCSET_COMMAND = "/eithonfixes rcset <name> <onEnter> <onOtherWorld>";
@@ -42,8 +42,8 @@ public class CommandHandler implements ICommandHandler {
 			buyCommand(commandParser);
 		} else if (command.equals("balance")) {
 			balanceCommand(commandParser);
-		} else if (command.equals("join")) {
-			joinCommand(commandParser);
+		} else if (command.equals("bungee")) {
+			bungeeCommand(commandParser);
 		} else if (command.equals("rcadd")) {
 			rcAddCommand(commandParser);
 		} else if (command.equals("rcedit")) {
@@ -108,15 +108,26 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.displayBalance(player);
 	}
 
-	void joinCommand(CommandParser commandParser)
+	void bungeeCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.join")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.bungee")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(4, 5)) return;
 
-		String channel = commandParser.getArgumentString();
-		Player player = commandParser.getPlayerOrInformSender();
-		if (player == null) return;
-		this._controller.joinChannel(player, channel);
+		String subCommand = commandParser.getArgumentStringAsLowercase();
+			String serverName = commandParser.getArgumentString();
+			EithonPlayer player = commandParser.getArgumentEithonPlayer((EithonPlayer) null);
+			if (player == null) {
+				commandParser.showCommandSyntax();
+				return;
+			}
+			String groupName = commandParser.getArgumentString();
+			if (subCommand.equalsIgnoreCase("join")) {
+			this._controller.playerJoined(serverName, player, groupName);
+			} else if (subCommand.equalsIgnoreCase("quit")) {
+			this._controller.playerQuit(serverName, player, groupName);
+		} else {
+			commandParser.showCommandSyntax();			
+		}
 	}
 
 	void rcAddCommand(CommandParser commandParser)
@@ -291,8 +302,8 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(BUY_COMMAND);
 		} else if (command.equals("balance")) {
 			sender.sendMessage(BALANCE_COMMAND);
-		} else if (command.equals("join")) {
-			sender.sendMessage(JOIN_COMMAND);
+		} else if (command.equals("bungee")) {
+			sender.sendMessage(BUNGEE_JOIN_COMMAND);
 		} else if (command.equals("rcadd")) {
 			sender.sendMessage(RCADD_COMMAND);
 		} else if (command.equals("rcedit")) {

@@ -7,6 +7,7 @@ A EithonFixes plugin for Minecraft.
 ### 1.22 (2015-10-04)
 
 * NEW: Added bungee login message.
+* NEW: Added bungee command.
 
 ### 1.21 (2015-09-23)
 
