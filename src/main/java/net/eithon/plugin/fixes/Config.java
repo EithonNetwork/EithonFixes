@@ -11,6 +11,7 @@ import net.eithon.library.plugin.PermissionBasedMultiplier;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.CommandScheduler;
 import net.eithon.plugin.fixes.logic.CoolDownInfo;
+import net.eithon.plugin.fixes.logic.IndividualConfigurableMessage;
 
 public class Config {
 	public static void load(EithonPlugin plugin)
@@ -38,7 +39,8 @@ public class Config {
 		public static double consecutiveDaysBaseAmount;
 		public static double consecutiveDaysMultiplyAmount;
 		public static CommandScheduler commandScheduler;
-
+		public static List<String> groupPriorities;
+		
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
 			rewardReduction = config.getDouble("RewardReduction", 0.85);
@@ -56,6 +58,7 @@ public class Config {
 			consecutiveDaysBaseAmount = config.getDouble("ConsecutiveDaysBaseAmount", 50);
 			consecutiveDaysMultiplyAmount = config.getDouble("ConsecutiveDaysMultiplyAmount", 25);
 			commandScheduler = CommandScheduler.getFromConfig(config, "schedule");
+			groupPriorities = config.getStringList("GroupPriorities");
 		}
 
 		private static List<CoolDownInfo> loadCoolDownCommandsConfig(Configuration config,
@@ -111,6 +114,8 @@ public class Config {
 		public static ConfigurableCommand joinChat;
 		public static ConfigurableCommand leaveChat;
 		public static ConfigurableCommand stopFly;
+		public static ConfigurableCommand bungeeJoin;
+		public static ConfigurableCommand bungeeQuit;
 
 		static void load(Configuration config) {
 			give = config.getConfigurableCommand("commands.GiveCommand", 3,
@@ -123,6 +128,10 @@ public class Config {
 					"ch leave %s");
 			stopFly = config.getConfigurableCommand("commands.StopFly", 0,
 					"fly");
+			bungeeJoin = config.getConfigurableCommand("commands.BungeeJoin", 3,
+					"sync console all eithonfixes join %s %s %s");
+			bungeeQuit = config.getConfigurableCommand("commands.BungeeQuit", 3,
+					"sync console all eithonfixes quit %s %s %s");
 		}
 
 	}
@@ -146,6 +155,8 @@ public class Config {
 		public static ConfigurableMessage noAccessToServer;
 		public static ConfigurableMessage couldNotConnectToServer;
 		public static ConfigurableMessage connectedToServer;
+		public static IndividualConfigurableMessage joinMessage;
+		public static IndividualConfigurableMessage quitMessage;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -186,6 +197,8 @@ public class Config {
 					"Could not connect to server %s: %s");
 			connectedToServer = config.getConfigurableMessage("messages.ConnectedToServer", 1,
 					"Connected to server %s.");
+			joinMessage = new IndividualConfigurableMessage(config, "messages.join");
+			quitMessage = new IndividualConfigurableMessage(config, "messages.quit");
 		}		
 	}
 

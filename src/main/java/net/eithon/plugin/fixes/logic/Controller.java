@@ -10,6 +10,7 @@ import java.util.UUID;
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.library.facades.ZPermissionsFacade;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.AlarmTrigger;
@@ -34,6 +35,7 @@ public class Controller {
 	private Logger _eithonLogger;
 	private EithonPlugin _eithonPlugin;
 	private boolean _hasRegisteredOutgoingPluginChannel;
+	private IndividualMessageController _individualMessageController;
 
 	public Controller(EithonPlugin plugin) {
 		this._eithonPlugin = plugin;
@@ -44,6 +46,7 @@ public class Controller {
 		this._spawnPointController = new SpawnPointController(plugin);
 		this._coolDownCommandController = new CoolDownCommandController(plugin);
 		this._coolDownWorldController = new CoolDownWorldController(plugin);
+		this._individualMessageController = new IndividualMessageController(plugin);
 		this._hasRegisteredOutgoingPluginChannel = false;
 		Config.V.commandScheduler.start();
 	}
@@ -288,6 +291,37 @@ public class Controller {
 		}
 		player.sendPluginMessage(this._eithonPlugin, "BungeeCord", b.toByteArray());
 		return true;
+	}
+
+	public void bungeeJoin(Player player) {
+		Config.C.bungeeJoin.execute(player.getServer().getName(), player.getUniqueId(), getHighestGroup(player));
+	}
+
+	public void playerJoined(String serverName, EithonPlayer player, String groupName) {
+		this._individualMessageController.playerJoined(serverName, player, groupName);
+	}
+
+	public void bungeeQuit(Player player) {
+		Config.C.bungeeJoin.execute(player.getServer().getName(), player.getUniqueId(), getHighestGroup(player));
+	}
+
+	public void playerQuit(String serverName, EithonPlayer player, String groupName) {
+		this._individualMessageController.playerQuit(serverName, player, groupName);
+	}
+
+	private String getHighestGroup(Player player) {
+		verbose("getHighestGroup", "Enter, Player = %s", player.getName());
+		String[] currentGroups = ZPermissionsFacade.getPlayerPermissionGroups(player);
+		for (String priorityGroup : Config.V.groupPriorities) {
+			for (String playerGroup : currentGroups) {
+				if (playerGroup.equalsIgnoreCase(priorityGroup)) {
+					verbose("getHighestGroup", "Leave, priorityGroup = %s", priorityGroup);
+					return priorityGroup;
+				}
+			}
+		}
+		verbose("getHighestGroup", "Leave, priorityGroup = null");
+		return null;
 	}
 
 	private boolean playerCanConnectToServer(Player player, String serverName) {

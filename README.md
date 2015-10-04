@@ -4,6 +4,11 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.22 (2015-10-04)
+
+* NEW: Added bungee login message.
+* NEW: Added bungee command.
+
 ### 1.21 (2015-09-23)
 
 * NEW: Added spawn points.

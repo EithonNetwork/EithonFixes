@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
@@ -48,8 +49,17 @@ public class EventListener implements Listener {
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (player == null) return;
+		this._controller.bungeeJoin(player);
 		maybeTeleportToSpawnPoint(player);
 		maybeBroadcast(event, player);
+	}
+
+	// Inform everyone that we have a new player on the server
+	@EventHandler
+	public void onPlayerQuitEvent(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		if (player == null) return;
+		this._controller.bungeeQuit(player);
 	}
 
 	private boolean maybeTeleportToSpawnPoint(Player player) {
