@@ -129,9 +129,9 @@ public class Config {
 			stopFly = config.getConfigurableCommand("commands.StopFly", 0,
 					"fly");
 			bungeeJoin = config.getConfigurableCommand("commands.BungeeJoin", 3,
-					"sync console all eithonfixes join %s %s %s");
+					"sync console all eithonfixes bungee join %s %s %s");
 			bungeeQuit = config.getConfigurableCommand("commands.BungeeQuit", 3,
-					"sync console all eithonfixes quit %s %s %s");
+					"sync console all eithonfixes bungee quit %s %s %s");
 		}
 
 	}

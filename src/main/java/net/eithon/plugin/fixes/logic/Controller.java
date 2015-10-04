@@ -294,7 +294,7 @@ public class Controller {
 	}
 
 	public void bungeeJoin(Player player) {
-		Config.C.bungeeJoin.execute(player.getServer().getName(), player.getUniqueId(), getHighestGroup(player));
+		Config.C.bungeeJoin.execute(Bukkit.getServer().getName(), player.getUniqueId(), getHighestGroup(player));
 	}
 
 	public void playerJoined(String serverName, EithonPlayer player, String groupName) {
@@ -302,7 +302,7 @@ public class Controller {
 	}
 
 	public void bungeeQuit(Player player) {
-		Config.C.bungeeJoin.execute(player.getServer().getName(), player.getUniqueId(), getHighestGroup(player));
+		Config.C.bungeeQuit.execute(Bukkit.getServer().getName(), player.getUniqueId(), getHighestGroup(player));
 	}
 
 	public void playerQuit(String serverName, EithonPlayer player, String groupName) {
