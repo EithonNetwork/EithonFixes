@@ -1,5 +1,7 @@
 package net.eithon.plugin.fixes.logic;
 
+import java.util.HashMap;
+
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.facades.ZPermissionsFacade;
 import net.eithon.library.plugin.ConfigurableMessage;
@@ -18,8 +20,12 @@ public class IndividualMessageController {
 	public void playerJoined(Player player) {
 		String playerName = player.getName();
 		String highestGroup = getHighestGroup(player);
-		ConfigurableMessage message = Config.M.joinMessage.getMessage(playerName, highestGroup);
-		if (message == null) return;
+		ConfigurableMessage configurableMessage = Config.M.joinMessage.getMessage(playerName, highestGroup);
+		if (configurableMessage == null) return;
+		HashMap<String,String> namedArguments = new HashMap<String, String>();
+		namedArguments.put("PLAYER_NAME", playerName);
+		namedArguments.put("SERVER_NAME", player.getServer().getName());
+		String message = configurableMessage.getMessageWithColorCoding(namedArguments);
 		Config.C.bungeeBroadcast.execute(message);
 	}
 
