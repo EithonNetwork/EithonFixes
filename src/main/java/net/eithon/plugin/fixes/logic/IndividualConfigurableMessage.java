@@ -18,7 +18,7 @@ public class IndividualConfigurableMessage {
 		this._configurationPath = configurationPath;
 		this._defaultMessage = config.getConfigurableMessage(
 				configurationPath + ".message", 0,
-				"[color=green]+[/color] [color=yellow]%name[/color] [color=gray]has joined the server.[/color]");
+				"[color=green]+[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has joined the server.[/color]");
 		this._playerMessages = new HashMap<String, ConfigurableMessage>();
 		this._groupMessages = new HashMap<String, ConfigurableMessage>();
 	}
