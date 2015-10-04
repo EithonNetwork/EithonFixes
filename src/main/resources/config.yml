@@ -260,11 +260,10 @@ messages:
   #
   # Parameters: <server name> (%s)
   ConnectedToServer: Connected to server %s.
-  
-  
+
   join:
-    message: '[color=green]+[/color] [color=yellow]%name[/color] [color=gray]has joined the server.[/color]'
-    groups:
+      message: '[color=green]+[/color] [color=yellow]%name[/color] [color=gray]has joined the server.[/color]'
+      groups:
         Owner: '[color=green]+[/color] [color=red]%name[/color] [color=gray]has joined the server.[/color]'
         Admin: '[color=green]+[/color] [color=red]%name[/color] [color=gray]has joined the server.[/color]'
         Developer: '[color=green]+[/color] [color=darkpurple]%name[/color] [color=gray]has joined the server.[/color]'
