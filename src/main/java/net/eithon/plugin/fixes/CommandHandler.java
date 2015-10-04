@@ -114,16 +114,16 @@ public class CommandHandler implements ICommandHandler {
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(4, 5)) return;
 
 		String subCommand = commandParser.getArgumentStringAsLowercase();
-			String serverName = commandParser.getArgumentString();
-			EithonPlayer player = commandParser.getArgumentEithonPlayer((EithonPlayer) null);
-			if (player == null) {
-				commandParser.showCommandSyntax();
-				return;
-			}
-			String groupName = commandParser.getArgumentString();
-			if (subCommand.equalsIgnoreCase("join")) {
+		String serverName = commandParser.getArgumentString();
+		EithonPlayer player = commandParser.getArgumentEithonPlayer((EithonPlayer) null);
+		if (player == null) {
+			commandParser.showCommandSyntax();
+			return;
+		}
+		String groupName = commandParser.getArgumentString();
+		if (subCommand.equalsIgnoreCase("join")) {
 			this._controller.playerJoined(serverName, player, groupName);
-			} else if (subCommand.equalsIgnoreCase("quit")) {
+		} else if (subCommand.equalsIgnoreCase("quit")) {
 			this._controller.playerQuit(serverName, player, groupName);
 		} else {
 			commandParser.showCommandSyntax();			
