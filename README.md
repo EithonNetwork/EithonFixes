@@ -4,6 +4,14 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.22.2 (2015-10-04)
+
+* BUG: Wrong server name.
+
+### 1.22.1 (2015-10-04)
+
+* BUG: Quit message was announced as join.
+
 ### 1.22 (2015-10-04)
 
 * NEW: Added bungee login message.
