@@ -48,6 +48,7 @@ public class EventListener implements Listener {
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (player == null) return;
+		this._controller.playerJoined(player);
 		maybeTeleportToSpawnPoint(player);
 		maybeBroadcast(event, player);
 	}

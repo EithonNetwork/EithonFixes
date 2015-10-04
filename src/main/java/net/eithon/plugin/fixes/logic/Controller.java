@@ -34,6 +34,7 @@ public class Controller {
 	private Logger _eithonLogger;
 	private EithonPlugin _eithonPlugin;
 	private boolean _hasRegisteredOutgoingPluginChannel;
+	private IndividualMessageController _individualMessageController;
 
 	public Controller(EithonPlugin plugin) {
 		this._eithonPlugin = plugin;
@@ -44,6 +45,7 @@ public class Controller {
 		this._spawnPointController = new SpawnPointController(plugin);
 		this._coolDownCommandController = new CoolDownCommandController(plugin);
 		this._coolDownWorldController = new CoolDownWorldController(plugin);
+		this._individualMessageController = new IndividualMessageController(plugin);
 		this._hasRegisteredOutgoingPluginChannel = false;
 		Config.V.commandScheduler.start();
 	}
@@ -298,5 +300,10 @@ public class Controller {
 	private void verbose(String method, String format, Object... args) {
 		String message = CoreMisc.safeFormat(format, args);
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
+	}
+
+	public void playerJoined(Player player) {
+		this._individualMessageController.playerJoined(player);
+		
 	}
 }
