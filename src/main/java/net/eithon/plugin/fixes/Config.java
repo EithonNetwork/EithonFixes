@@ -112,8 +112,6 @@ public class Config {
 		public static ConfigurableCommand joinChat;
 		public static ConfigurableCommand leaveChat;
 		public static ConfigurableCommand stopFly;
-		public static ConfigurableCommand bungeeJoin;
-		public static ConfigurableCommand bungeeQuit;
 
 		static void load(Configuration config) {
 			give = config.getConfigurableCommand("commands.GiveCommand", 3,
@@ -126,10 +124,6 @@ public class Config {
 					"ch leave %s");
 			stopFly = config.getConfigurableCommand("commands.StopFly", 0,
 					"fly");
-			bungeeJoin = config.getConfigurableCommand("commands.BungeeJoin", 3,
-					"sync console all eithonfixes bungee join %s %s %s");
-			bungeeQuit = config.getConfigurableCommand("commands.BungeeQuit", 3,
-					"sync console all eithonfixes bungee quit %s %s %s");
 		}
 
 	}
