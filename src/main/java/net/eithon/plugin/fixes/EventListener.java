@@ -64,7 +64,7 @@ public class EventListener implements Listener {
 		verbose("onEithonBungeeJoinEvent", "Enter");
 		EithonPlayer player = event.getPlayer();
 		if (player == null) return;
-		this._controller.playerJoined(event.getServerName(), player, event.getMainGroup());
+		this._controller.broadcastPlayerJoined(event.getServerName(), player, event.getMainGroup());
 		verbose("onEithonBungeeJoinEvent", "Leave");
 	}
 
@@ -83,7 +83,7 @@ public class EventListener implements Listener {
 		verbose("onEithonBungeeQuitEvent", "Enter");
 		EithonPlayer player = event.getPlayer();
 		if (player == null) return;
-		this._controller.playerQuitted(event.getServerName(), player, event.getMainGroup());
+		this._controller.broadcastPlayerQuitted(event.getServerName(), player, event.getMainGroup());
 		verbose("onEithonBungeeQuitEvent", "Leave");
 	}
 

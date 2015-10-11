@@ -16,11 +16,11 @@ public class IndividualMessageController {
 		this._eithonPlugin = eithonPlugin;
 	}
 	
-	public void playerJoined(String serverName, EithonPlayer player, String groupName) {
+	public void broadcastPlayerJoined(String serverName, EithonPlayer player, String groupName) {
 		broadcastMessage(Config.M.joinMessage, serverName, player, groupName);
 	}
 	
-	public void playerQuit(String serverName, EithonPlayer player, String groupName) {
+	public void broadcastPlayerQuit(String serverName, EithonPlayer player, String groupName) {
 		broadcastMessage(Config.M.quitMessage, serverName, player, groupName);
 	}
 	

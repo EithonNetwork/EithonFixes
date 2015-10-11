@@ -278,18 +278,18 @@ public class Controller {
 		return true;
 	}
 
-	public void playerJoined(String serverName, EithonPlayer player, String groupName) {
-		verbose("playerJoined", String.format("Enter: serverName=%s, player=%s, groupName=%s",
+	public void broadcastPlayerJoined(String serverName, EithonPlayer player, String groupName) {
+		verbose("broadcastPlayerJoined", String.format("Enter: serverName=%s, player=%s, groupName=%s",
 				serverName, player.getName(), groupName));
-		this._individualMessageController.playerJoined(serverName, player, groupName);
-		verbose("playerJoined", "Leave");
+		this._individualMessageController.broadcastPlayerJoined(serverName, player, groupName);
+		verbose("broadcastPlayerJoined", "Leave");
 	}
 
-	public void playerQuitted(String serverName, EithonPlayer player, String groupName) {
-		verbose("playerQuitted", String.format("Enter: serverName=%s, player=%s, groupName=%s",
+	public void broadcastPlayerQuitted(String serverName, EithonPlayer player, String groupName) {
+		verbose("broadcastPlayerQuitted", String.format("Enter: serverName=%s, player=%s, groupName=%s",
 				serverName, player.getName(), groupName));
-		this._individualMessageController.playerQuit(serverName, player, groupName);
-		verbose("playerQuitted", "Leave");
+		this._individualMessageController.broadcastPlayerQuit(serverName, player, groupName);
+		verbose("broadcastPlayerQuitted", "Leave");
 	}
 
 	private boolean playerCanConnectToServer(Player player, String serverName) {
