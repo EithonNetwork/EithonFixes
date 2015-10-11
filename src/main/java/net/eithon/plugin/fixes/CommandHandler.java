@@ -2,6 +2,7 @@ package net.eithon.plugin.fixes;
 
 import java.time.LocalDateTime;
 
+import net.eithon.library.bungee.BungeeSender;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.CommandParser;
@@ -29,8 +30,10 @@ public class CommandHandler implements ICommandHandler {
 	private static final String SERVER_COMMAND = "/eithonfixes server <server name>";
 	private static final String RESTART_COMMAND = "/eithonfixes restart [cancel | [<time to restart>]]";
 	private Controller _controller;
+	private EithonPlugin _eithonPlugin;
 
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
+		this._eithonPlugin = eithonPlugin;
 		this._controller = controller;
 	}
 
@@ -281,6 +284,9 @@ public class CommandHandler implements ICommandHandler {
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.test")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
 		Player player = commandParser.getPlayer();
+		BungeeSender bungeeSender = this._eithonPlugin.getBungeeSender();
+		bungeeSender.getServer();
+		bungeeSender.eithonTest();
 		player.sendMessage(String.format("TEST by player %s", player.getName()));
 	}
 

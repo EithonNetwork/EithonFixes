@@ -1,12 +1,10 @@
 package net.eithon.plugin.fixes.logic;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 
+import net.eithon.library.bungee.BungeeSender;
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
@@ -34,7 +32,6 @@ public class Controller {
 	private LocalDateTime _whenRestart;
 	private Logger _eithonLogger;
 	private EithonPlugin _eithonPlugin;
-	private boolean _hasRegisteredOutgoingPluginChannel;
 	private IndividualMessageController _individualMessageController;
 
 	public Controller(EithonPlugin plugin) {
@@ -47,7 +44,6 @@ public class Controller {
 		this._coolDownCommandController = new CoolDownCommandController(plugin);
 		this._coolDownWorldController = new CoolDownWorldController(plugin);
 		this._individualMessageController = new IndividualMessageController(plugin);
-		this._hasRegisteredOutgoingPluginChannel = false;
 		Config.V.commandScheduler.start();
 	}
 
@@ -274,22 +270,13 @@ public class Controller {
 			return false;
 		}
 		
-		if (!this._hasRegisteredOutgoingPluginChannel) {
-			Bukkit.getMessenger().registerOutgoingPluginChannel(this._eithonPlugin, "BungeeCord");
-			this._hasRegisteredOutgoingPluginChannel = true;
-		}
+		BungeeSender bungeeSender = this._eithonPlugin.getBungeeSender();
+		boolean success = bungeeSender.connect(player, serverName);
 
-		ByteArrayOutputStream b = new ByteArrayOutputStream();
-		DataOutputStream out = new DataOutputStream(b);
-
-		try {
-			out.writeUTF("Connect");
-			out.writeUTF(serverName);
-		} catch (IOException ex) {
-			Config.M.couldNotConnectToServer.sendMessage(player, serverName, ex.getMessage());
+		if (!success) {
+			Config.M.couldNotConnectToServer.sendMessage(player, serverName, "Unspecified fail reason");
 			return false;
 		}
-		player.sendPluginMessage(this._eithonPlugin, "BungeeCord", b.toByteArray());
 		return true;
 	}
 

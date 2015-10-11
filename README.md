@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.23 (2015-10-11)
+
+* NEW: Bungee cord test
+
 ### 1.22.2 (2015-10-04)
 
 * BUG: Wrong server name.
