@@ -4,6 +4,14 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.24.1 (2015-10-11)
+
+* BUG: Minor fixes for EithonBungeeJoinEvent.
+
+### 1.24 (2015-10-11)
+
+* NEW: Added EithonBungeeJoinEvent.
+
 ### 1.23 (2015-10-11)
 
 * NEW: Bungee cord test

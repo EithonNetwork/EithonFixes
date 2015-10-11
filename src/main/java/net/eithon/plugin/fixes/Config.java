@@ -39,7 +39,6 @@ public class Config {
 		public static double consecutiveDaysBaseAmount;
 		public static double consecutiveDaysMultiplyAmount;
 		public static CommandScheduler commandScheduler;
-		public static List<String> groupPriorities;
 		
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
@@ -58,7 +57,6 @@ public class Config {
 			consecutiveDaysBaseAmount = config.getDouble("ConsecutiveDaysBaseAmount", 50);
 			consecutiveDaysMultiplyAmount = config.getDouble("ConsecutiveDaysMultiplyAmount", 25);
 			commandScheduler = CommandScheduler.getFromConfig(config, "schedule");
-			groupPriorities = config.getStringList("GroupPriorities");
 		}
 
 		private static List<CoolDownInfo> loadCoolDownCommandsConfig(Configuration config,
@@ -114,8 +112,6 @@ public class Config {
 		public static ConfigurableCommand joinChat;
 		public static ConfigurableCommand leaveChat;
 		public static ConfigurableCommand stopFly;
-		public static ConfigurableCommand bungeeJoin;
-		public static ConfigurableCommand bungeeQuit;
 
 		static void load(Configuration config) {
 			give = config.getConfigurableCommand("commands.GiveCommand", 3,
@@ -128,10 +124,6 @@ public class Config {
 					"ch leave %s");
 			stopFly = config.getConfigurableCommand("commands.StopFly", 0,
 					"fly");
-			bungeeJoin = config.getConfigurableCommand("commands.BungeeJoin", 3,
-					"sync console all eithonfixes bungee join %s %s %s");
-			bungeeQuit = config.getConfigurableCommand("commands.BungeeQuit", 3,
-					"sync console all eithonfixes bungee quit %s %s %s");
 		}
 
 	}

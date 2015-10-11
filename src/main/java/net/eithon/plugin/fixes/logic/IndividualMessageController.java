@@ -25,8 +25,9 @@ public class IndividualMessageController {
 	}
 	
 	private void broadcastMessage(IndividualConfigurableMessage message, String serverName, EithonPlayer player, String groupName) {
-		verbose("broadCastMessage", "Enter, serverName =%s, Player = %s", serverName, player.getName());
-		String playerName = player.getName();
+		verbose("broadCastMessage", "Enter, serverName =%s, Player = %s, group = %s", 
+				serverName, player == null ? "Unknown" : player.getName(), groupName);
+		String playerName = player == null ? "Unknown" : player.getName();
 		ConfigurableMessage configurableMessage = message.getMessage(playerName, groupName);
 		if (configurableMessage == null) {
 			verbose("broadCastMessage", "Leave, No configurable message", player.getName());

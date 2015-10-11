@@ -2,7 +2,6 @@ package net.eithon.plugin.fixes;
 
 import java.time.LocalDateTime;
 
-import net.eithon.library.bungee.BungeeSender;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.CommandParser;
@@ -15,7 +14,6 @@ import org.bukkit.entity.Player;
 public class CommandHandler implements ICommandHandler {
 	private static final String BUY_COMMAND = "/eithonfixes buy <player> <item> <price> <amount>";
 	private static final String BALANCE_COMMAND = "/eithonfixes balance";
-	private static final String BUNGEE_JOIN_COMMAND = "/eithonfixes bungee join <server name> <player id or name> [<group name>]";
 	private static final String RCADD_COMMAND = "/eithonfixes rcadd <name> <command>";
 	private static final String RCEDIT_COMMAND = "/eithonfixes rcedit <name> <command>";
 	private static final String RCSET_COMMAND = "/eithonfixes rcset <name> <onEnter> <onOtherWorld>";
@@ -30,10 +28,8 @@ public class CommandHandler implements ICommandHandler {
 	private static final String SERVER_COMMAND = "/eithonfixes server <server name>";
 	private static final String RESTART_COMMAND = "/eithonfixes restart [cancel | [<time to restart>]]";
 	private Controller _controller;
-	private EithonPlugin _eithonPlugin;
 
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
-		this._eithonPlugin = eithonPlugin;
 		this._controller = controller;
 	}
 
@@ -45,8 +41,6 @@ public class CommandHandler implements ICommandHandler {
 			buyCommand(commandParser);
 		} else if (command.equals("balance")) {
 			balanceCommand(commandParser);
-		} else if (command.equals("bungee")) {
-			bungeeCommand(commandParser);
 		} else if (command.equals("rcadd")) {
 			rcAddCommand(commandParser);
 		} else if (command.equals("rcedit")) {
@@ -284,9 +278,6 @@ public class CommandHandler implements ICommandHandler {
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.test")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
 		Player player = commandParser.getPlayer();
-		BungeeSender bungeeSender = this._eithonPlugin.getBungeeSender();
-		bungeeSender.getServer();
-		bungeeSender.eithonTest();
 		player.sendMessage(String.format("TEST by player %s", player.getName()));
 	}
 
@@ -308,8 +299,6 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(BUY_COMMAND);
 		} else if (command.equals("balance")) {
 			sender.sendMessage(BALANCE_COMMAND);
-		} else if (command.equals("bungee")) {
-			sender.sendMessage(BUNGEE_JOIN_COMMAND);
 		} else if (command.equals("rcadd")) {
 			sender.sendMessage(RCADD_COMMAND);
 		} else if (command.equals("rcedit")) {

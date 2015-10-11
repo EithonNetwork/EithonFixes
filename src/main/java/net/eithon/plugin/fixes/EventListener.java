@@ -3,6 +3,8 @@ package net.eithon.plugin.fixes;
 import java.math.BigDecimal;
 
 import net.diecode.KillerMoney.CustomEvents.KillerMoneyMoneyRewardEvent;
+import net.eithon.library.bungee.EithonBungeeJoinEvent;
+import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
@@ -18,7 +20,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
@@ -44,22 +45,23 @@ public class EventListener implements Listener {
 		this._controller.playerDied(player);
 	}
 
-	// Inform everyone that we have a new player on the server
+	// Inform everyone if we have a new player on the server
 	@EventHandler
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (player == null) return;
-		this._controller.bungeeJoin(player);
 		maybeTeleportToSpawnPoint(player);
 		maybeBroadcast(event, player);
 	}
 
-	// Inform everyone that we have a new player on the server
+	// Inform everyone that a player joined
 	@EventHandler
-	public void onPlayerQuitEvent(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
+	public void onEithonBungeeJoinEvent(EithonBungeeJoinEvent event) {
+		verbose("onEithonBungeeJoinEvent", "Enter");
+		EithonPlayer player = event.getPlayer();
 		if (player == null) return;
-		this._controller.bungeeQuit(player);
+		this._controller.playerJoined(event.getServerName(), player, event.getMainGroup());
+		verbose("onEithonBungeeJoinEvent", "Leave");
 	}
 
 	private boolean maybeTeleportToSpawnPoint(Player player) {
