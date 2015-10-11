@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import net.diecode.KillerMoney.CustomEvents.KillerMoneyMoneyRewardEvent;
 import net.eithon.library.bungee.EithonBungeeJoinEvent;
+import net.eithon.library.bungee.EithonBungeeQuitEvent;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
@@ -20,6 +21,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
@@ -45,16 +47,18 @@ public class EventListener implements Listener {
 		this._controller.playerDied(player);
 	}
 
-	// Inform everyone if we have a new player on the server
+	// Inform everyone if we have a new player on this server
 	@EventHandler
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (player == null) return;
 		maybeTeleportToSpawnPoint(player);
 		maybeBroadcast(event, player);
+		String joinMessage = this._controller.getJoinMessage(player);
+		if (joinMessage != null) event.setJoinMessage(joinMessage);
 	}
 
-	// Inform everyone that a player joined
+	// Inform everyone that a player joined on another server
 	@EventHandler
 	public void onEithonBungeeJoinEvent(EithonBungeeJoinEvent event) {
 		verbose("onEithonBungeeJoinEvent", "Enter");
@@ -62,6 +66,25 @@ public class EventListener implements Listener {
 		if (player == null) return;
 		this._controller.playerJoined(event.getServerName(), player, event.getMainGroup());
 		verbose("onEithonBungeeJoinEvent", "Leave");
+	}
+
+	// Inform everyone that a player left this server
+	@EventHandler
+	public void onPlayerQuitEvent(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		if (player == null) return;
+		String quitMessage = this._controller.getQuitMessage(player);
+		if (quitMessage != null) event.setQuitMessage(quitMessage);
+	}
+
+	// Inform everyone that a player left another server
+	@EventHandler
+	public void onEithonBungeeQuitEvent(EithonBungeeQuitEvent event) {
+		verbose("onEithonBungeeQuitEvent", "Enter");
+		EithonPlayer player = event.getPlayer();
+		if (player == null) return;
+		this._controller.playerQuitted(event.getServerName(), player, event.getMainGroup());
+		verbose("onEithonBungeeQuitEvent", "Leave");
 	}
 
 	private boolean maybeTeleportToSpawnPoint(Player player) {

@@ -24,6 +24,14 @@ public class IndividualMessageController {
 		broadcastMessage(Config.M.quitMessage, serverName, player, groupName);
 	}
 	
+	public String getJoinMessage(String serverName, EithonPlayer player, String groupName) {
+		return getIndividualMessage(Config.M.joinMessage, serverName, player, groupName);
+	}
+	
+	public String getQuitMessage(String serverName, EithonPlayer player, String groupName) {
+		return getIndividualMessage(Config.M.quitMessage, serverName, player, groupName);
+	}
+	
 	private void broadcastMessage(IndividualConfigurableMessage message, String serverName, EithonPlayer player, String groupName) {
 		verbose("broadCastMessage", "Enter, serverName =%s, Player = %s, group = %s", 
 				serverName, player == null ? "Unknown" : player.getName(), groupName);
@@ -38,6 +46,22 @@ public class IndividualMessageController {
 		namedArguments.put("SERVER_NAME", serverName);
 		configurableMessage.broadcastMessage(namedArguments);
 		verbose("broadCastMessage", "Leave");
+	}
+	
+	private String getIndividualMessage(IndividualConfigurableMessage message, String serverName, EithonPlayer player, String groupName) {
+		verbose("getIndividualMessage", "Enter, serverName =%s, Player = %s, group = %s", 
+				serverName, player == null ? "Unknown" : player.getName(), groupName);
+		String playerName = player == null ? "Unknown" : player.getName();
+		ConfigurableMessage configurableMessage = message.getMessage(playerName, groupName);
+		if (configurableMessage == null) {
+			verbose("getIndividualMessage", "Leave, No configurable message", player.getName());
+			return null;
+		}
+		HashMap<String,String> namedArguments = new HashMap<String, String>();
+		namedArguments.put("PLAYER_NAME", playerName);
+		namedArguments.put("SERVER_NAME", serverName);
+		verbose("getIndividualMessage", "Leave");
+		return configurableMessage.getMessageWithColorCoding(namedArguments);
 	}
 
 	private void verbose(String method, String format, Object... args) {
