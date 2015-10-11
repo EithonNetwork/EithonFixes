@@ -39,7 +39,6 @@ public class Config {
 		public static double consecutiveDaysBaseAmount;
 		public static double consecutiveDaysMultiplyAmount;
 		public static CommandScheduler commandScheduler;
-		public static List<String> groupPriorities;
 		
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
@@ -58,7 +57,6 @@ public class Config {
 			consecutiveDaysBaseAmount = config.getDouble("ConsecutiveDaysBaseAmount", 50);
 			consecutiveDaysMultiplyAmount = config.getDouble("ConsecutiveDaysMultiplyAmount", 25);
 			commandScheduler = CommandScheduler.getFromConfig(config, "schedule");
-			groupPriorities = config.getStringList("GroupPriorities");
 		}
 
 		private static List<CoolDownInfo> loadCoolDownCommandsConfig(Configuration config,
