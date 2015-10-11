@@ -4,6 +4,11 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.25 (2015-10-11)
+
+* NEW: Added EithonBungeeQuitEvent
+* BUG: There were double join and quit messages.
+
 ### 1.24.1 (2015-10-11)
 
 * BUG: Minor fixes for EithonBungeeJoinEvent.

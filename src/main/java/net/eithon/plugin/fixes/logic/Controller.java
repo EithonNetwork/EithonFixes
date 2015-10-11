@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 
+import net.eithon.library.bungee.BungeeController;
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
@@ -262,12 +263,12 @@ public class Controller {
 			Config.M.alreadyConnectedToServer.sendMessage(player, serverName);
 			return false;
 		}
-		
+
 		if (!playerCanConnectToServer(player, serverName)) {
 			Config.M.noAccessToServer.sendMessage(player, serverName);
 			return false;
 		}
-		
+
 		boolean success = this._eithonPlugin.teleportPlayerToServer(player, serverName);
 
 		if (!success) {
@@ -277,15 +278,18 @@ public class Controller {
 		return true;
 	}
 
-	public void playerJoined(String serverName, EithonPlayer player, String groupName) {
-		verbose("playerJoined", String.format("Enter: serverName=%s, player=%s, groupName=%s",
+	public void broadcastPlayerJoined(String serverName, EithonPlayer player, String groupName) {
+		verbose("broadcastPlayerJoined", String.format("Enter: serverName=%s, player=%s, groupName=%s",
 				serverName, player.getName(), groupName));
-		this._individualMessageController.playerJoined(serverName, player, groupName);
-		verbose("playerJoined", "Leave");
+		this._individualMessageController.broadcastPlayerJoined(serverName, player, groupName);
+		verbose("broadcastPlayerJoined", "Leave");
 	}
 
-	public void playerQuit(String serverName, EithonPlayer player, String groupName) {
-		this._individualMessageController.playerQuit(serverName, player, groupName);
+	public void broadcastPlayerQuitted(String serverName, EithonPlayer player, String groupName) {
+		verbose("broadcastPlayerQuitted", String.format("Enter: serverName=%s, player=%s, groupName=%s",
+				serverName, player.getName(), groupName));
+		this._individualMessageController.broadcastPlayerQuit(serverName, player, groupName);
+		verbose("broadcastPlayerQuitted", "Leave");
 	}
 
 	private boolean playerCanConnectToServer(Player player, String serverName) {
@@ -296,5 +300,19 @@ public class Controller {
 	private void verbose(String method, String format, Object... args) {
 		String message = CoreMisc.safeFormat(format, args);
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
+	}
+
+	public String getJoinMessage(Player player) {
+		String serverName = this._eithonPlugin.getBungeeServerName();
+		EithonPlayer eithonPlayer = new EithonPlayer(player);
+		String mainGroup = BungeeController.getHighestGroup(player);
+		return this._individualMessageController.getJoinMessage(serverName, eithonPlayer, mainGroup);
+	}
+
+	public String getQuitMessage(Player player) {
+		String serverName = this._eithonPlugin.getBungeeServerName();
+		EithonPlayer eithonPlayer = new EithonPlayer(player);
+		String mainGroup = BungeeController.getHighestGroup(player);
+		return this._individualMessageController.getQuitMessage(serverName, eithonPlayer, mainGroup);
 	}
 }

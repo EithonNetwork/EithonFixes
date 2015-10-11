@@ -105,28 +105,6 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.displayBalance(player);
 	}
 
-	void bungeeCommand(CommandParser commandParser)
-	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.bungee")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(4, 5)) return;
-
-		String subCommand = commandParser.getArgumentStringAsLowercase();
-		String serverName = commandParser.getArgumentString();
-		EithonPlayer player = commandParser.getArgumentEithonPlayer((EithonPlayer) null);
-		if (player == null) {
-			commandParser.showCommandSyntax();
-			return;
-		}
-		String groupName = commandParser.getArgumentString();
-		if (subCommand.equalsIgnoreCase("join")) {
-			this._controller.playerJoined(serverName, player, groupName);
-		} else if (subCommand.equalsIgnoreCase("quit")) {
-			this._controller.playerQuit(serverName, player, groupName);
-		} else {
-			commandParser.showCommandSyntax();			
-		}
-	}
-
 	void rcAddCommand(CommandParser commandParser)
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcadd")) return;
