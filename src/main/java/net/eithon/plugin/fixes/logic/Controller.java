@@ -8,10 +8,12 @@ import net.eithon.library.bungee.BungeeController;
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.library.facades.EithonLibraryFacade;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.AlarmTrigger;
 import net.eithon.library.time.TimeMisc;
+import net.eithon.plugin.eithonlibrary.EithonLibraryApi;
 import net.eithon.plugin.fixes.Config;
 
 import org.bukkit.Bukkit;
@@ -32,10 +34,12 @@ public class Controller {
 	private Logger _eithonLogger;
 	private EithonPlugin _eithonPlugin;
 	private IndividualMessageController _individualMessageController;
+	private EithonLibraryApi _eithonLibraryApi;
 
 	public Controller(EithonPlugin plugin) {
 		this._eithonPlugin = plugin;
 		this._eithonLogger = plugin.getEithonLogger();
+		this._eithonLibraryApi = new EithonLibraryFacade(plugin).getApi();
 		this._killerMoneyController = new KillerMoneyController(plugin);
 		this._buyController = new BuyController(plugin);
 		this._regionCommandController = new RegionCommandController(plugin);
@@ -303,14 +307,14 @@ public class Controller {
 	}
 
 	public String getJoinMessage(Player player) {
-		String serverName = this._eithonPlugin.getBungeeServerName();
+		String serverName = this._eithonLibraryApi.getBungeeServerName();
 		EithonPlayer eithonPlayer = new EithonPlayer(player);
 		String mainGroup = BungeeController.getHighestGroup(player);
 		return this._individualMessageController.getJoinMessage(serverName, eithonPlayer, mainGroup);
 	}
 
 	public String getQuitMessage(Player player) {
-		String serverName = this._eithonPlugin.getBungeeServerName();
+		String serverName = this._eithonLibraryApi.getBungeeServerName();
 		EithonPlayer eithonPlayer = new EithonPlayer(player);
 		String mainGroup = BungeeController.getHighestGroup(player);
 		return this._individualMessageController.getQuitMessage(serverName, eithonPlayer, mainGroup);

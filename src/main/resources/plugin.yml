@@ -1,6 +1,6 @@
 name: EithonFixes
 main: net.eithon.plugin.fixes.Plugin
-version: 1.25
+version: 1.25.2
 author: vanbrayne
 softdepend: [Essentials, WorldEdit, EithonStats, KillerMoney]
 depend: [EithonLibrary]
