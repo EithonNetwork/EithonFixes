@@ -314,7 +314,7 @@ public class Controller {
 	}
 
 	public String getQuitMessage(Player player) {
-		String serverName = this._eithonPlugin.getBungeeServerName();
+		String serverName = this._eithonLibraryApi.getBungeeServerName();
 		EithonPlayer eithonPlayer = new EithonPlayer(player);
 		String mainGroup = BungeeController.getHighestGroup(player);
 		return this._individualMessageController.getQuitMessage(serverName, eithonPlayer, mainGroup);
