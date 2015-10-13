@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.26 (2015-10-13)
+
+* CHANGE: New EithonLibrary
+
 ### 1.25.2 (2015-10-12)
 
 * BUG: The bungee server name was empty for quit messages.

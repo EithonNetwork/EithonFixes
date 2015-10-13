@@ -8,7 +8,6 @@ import net.eithon.library.bungee.BungeeController;
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.facades.EithonLibraryFacade;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.AlarmTrigger;
@@ -39,7 +38,7 @@ public class Controller {
 	public Controller(EithonPlugin plugin) {
 		this._eithonPlugin = plugin;
 		this._eithonLogger = plugin.getEithonLogger();
-		this._eithonLibraryApi = new EithonLibraryFacade(plugin).getApi();
+		this._eithonLibraryApi = plugin.getApi();
 		this._killerMoneyController = new KillerMoneyController(plugin);
 		this._buyController = new BuyController(plugin);
 		this._regionCommandController = new RegionCommandController(plugin);
@@ -273,7 +272,7 @@ public class Controller {
 			return false;
 		}
 
-		boolean success = this._eithonPlugin.teleportPlayerToServer(player, serverName);
+		boolean success = this._eithonPlugin.getApi().teleportPlayerToServer(player, serverName);
 
 		if (!success) {
 			Config.M.couldNotConnectToServer.sendMessage(player, serverName, "Unspecified fail reason");
