@@ -27,6 +27,7 @@ public class CommandHandler implements ICommandHandler {
 	private static final String SPLIST_COMMAND = "/eithonfixes splist";
 	private static final String SERVER_COMMAND = "/eithonfixes server <server name>";
 	private static final String RESTART_COMMAND = "/eithonfixes restart [cancel | [<time to restart>]]";
+	private static final String DEBUG_COMMAND = "/eithonfixes debug <plugin> <level>";
 	private Controller _controller;
 
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
@@ -41,6 +42,8 @@ public class CommandHandler implements ICommandHandler {
 			buyCommand(commandParser);
 		} else if (command.equals("balance")) {
 			balanceCommand(commandParser);
+		} else if (command.equals("debug")) {
+			debugCommand(commandParser);
 		} else if (command.equals("rcadd")) {
 			rcAddCommand(commandParser);
 		} else if (command.equals("rcedit")) {
@@ -53,6 +56,10 @@ public class CommandHandler implements ICommandHandler {
 			rcGotoCommand(commandParser);
 		} else if (command.equals("rclist")) {
 			rcListCommand(commandParser);
+		} else if (command.equals("restart")) {
+			restartCommand(commandParser);
+		} else if (command.equals("server")) {
+			serverCommand(commandParser);
 		} else if (command.equals("spadd")) {
 			spAddCommand(commandParser);
 		} else if (command.equals("spedit")) {
@@ -63,12 +70,8 @@ public class CommandHandler implements ICommandHandler {
 			spGotoCommand(commandParser);
 		} else if (command.equals("splist")) {
 			spListCommand(commandParser);
-		} else if (command.equals("restart")) {
-			restartCommand(commandParser);
 		} else if (command.equals("test")) {
 			testCommand(commandParser);
-		} else if (command.equals("server")) {
-			serverCommand(commandParser);
 		} else {
 			commandParser.showCommandSyntax();
 		}
@@ -103,6 +106,19 @@ public class CommandHandler implements ICommandHandler {
 		if (player == null) return ;
 
 		this._controller.displayBalance(player);
+	}
+
+	void debugCommand(CommandParser commandParser)
+	{
+		if (!commandParser.hasPermissionOrInformSender("eithonfixes.debug")) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(3)) return;
+
+		String pluginName = commandParser.getArgumentString();
+		int debugLevel = commandParser.getArgumentInteger(0);
+		CommandSender sender = commandParser.getSender();
+		boolean success = this._controller.setPluginDebugLevel(sender, pluginName, debugLevel);
+		if (!success) return;
+		sender.sendMessage(String.format("Plugin  %s now has debug level %d", pluginName, debugLevel));
 	}
 
 	void rcAddCommand(CommandParser commandParser)
@@ -277,6 +293,8 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(BUY_COMMAND);
 		} else if (command.equals("balance")) {
 			sender.sendMessage(BALANCE_COMMAND);
+		} else if (command.equals("debug")) {
+			sender.sendMessage(DEBUG_COMMAND);
 		} else if (command.equals("rcadd")) {
 			sender.sendMessage(RCADD_COMMAND);
 		} else if (command.equals("rcedit")) {
@@ -289,6 +307,10 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(RCGOTO_COMMAND);
 		} else if (command.equals("rclist")) {
 			sender.sendMessage(RCLIST_COMMAND);
+		} else if (command.equals("restart")) {
+			sender.sendMessage(RESTART_COMMAND);
+		} else if (command.equals("server")) {
+			sender.sendMessage(SERVER_COMMAND);
 		} else if (command.equals("spadd")) {
 			sender.sendMessage(SPADD_COMMAND);
 		} else if (command.equals("spedit")) {
@@ -299,10 +321,6 @@ public class CommandHandler implements ICommandHandler {
 			sender.sendMessage(SPGOTO_COMMAND);
 		} else if (command.equals("splist")) {
 			sender.sendMessage(SPLIST_COMMAND);
-		} else if (command.equals("restart")) {
-			sender.sendMessage(RESTART_COMMAND);
-		} else if (command.equals("server")) {
-			sender.sendMessage(SERVER_COMMAND);
 		} else {
 			sender.sendMessage(String.format("Unknown command: %s.", command));
 		}
