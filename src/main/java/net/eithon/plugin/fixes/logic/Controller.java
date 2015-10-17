@@ -8,7 +8,6 @@ import net.eithon.library.bungee.BungeeController;
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.facades.EithonLibraryFacade;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.AlarmTrigger;
@@ -39,7 +38,7 @@ public class Controller {
 	public Controller(EithonPlugin plugin) {
 		this._eithonPlugin = plugin;
 		this._eithonLogger = plugin.getEithonLogger();
-		this._eithonLibraryApi = new EithonLibraryFacade(plugin).getApi();
+		this._eithonLibraryApi = plugin.getApi();
 		this._killerMoneyController = new KillerMoneyController(plugin);
 		this._buyController = new BuyController(plugin);
 		this._regionCommandController = new RegionCommandController(plugin);
@@ -273,7 +272,7 @@ public class Controller {
 			return false;
 		}
 
-		boolean success = this._eithonPlugin.teleportPlayerToServer(player, serverName);
+		boolean success = this._eithonPlugin.getApi().teleportPlayerToServer(player, serverName);
 
 		if (!success) {
 			Config.M.couldNotConnectToServer.sendMessage(player, serverName, "Unspecified fail reason");
@@ -287,6 +286,30 @@ public class Controller {
 				serverName, player.getName(), groupName));
 		this._individualMessageController.broadcastPlayerJoined(serverName, player, groupName);
 		verbose("broadcastPlayerJoined", "Leave");
+	}
+
+	public String getJoinMessage(Player player) {
+		String serverName = this._eithonLibraryApi.getBungeeServerName();
+		EithonPlayer eithonPlayer = new EithonPlayer(player);
+		String mainGroup = BungeeController.getHighestGroup(player);
+		return this._individualMessageController.getJoinMessage(serverName, eithonPlayer, mainGroup);
+	}
+
+	public String getQuitMessage(Player player) {
+		String serverName = this._eithonLibraryApi.getBungeeServerName();
+		EithonPlayer eithonPlayer = new EithonPlayer(player);
+		String mainGroup = BungeeController.getHighestGroup(player);
+		return this._individualMessageController.getQuitMessage(serverName, eithonPlayer, mainGroup);
+	}
+
+	public boolean setPluginDebugLevel(CommandSender sender, String pluginName, int debugLevel) {
+		EithonPlugin eithonPlugin = EithonPlugin.getByName(pluginName);
+		if (eithonPlugin == null) {
+			sender.sendMessage(String.format("Could not find EithonPlugin by name %s", pluginName));
+			return false;
+		}
+		eithonPlugin.getEithonLogger().setDebugLevel(debugLevel);
+		return true;
 	}
 
 	public void broadcastPlayerQuitted(String serverName, EithonPlayer player, String groupName) {
@@ -304,19 +327,5 @@ public class Controller {
 	private void verbose(String method, String format, Object... args) {
 		String message = CoreMisc.safeFormat(format, args);
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
-	}
-
-	public String getJoinMessage(Player player) {
-		String serverName = this._eithonLibraryApi.getBungeeServerName();
-		EithonPlayer eithonPlayer = new EithonPlayer(player);
-		String mainGroup = BungeeController.getHighestGroup(player);
-		return this._individualMessageController.getJoinMessage(serverName, eithonPlayer, mainGroup);
-	}
-
-	public String getQuitMessage(Player player) {
-		String serverName = this._eithonLibraryApi.getBungeeServerName();
-		EithonPlayer eithonPlayer = new EithonPlayer(player);
-		String mainGroup = BungeeController.getHighestGroup(player);
-		return this._individualMessageController.getQuitMessage(serverName, eithonPlayer, mainGroup);
 	}
 }

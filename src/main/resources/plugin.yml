@@ -1,6 +1,6 @@
 name: EithonFixes
 main: net.eithon.plugin.fixes.Plugin
-version: 1.25.2
+version: 1.27
 author: vanbrayne
 softdepend: [Essentials, WorldEdit, EithonStats, KillerMoney]
 depend: [EithonLibrary]
@@ -8,7 +8,7 @@ description: A Minecraft plugin for Eithon fixes
 commands:
   eithonfixes:
     description: Fix things other plugins fail to do
-    usage: /eithonfixes buy | balance | rcadd | rcedit | rclist | rcdelete | rcgoto  | spadd | spedit | splist | spdelete | spgoto | restart | server | test
+    usage: /eithonfixes buy | balance | debug | rcadd | rcedit | rclist | rcdelete | rcgoto  | spadd | spedit | splist | spdelete | spgoto | restart | server | test
     permission-message: You don't have <permission>
 permissions:
   eithonfixes.*:
@@ -16,6 +16,7 @@ permissions:
     default: op
     eithonfixes.buy: true
     eithonfixes.balance: true
+    eithonfixes.debug: true
     eithonfixes.rcadd: true
     eithonfixes.rcedit: true
     eithonfixes.rclist: true
@@ -36,6 +37,9 @@ permissions:
     default: op
   eithonfixes.balance:
     description: Access to /eithonfixes balance command
+    default: op
+  eithonfixes.debug:
+    description: Access to /eithonfixes debug command
     default: op
   eithonfixes.rcadd:
     description: Access to /eithonfixes rcadd command
