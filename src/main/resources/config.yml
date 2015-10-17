@@ -46,7 +46,7 @@ RewardCoolDownTimeSpan: 7
 #
 # Worlds where there is a penalty for dying
 #
-PenaltyOnDeathWorlds: [W_Hardcore, W_SurvivalFreebuild]
+PenaltyOnDeathWorlds: [W_Hardcore,W_Nether,W_SurvivalFreebuild]
 
 #
 # Commands that should have a cooldown period
@@ -105,11 +105,6 @@ ConsecutiveDaysBaseAmount: 50.0
 # The extra amount that the player will get, multiplied with the player total consecutive day
 #
 ConsecutiveDaysMultiplyAmount: 25.0
-
-#
-#
-#
-GroupPriorities: [Owner, Admin, Developer, Architect, Designer, Mod, Submod, Tourist, Trusted, Vip1, Vip2, Vip3, Builder, Legendary, Veteran, Citizen, Member, New, Funder, Founder, RetiredAdmin, RetiredArchitect, RetiredMod]
 
 multipliers:
   donationboard:
@@ -313,4 +308,4 @@ messages:
         RetiredArchitect: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         RetiredMod: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
     players:
- 
+    
