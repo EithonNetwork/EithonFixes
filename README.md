@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.28 (2015-10-18)
+
+* CHANGE: Refactoring EithonLibrary.
+
 ### 1.27 (2015-10-17)
 
 * CHANGE: Added command /eithonfixes debug

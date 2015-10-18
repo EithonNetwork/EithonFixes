@@ -4,14 +4,14 @@ import java.util.UUID;
 
 import net.eithon.library.extensions.EithonLocation;
 import net.eithon.library.extensions.EithonPlayer;
-import net.eithon.library.json.IJson;
+import net.eithon.library.json.JsonObject;
 
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
-public class SpawnPoint implements IJson<SpawnPoint> {
+public class SpawnPoint extends JsonObject<SpawnPoint> {
 	private UUID _id;
 	private String _name;
 	private EithonLocation _location;
