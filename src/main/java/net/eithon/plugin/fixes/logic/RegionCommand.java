@@ -5,7 +5,7 @@ import java.util.UUID;
 import net.eithon.library.extensions.EithonBlock;
 import net.eithon.library.extensions.EithonLocation;
 import net.eithon.library.extensions.EithonPlayer;
-import net.eithon.library.json.IJson;
+import net.eithon.library.json.JsonObject;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
-public class RegionCommand implements IJson<RegionCommand> {
+public class RegionCommand extends JsonObject<RegionCommand> {
 	private UUID _id;
 	private String _name;
 	private String _commands;
