@@ -7,6 +7,7 @@ import net.eithon.library.bungee.EithonBungeeJoinEvent;
 import net.eithon.library.bungee.EithonBungeeQuitEvent;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.library.move.EithonPlayerMoveOneBlockEvent;
 import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.TimeMisc;
@@ -37,6 +38,11 @@ public class EventListener implements Listener {
 	public EventListener(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
 		this._eithonLogger = eithonPlugin.getEithonLogger();
+	}
+
+	@EventHandler
+	public void onPlayerJoinEvent(EithonPlayerMoveOneBlockEvent event) {
+		this._controller.playerMovedOneBlock(event.getPlayer(), event.getFromBlock(), event.getToBlock());
 	}
 
 	@EventHandler

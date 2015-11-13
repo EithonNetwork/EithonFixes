@@ -5,10 +5,8 @@ import java.util.HashMap;
 
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.json.FileContent;
-import net.eithon.library.move.IBlockMoverFollower;
-import net.eithon.library.move.MoveEventHandler;
-import net.eithon.library.plugin.PluginMisc;
 import net.eithon.library.plugin.Logger.DebugPrintLevel;
+import net.eithon.library.plugin.PluginMisc;
 import net.eithon.library.time.TimeMisc;
 
 import org.bukkit.Bukkit;
@@ -16,7 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -28,7 +25,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class RegionCommandController implements IBlockMoverFollower {
+public class RegionCommandController {
 	private WorldEditPlugin _worldEditPlugin;	
 	private HashMap<String, RegionCommand> _regionCommandsByName = null;
 	private EithonPlugin _eithonPlugin;
@@ -48,7 +45,6 @@ public class RegionCommandController implements IBlockMoverFollower {
 		}
 		delayedLoad(this._eithonPlugin, 0);
 		this._worldEditPlugin = (WorldEditPlugin) plugin;
-		MoveEventHandler.addBlockMover(this); 
 	}
 	
 	public void updateOrCreateRegionCommand(Player player, String name, String commands, boolean onEnter, boolean triggerOnEnterFromOtherWorld) {
@@ -72,7 +68,7 @@ public class RegionCommandController implements IBlockMoverFollower {
 		Block minBlock = minLocation.getBlock();
 		Block maxBlock = maxLocation.getBlock();
 		
-		RegionCommand regionCommand = new RegionCommand(player, name, commands, triggerOnEnterFromOtherWorld, onEnter, minBlock, maxBlock);
+		RegionCommand regionCommand = new RegionCommand(this._eithonPlugin, player, name, commands, triggerOnEnterFromOtherWorld, onEnter, minBlock, maxBlock);
 		this._regionCommandsByName.put(name, regionCommand);
 		delayedSave(this._eithonPlugin, 0);
 		player.sendMessage(String.format("Added RegionCommand %s", regionCommand.toString()));
@@ -123,20 +119,10 @@ public class RegionCommandController implements IBlockMoverFollower {
 		}
 	}
 
-	@Override
-	public void moveEventHandler(PlayerMoveEvent event) {
-		if (event.isCancelled()) return;
-		Player player = event.getPlayer();
-		Block fromBlock = event.getFrom().getBlock();
-		Block toBlock = event.getTo().getBlock();
+	public void playerMovedOneBlock(Player player, Block fromBlock, Block toBlock) {
 		for (RegionCommand regionCommand : this._regionCommandsByName.values()) {
 			regionCommand.maybeExecuteCommand(player, fromBlock, toBlock);
 		}
-	}
-
-	@Override
-	public String getName() {
-		return "EithonFixes.RegionCommandController";
 	}
 
 	public void delayedSave(JavaPlugin plugin, double seconds)

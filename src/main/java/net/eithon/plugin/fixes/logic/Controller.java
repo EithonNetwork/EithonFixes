@@ -18,8 +18,10 @@ import net.eithon.plugin.fixes.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class Controller {
 	private KillerMoneyController _killerMoneyController;
@@ -327,5 +329,16 @@ public class Controller {
 	private void verbose(String method, String format, Object... args) {
 		String message = CoreMisc.safeFormat(format, args);
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
+	}
+
+	public void playerMovedOneBlock(final Player player, final Block fromBlock,
+			final Block toBlock) {
+		final RegionCommandController regionCommandController = this._regionCommandController;
+		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+		scheduler.runTaskAsynchronously(this._eithonPlugin, new Runnable() {
+			public void run() {
+				regionCommandController.playerMovedOneBlock(player, fromBlock, toBlock);
+			}
+		});
 	}
 }

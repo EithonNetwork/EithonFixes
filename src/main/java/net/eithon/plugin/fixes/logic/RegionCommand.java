@@ -5,6 +5,7 @@ import java.util.UUID;
 import net.eithon.library.extensions.EithonBlock;
 import net.eithon.library.extensions.EithonLocation;
 import net.eithon.library.extensions.EithonPlayer;
+import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.json.JsonObject;
 
 import org.bukkit.Bukkit;
@@ -25,9 +26,11 @@ public class RegionCommand extends JsonObject<RegionCommand> {
 	private EithonBlock _max;
 	private boolean _onEnter;
 	private boolean _triggerForOtherWorld;
+	private EithonPlugin _eithonPlugin;
 
-	public RegionCommand(Player player, String name, String commands, boolean onEnter, boolean triggerForOtherWorld, Block min, Block max)
+	public RegionCommand(EithonPlugin plugin, Player player, String name, String commands, boolean onEnter, boolean triggerForOtherWorld, Block min, Block max)
 	{
+		this._eithonPlugin = plugin;
 		this._id = UUID.randomUUID();
 		this._name = name;
 		edit(player, commands, onEnter, triggerForOtherWorld);
@@ -65,12 +68,17 @@ public class RegionCommand extends JsonObject<RegionCommand> {
 			if (!isSameWorld(to)) {
 				if (!this._triggerForOtherWorld) return false;
 			} else if (inRegion(to)) return false;
-		}
-		executeCommands(player);
+		}	
+		Bukkit.getServer().getScheduler()
+		.runTask(this._eithonPlugin, new Runnable() {
+			public void run() {
+				executeCommands(player);
+			}
+		});
 		return true;
 	}
 
-	private void executeCommands(Player player) {
+	void executeCommands(Player player) {
 		String[] commands = this._commands.split(";");
 		for (String command : commands) {
 			boolean setOp = false;

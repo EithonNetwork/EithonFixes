@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.29 (2015-11-13)
+
+* CHANGE: Optimization of PlayerMoveEvent
+
 ### 1.28 (2015-10-18)
 
 * CHANGE: Refactoring EithonLibrary.
