@@ -8,8 +8,8 @@ import net.eithon.library.bungee.EithonBungeeQuitEvent;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.move.EithonPlayerMoveOneBlockEvent;
-import net.eithon.library.plugin.EithonLogger;
-import net.eithon.library.plugin.EithonLogger.DebugPrintLevel;
+import net.eithon.library.plugin.Logger;
+import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.Controller;
 import net.eithon.plugin.stats.logic.ConsecutiveDaysEvent;
@@ -33,7 +33,7 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 public class EventListener implements Listener {
 
 	private Controller _controller;
-	private EithonLogger _eithonLogger;
+	private Logger _eithonLogger;
 
 	public EventListener(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;

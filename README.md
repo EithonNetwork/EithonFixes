@@ -7,7 +7,6 @@ A EithonFixes plugin for Minecraft.
 ### 1.30 (2015-11-14)
 
 * CHANGE: Now has max amount for Consecutive Days reward.
-* CHANGE: Renamed Logger to EithonLogger
 
 ### 1.29 (2015-11-13)
 

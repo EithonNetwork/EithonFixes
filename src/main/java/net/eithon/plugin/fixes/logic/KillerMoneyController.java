@@ -2,7 +2,7 @@ package net.eithon.plugin.fixes.logic;
 
 import net.eithon.library.core.PlayerCollection;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.EithonLogger.DebugPrintLevel;
+import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.CoolDown;
 import net.eithon.plugin.fixes.Config;
 

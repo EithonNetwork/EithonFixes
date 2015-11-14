@@ -3,7 +3,7 @@ package net.eithon.plugin.fixes.logic;
 import java.math.BigDecimal;
 
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.EithonLogger;
+import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.PluginMisc;
 import net.eithon.plugin.fixes.Config;
 
@@ -16,7 +16,7 @@ import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
 class BuyController {
-	private EithonLogger _eithonLogger;
+	private Logger _eithonLogger;
 
 	public BuyController(EithonPlugin plugin){
 		this._eithonLogger = plugin.getEithonLogger();

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.ConfigurableMessage;
-import net.eithon.library.plugin.EithonLogger.DebugPrintLevel;
+import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.plugin.fixes.Config;
 
 public class IndividualMessageController {

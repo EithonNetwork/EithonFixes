@@ -6,7 +6,7 @@ import net.eithon.library.extensions.EithonBlock;
 import net.eithon.library.extensions.EithonLocation;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.json.JsonObject;
-import net.eithon.library.plugin.EithonLogger;
+import net.eithon.library.plugin.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -53,7 +53,7 @@ public class RegionCommand extends JsonObject<RegionCommand> {
 
 	public boolean maybeExecuteCommand(Plugin plugin, Player player, Block from, Block to) {
 		if (plugin == null) {
-			EithonLogger.libraryError("%s", "EithonFixes.RegionCommand.maybeExecuteCommand: Plugin was null.");
+			Logger.libraryError("%s", "EithonFixes.RegionCommand.maybeExecuteCommand: Plugin was null.");
 			return false;
 		}
 		if (this._onEnter) {
