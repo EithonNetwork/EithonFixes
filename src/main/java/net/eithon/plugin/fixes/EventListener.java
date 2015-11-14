@@ -173,6 +173,7 @@ public class EventListener implements Listener {
 		Player player = event.getPlayer();
 		long consecutiveDays = event.getConsecutiveDays();
 		double amount = Config.V.consecutiveDaysBaseAmount + (consecutiveDays - 1) * Config.V.consecutiveDaysMultiplyAmount;
+		amount = Math.min(amount, Config.V.consecutiveDaysMaxAmount);
 		try {
 			Economy.add(player.getName(), new BigDecimal(amount));
 			Config.M.consecutiveDaysReward.sendMessage(player, amount, consecutiveDays);

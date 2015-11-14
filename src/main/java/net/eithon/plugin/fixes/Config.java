@@ -38,6 +38,7 @@ public class Config {
 		public static PermissionBasedMultiplier killerMoneyMultiplier;
 		public static double consecutiveDaysBaseAmount;
 		public static double consecutiveDaysMultiplyAmount;
+		public static double consecutiveDaysMaxAmount;
 		public static CommandScheduler commandScheduler;
 		
 		static void load(Configuration config, EithonPlugin plugin) {
@@ -54,8 +55,9 @@ public class Config {
 			chatChannelsToLeave = config.getStringList("ChatChannelsToLeave");
 			costOfDeath = config.getDouble("CostOfDeath", 30.0);
 			killerMoneyMultiplier = PermissionBasedMultiplier.getFromConfig(config, "multipliers.donationboard.mobKill");
-			consecutiveDaysBaseAmount = config.getDouble("ConsecutiveDaysBaseAmount", 50);
-			consecutiveDaysMultiplyAmount = config.getDouble("ConsecutiveDaysMultiplyAmount", 25);
+			consecutiveDaysBaseAmount = config.getDouble("ConsecutiveDaysBaseAmount", 50.0);
+			consecutiveDaysMultiplyAmount = config.getDouble("ConsecutiveDaysMultiplyAmount", 25.0);
+			consecutiveDaysMaxAmount = config.getDouble("ConsecutiveDaysMaxAmount", 700.0);
 			commandScheduler = CommandScheduler.getFromConfig(config, "schedule");
 		}
 
