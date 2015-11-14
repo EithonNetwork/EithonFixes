@@ -5,15 +5,15 @@ import java.util.UUID;
 import net.eithon.library.extensions.EithonBlock;
 import net.eithon.library.extensions.EithonLocation;
 import net.eithon.library.extensions.EithonPlayer;
-import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.json.JsonObject;
+import net.eithon.library.plugin.EithonLogger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONObject;
 
 public class RegionCommand extends JsonObject<RegionCommand> {
@@ -26,11 +26,9 @@ public class RegionCommand extends JsonObject<RegionCommand> {
 	private EithonBlock _max;
 	private boolean _onEnter;
 	private boolean _triggerForOtherWorld;
-	private EithonPlugin _eithonPlugin;
 
-	public RegionCommand(EithonPlugin plugin, Player player, String name, String commands, boolean onEnter, boolean triggerForOtherWorld, Block min, Block max)
+	public RegionCommand(Player player, String name, String commands, boolean onEnter, boolean triggerForOtherWorld, Block min, Block max)
 	{
-		this._eithonPlugin = plugin;
 		this._id = UUID.randomUUID();
 		this._name = name;
 		edit(player, commands, onEnter, triggerForOtherWorld);
@@ -53,11 +51,11 @@ public class RegionCommand extends JsonObject<RegionCommand> {
 		this._triggerForOtherWorld = triggerForOtherWorld;
 	}
 
-	public boolean maybeExecuteCommand(Player player, Location from, Location to) {
-		return maybeExecuteCommand(player, from.getBlock(), to.getBlock());
-	}
-
-	public boolean maybeExecuteCommand(Player player, Block from, Block to) {
+	public boolean maybeExecuteCommand(Plugin plugin, Player player, Block from, Block to) {
+		if (plugin == null) {
+			EithonLogger.libraryError("%s", "EithonFixes.RegionCommand.maybeExecuteCommand: Plugin was null.");
+			return false;
+		}
 		if (this._onEnter) {
 			if (!inRegion(to)) return false;
 			if (!isSameWorld(from)) {
@@ -70,7 +68,7 @@ public class RegionCommand extends JsonObject<RegionCommand> {
 			} else if (inRegion(to)) return false;
 		}	
 		Bukkit.getServer().getScheduler()
-		.runTask(this._eithonPlugin, new Runnable() {
+		.runTask(plugin, new Runnable() {
 			public void run() {
 				executeCommands(player);
 			}

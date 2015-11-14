@@ -8,8 +8,8 @@ import net.eithon.library.bungee.BungeeController;
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
+import net.eithon.library.plugin.EithonLogger;
+import net.eithon.library.plugin.EithonLogger.DebugPrintLevel;
 import net.eithon.library.time.AlarmTrigger;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.eithonlibrary.EithonLibraryApi;
@@ -32,7 +32,7 @@ public class Controller {
 	private CoolDownWorldController _coolDownWorldController;
 	UUID _restartAlarmIdentity;
 	private LocalDateTime _whenRestart;
-	private Logger _eithonLogger;
+	private EithonLogger _eithonLogger;
 	private EithonPlugin _eithonPlugin;
 	private IndividualMessageController _individualMessageController;
 	private EithonLibraryApi _eithonLibraryApi;
@@ -337,7 +337,7 @@ public class Controller {
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 		scheduler.runTaskAsynchronously(this._eithonPlugin, new Runnable() {
 			public void run() {
-				regionCommandController.playerMovedOneBlock(player, fromBlock, toBlock);
+				regionCommandController.playerMovedOneBlockAsync(player, fromBlock, toBlock);
 			}
 		});
 	}

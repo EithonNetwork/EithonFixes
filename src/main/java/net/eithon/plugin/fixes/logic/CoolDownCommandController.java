@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
+import net.eithon.library.plugin.EithonLogger;
+import net.eithon.library.plugin.EithonLogger.DebugPrintLevel;
 import net.eithon.library.time.CoolDown;
 import net.eithon.plugin.fixes.Config;
 
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 class CoolDownCommandController {
 	private HashMap<UUID, CoolDown> _coolDownHashMap;
-	private Logger _eithonLogger;
+	private EithonLogger _eithonLogger;
 
 	public CoolDownCommandController(EithonPlugin plugin){
 		this._eithonLogger = plugin.getEithonLogger();

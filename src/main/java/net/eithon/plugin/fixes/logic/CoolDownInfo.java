@@ -3,7 +3,7 @@ package net.eithon.plugin.fixes.logic;
 import java.util.UUID;
 
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
+import net.eithon.library.plugin.EithonLogger.DebugPrintLevel;
 
 public class CoolDownInfo {
 	private String _comparableString;

@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.json.FileContent;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
+import net.eithon.library.plugin.EithonLogger.DebugPrintLevel;
 import net.eithon.library.plugin.PluginMisc;
 import net.eithon.library.time.TimeMisc;
 
@@ -68,7 +68,7 @@ public class RegionCommandController {
 		Block minBlock = minLocation.getBlock();
 		Block maxBlock = maxLocation.getBlock();
 		
-		RegionCommand regionCommand = new RegionCommand(this._eithonPlugin, player, name, commands, triggerOnEnterFromOtherWorld, onEnter, minBlock, maxBlock);
+		RegionCommand regionCommand = new RegionCommand(player, name, commands, triggerOnEnterFromOtherWorld, onEnter, minBlock, maxBlock);
 		this._regionCommandsByName.put(name, regionCommand);
 		delayedSave(this._eithonPlugin, 0);
 		player.sendMessage(String.format("Added RegionCommand %s", regionCommand.toString()));
@@ -119,9 +119,9 @@ public class RegionCommandController {
 		}
 	}
 
-	public void playerMovedOneBlock(Player player, Block fromBlock, Block toBlock) {
+	public void playerMovedOneBlockAsync(Player player, Block fromBlock, Block toBlock) {
 		for (RegionCommand regionCommand : this._regionCommandsByName.values()) {
-			regionCommand.maybeExecuteCommand(player, fromBlock, toBlock);
+			regionCommand.maybeExecuteCommand(this._eithonPlugin, player, fromBlock, toBlock);
 		}
 	}
 
