@@ -7,8 +7,9 @@ import net.eithon.library.bungee.EithonBungeeJoinEvent;
 import net.eithon.library.bungee.EithonBungeeQuitEvent;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
+import net.eithon.library.move.EithonPlayerMoveOneBlockEvent;
+import net.eithon.library.plugin.EithonLogger;
+import net.eithon.library.plugin.EithonLogger.DebugPrintLevel;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.Controller;
 import net.eithon.plugin.stats.logic.ConsecutiveDaysEvent;
@@ -32,11 +33,16 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 public class EventListener implements Listener {
 
 	private Controller _controller;
-	private Logger _eithonLogger;
+	private EithonLogger _eithonLogger;
 
 	public EventListener(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
 		this._eithonLogger = eithonPlugin.getEithonLogger();
+	}
+
+	@EventHandler
+	public void onPlayerJoinEvent(EithonPlayerMoveOneBlockEvent event) {
+		this._controller.playerMovedOneBlock(event.getPlayer(), event.getFromBlock(), event.getToBlock());
 	}
 
 	@EventHandler
@@ -167,6 +173,7 @@ public class EventListener implements Listener {
 		Player player = event.getPlayer();
 		long consecutiveDays = event.getConsecutiveDays();
 		double amount = Config.V.consecutiveDaysBaseAmount + (consecutiveDays - 1) * Config.V.consecutiveDaysMultiplyAmount;
+		amount = Math.min(amount, Config.V.consecutiveDaysMaxAmount);
 		try {
 			Economy.add(player.getName(), new BigDecimal(amount));
 			Config.M.consecutiveDaysReward.sendMessage(player, amount, consecutiveDays);

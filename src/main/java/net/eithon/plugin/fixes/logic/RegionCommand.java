@@ -6,13 +6,14 @@ import net.eithon.library.extensions.EithonBlock;
 import net.eithon.library.extensions.EithonLocation;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.json.JsonObject;
+import net.eithon.library.plugin.EithonLogger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONObject;
 
 public class RegionCommand extends JsonObject<RegionCommand> {
@@ -50,11 +51,11 @@ public class RegionCommand extends JsonObject<RegionCommand> {
 		this._triggerForOtherWorld = triggerForOtherWorld;
 	}
 
-	public boolean maybeExecuteCommand(Player player, Location from, Location to) {
-		return maybeExecuteCommand(player, from.getBlock(), to.getBlock());
-	}
-
-	public boolean maybeExecuteCommand(Player player, Block from, Block to) {
+	public boolean maybeExecuteCommand(Plugin plugin, Player player, Block from, Block to) {
+		if (plugin == null) {
+			EithonLogger.libraryError("%s", "EithonFixes.RegionCommand.maybeExecuteCommand: Plugin was null.");
+			return false;
+		}
 		if (this._onEnter) {
 			if (!inRegion(to)) return false;
 			if (!isSameWorld(from)) {
@@ -65,12 +66,17 @@ public class RegionCommand extends JsonObject<RegionCommand> {
 			if (!isSameWorld(to)) {
 				if (!this._triggerForOtherWorld) return false;
 			} else if (inRegion(to)) return false;
-		}
-		executeCommands(player);
+		}	
+		Bukkit.getServer().getScheduler()
+		.runTask(plugin, new Runnable() {
+			public void run() {
+				executeCommands(player);
+			}
+		});
 		return true;
 	}
 
-	private void executeCommands(Player player) {
+	void executeCommands(Player player) {
 		String[] commands = this._commands.split(";");
 		for (String command : commands) {
 			boolean setOp = false;

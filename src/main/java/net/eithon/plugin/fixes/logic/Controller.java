@@ -8,8 +8,8 @@ import net.eithon.library.bungee.BungeeController;
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
+import net.eithon.library.plugin.EithonLogger;
+import net.eithon.library.plugin.EithonLogger.DebugPrintLevel;
 import net.eithon.library.time.AlarmTrigger;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.eithonlibrary.EithonLibraryApi;
@@ -18,8 +18,10 @@ import net.eithon.plugin.fixes.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class Controller {
 	private KillerMoneyController _killerMoneyController;
@@ -30,7 +32,7 @@ public class Controller {
 	private CoolDownWorldController _coolDownWorldController;
 	UUID _restartAlarmIdentity;
 	private LocalDateTime _whenRestart;
-	private Logger _eithonLogger;
+	private EithonLogger _eithonLogger;
 	private EithonPlugin _eithonPlugin;
 	private IndividualMessageController _individualMessageController;
 	private EithonLibraryApi _eithonLibraryApi;
@@ -327,5 +329,16 @@ public class Controller {
 	private void verbose(String method, String format, Object... args) {
 		String message = CoreMisc.safeFormat(format, args);
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
+	}
+
+	public void playerMovedOneBlock(final Player player, final Block fromBlock,
+			final Block toBlock) {
+		final RegionCommandController regionCommandController = this._regionCommandController;
+		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+		scheduler.runTaskAsynchronously(this._eithonPlugin, new Runnable() {
+			public void run() {
+				regionCommandController.playerMovedOneBlockAsync(player, fromBlock, toBlock);
+			}
+		});
 	}
 }
