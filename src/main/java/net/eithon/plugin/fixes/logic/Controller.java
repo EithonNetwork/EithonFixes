@@ -105,8 +105,8 @@ public class Controller {
 		this._regionCommandController.editRegionCommand(player, name, onEnter, triggerOnEnterFromOtherWorld);
 	}
 
-	public void rcDelete(CommandSender sender, String name) {
-		this._regionCommandController.deleteRegionCommand(sender, name);
+	public void rcDelete(Player player, String name) {
+		this._regionCommandController.deleteRegionCommand(player, name);
 	}
 
 	public void rcGoto(Player player, String name) {

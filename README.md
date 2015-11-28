@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.30.1 (2015-11-28)
+
+* BUG: Did not save the list of RegionCommands after deleting a RegionCommand.
+
 ### 1.30 (2015-11-14)
 
 * CHANGE: Now has max amount for Consecutive Days reward.
