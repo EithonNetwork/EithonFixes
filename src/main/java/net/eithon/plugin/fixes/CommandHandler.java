@@ -166,8 +166,11 @@ public class CommandHandler implements ICommandHandler {
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcdelete")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
 
+		Player player = commandParser.getPlayerOrInformSender();
+		if (player == null) return;
+
 		String name = commandParser.getArgumentString();
-		this._controller.rcDelete(commandParser.getSender(), name);
+		this._controller.rcDelete(player, name);
 	}
 
 	void rcGotoCommand(CommandParser commandParser)

@@ -92,8 +92,12 @@ public class RegionCommandController {
 		player.sendMessage(String.format("Edited RegionCommand %s", regionCommand.toString()));
 	}
 
-	public void deleteRegionCommand(CommandSender sender, String name) {
+	public void deleteRegionCommand(Player player, String name) {
+		RegionCommand regionCommand = getRegionCommandOrInformPlayer(player, name);
+		if (regionCommand == null) return;
 		this._regionCommandsByName.remove(name);
+		delayedSave(this._eithonPlugin, 0);
+		player.sendMessage(String.format("Deleted RegionCommand %s", regionCommand.toString()));
 	}
 
 	public void gotoRegionCommand(Player player, String name) {
