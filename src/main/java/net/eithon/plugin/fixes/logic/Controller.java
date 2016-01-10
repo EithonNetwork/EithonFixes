@@ -116,6 +116,10 @@ public class Controller {
 	public void rcList(CommandSender sender) {
 		this._regionCommandController.listRegionCommands(sender);
 	}
+	
+	public String[] getAllRegionCommands() {
+		return this._regionCommandController.getAllRegionCommands();
+	}
 
 	public void spAdd(Player player, String name, long distance) {
 		this._spawnPointController.updateOrCreateSpawnPoint(player, name, distance);

@@ -25,7 +25,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class RegionCommandController {
+class RegionCommandController {
 	private WorldEditPlugin _worldEditPlugin;	
 	private HashMap<String, RegionCommand> _regionCommandsByName = null;
 	private EithonPlugin _eithonPlugin;
@@ -45,6 +45,10 @@ public class RegionCommandController {
 		}
 		delayedLoad(this._eithonPlugin, 0);
 		this._worldEditPlugin = (WorldEditPlugin) plugin;
+	}
+	
+	public String[] getAllRegionCommands() {
+		return this._regionCommandsByName.keySet().toArray(new String[0]);
 	}
 	
 	public void updateOrCreateRegionCommand(Player player, String name, String commands, boolean onEnter, boolean triggerOnEnterFromOtherWorld) {

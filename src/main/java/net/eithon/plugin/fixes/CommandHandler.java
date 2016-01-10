@@ -4,8 +4,11 @@ import java.time.LocalDateTime;
 
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.CommandParser;
-import net.eithon.library.plugin.ICommandHandler;
+import net.eithon.library.command.ArgumentSyntax;
+import net.eithon.library.command.CommandParser;
+import net.eithon.library.command.CommandSyntax;
+import net.eithon.library.command.ICommandHandler;
+import net.eithon.library.command.CommandSyntax.ArgumentType;
 import net.eithon.plugin.fixes.logic.Controller;
 
 import org.bukkit.command.CommandSender;
@@ -33,7 +36,49 @@ public class CommandHandler implements ICommandHandler {
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
 	}
-
+	
+	@Override
+	public void setup(CommandParser commandParser) {
+		commandParser.setRootCommand("eithonfixes");
+		
+		// buy
+		CommandSyntax buy = commandParser.addCommand("buy");
+		buy.addArgumentPlayer("player");
+		buy.addArgument(ArgumentType.String, "item");
+		buy.addArgument(ArgumentType.Double, "price");
+		buy.addArgument(ArgumentType.Integer, "amount");
+		
+		// balance
+		CommandSyntax balance = commandParser.addCommand("balance");
+		
+		// rc
+		CommandSyntax rc = commandParser.addCommand("rc");
+		ArgumentSyntax rcExistingName = new ArgumentSyntax(ArgumentType.String, "name");
+		rcExistingName.SetValueGetter(() -> this._controller.getAllRegionCommands(), true);
+		
+		// rc add
+		CommandSyntax rcAdd = commandParser.addCommand("add");
+		rcAdd.addArgument(ArgumentType.String, "name");
+		rcAdd.addArgument(ArgumentType.Rest, "command");
+		// rc edit
+		CommandSyntax rcEdit = commandParser.addCommand("edit");
+		rcEdit.addArgument(rcExistingName);
+		rcEdit.addArgument(ArgumentType.Rest, "command");
+		// rc set
+		CommandSyntax rcSet = commandParser.addCommand("set");
+		rcSet.addArgument(rcExistingName);
+		rcSet.addNamedArgument(ArgumentType.Boolean, "OnEnter");
+		rcSet.addNamedArgument(ArgumentType.Boolean, "OnOtherWorld");
+		// rc delete
+		CommandSyntax rcDelete = commandParser.addCommand("delete");
+		rcDelete.addArgument(rcExistingName);
+		// rc goto
+		CommandSyntax rcGoto = commandParser.addCommand("goto");
+		rcGoto.addArgument(rcExistingName);
+		// rc goto
+		CommandSyntax rcList = commandParser.addCommand("list");
+	}
+	
 	public boolean onCommand(CommandParser commandParser) {
 		String command = commandParser.getArgumentCommand();
 		if (command == null) return false;
@@ -288,44 +333,5 @@ public class CommandHandler implements ICommandHandler {
 		boolean success = this._controller.connectPlayerToServer(player, serverName);
 		if (!success) return;
 		Config.M.connectedToServer.sendMessage(player, serverName);
-	}
-
-	@Override
-	public void showCommandSyntax(CommandSender sender, String command) {
-		if (command.equals("buy")) {
-			sender.sendMessage(BUY_COMMAND);
-		} else if (command.equals("balance")) {
-			sender.sendMessage(BALANCE_COMMAND);
-		} else if (command.equals("debug")) {
-			sender.sendMessage(DEBUG_COMMAND);
-		} else if (command.equals("rcadd")) {
-			sender.sendMessage(RCADD_COMMAND);
-		} else if (command.equals("rcedit")) {
-			sender.sendMessage(RCEDIT_COMMAND);
-		} else if (command.equals("rcset")) {
-			sender.sendMessage(RCSET_COMMAND);
-		} else if (command.equals("rcdelete")) {
-			sender.sendMessage(RCDELETE_COMMAND);
-		} else if (command.equals("rcgoto")) {
-			sender.sendMessage(RCGOTO_COMMAND);
-		} else if (command.equals("rclist")) {
-			sender.sendMessage(RCLIST_COMMAND);
-		} else if (command.equals("restart")) {
-			sender.sendMessage(RESTART_COMMAND);
-		} else if (command.equals("server")) {
-			sender.sendMessage(SERVER_COMMAND);
-		} else if (command.equals("spadd")) {
-			sender.sendMessage(SPADD_COMMAND);
-		} else if (command.equals("spedit")) {
-			sender.sendMessage(SPEDIT_COMMAND);
-		} else if (command.equals("spdelete")) {
-			sender.sendMessage(SPDELETE_COMMAND);
-		} else if (command.equals("spgoto")) {
-			sender.sendMessage(SPGOTO_COMMAND);
-		} else if (command.equals("splist")) {
-			sender.sendMessage(SPLIST_COMMAND);
-		} else {
-			sender.sendMessage(String.format("Unknown command: %s.", command));
-		}
 	}
 }
