@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.command.ArgumentSyntax;
-import net.eithon.library.command.ArgumentSyntax.ArgumentType;
+import net.eithon.library.command.syntax.ArgumentSyntax;
+import net.eithon.library.command.syntax.CommandSyntax;
+import net.eithon.library.command.syntax.ArgumentSyntax.ArgumentType;
 import net.eithon.library.command.CommandArguments;
 import net.eithon.library.command.CommandParser;
-import net.eithon.library.command.CommandSyntax;
 import net.eithon.library.command.ICommandHandler;
 import net.eithon.plugin.fixes.logic.Controller;
 
@@ -17,14 +17,12 @@ import org.bukkit.entity.Player;
 
 public class CommandHandler implements ICommandHandler {
 	private Controller _controller;
+	private CommandSyntax _commandSyntax;
 
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
-	}
-	
-	@Override
-	public void setup(CommandParser commandParser) {
-		CommandSyntax commandSyntax = commandParser.addCommand("eithonfixes");
+		
+		CommandSyntax commandSyntax = new CommandSyntax("eithonfixes");
 		
 		setupBuyCommand(commandSyntax);
 		setupRcCommand(commandSyntax);
@@ -32,6 +30,14 @@ public class CommandHandler implements ICommandHandler {
 		setupBalanceCommand(commandSyntax);
 		setupServerCommand(commandSyntax);
 		setupDebugCommand(commandSyntax);
+		
+		this._commandSyntax = commandSyntax;
+	}
+	
+	@Override
+	public CommandSyntax getCommandSyntax()
+	{
+		return this._commandSyntax;
 	}
 
 	public void setupDebugCommand(CommandSyntax commandSyntax) {
