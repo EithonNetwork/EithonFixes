@@ -5,32 +5,17 @@ import java.time.LocalDateTime;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.command.ArgumentSyntax;
+import net.eithon.library.command.ArgumentSyntax.ArgumentType;
+import net.eithon.library.command.CommandArguments;
 import net.eithon.library.command.CommandParser;
 import net.eithon.library.command.CommandSyntax;
 import net.eithon.library.command.ICommandHandler;
-import net.eithon.library.command.CommandSyntax.ArgumentType;
 import net.eithon.plugin.fixes.logic.Controller;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandHandler implements ICommandHandler {
-	private static final String BUY_COMMAND = "/eithonfixes buy <player> <item> <price> <amount>";
-	private static final String BALANCE_COMMAND = "/eithonfixes balance";
-	private static final String RCADD_COMMAND = "/eithonfixes rcadd <name> <command>";
-	private static final String RCEDIT_COMMAND = "/eithonfixes rcedit <name> <command>";
-	private static final String RCSET_COMMAND = "/eithonfixes rcset <name> <onEnter> <onOtherWorld>";
-	private static final String RCDELETE_COMMAND = "/eithonfixes rcdelete <name>";
-	private static final String RCGOTO_COMMAND = "/eithonfixes rcgoto <name>";
-	private static final String RCLIST_COMMAND = "/eithonfixes rclist";
-	private static final String SPADD_COMMAND = "/eithonfixes spadd <name> [<distance>]";
-	private static final String SPEDIT_COMMAND = "/eithonfixes spedit <name> [<distance>]";
-	private static final String SPDELETE_COMMAND = "/eithonfixes spdelete <name>";
-	private static final String SPGOTO_COMMAND = "/eithonfixes spgoto <name>";
-	private static final String SPLIST_COMMAND = "/eithonfixes splist";
-	private static final String SERVER_COMMAND = "/eithonfixes server <server name>";
-	private static final String RESTART_COMMAND = "/eithonfixes restart [cancel | [<time to restart>]]";
-	private static final String DEBUG_COMMAND = "/eithonfixes debug <plugin> <level>";
 	private Controller _controller;
 
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
@@ -39,114 +24,135 @@ public class CommandHandler implements ICommandHandler {
 	
 	@Override
 	public void setup(CommandParser commandParser) {
-		commandParser.setRootCommand("eithonfixes");
+		CommandSyntax commandSyntax = commandParser.addCommand("eithonfixes");
 		
-		// buy
-		CommandSyntax buy = commandParser.addCommand("buy");
-		buy.addArgumentPlayer("player");
-		buy.addArgument(ArgumentType.String, "item");
-		buy.addArgument(ArgumentType.Double, "price");
-		buy.addArgument(ArgumentType.Integer, "amount");
+		setupBuyCommand(commandSyntax);
+		setupRcCommand(commandSyntax);
+		setupSpCommand(commandSyntax);
+		setupBalanceCommand(commandSyntax);
+		setupServerCommand(commandSyntax);
+		setupDebugCommand(commandSyntax);
+	}
+
+	public void setupDebugCommand(CommandSyntax commandSyntax) {
+		CommandSyntax debug = commandSyntax.addCommand("debug", p -> debugCommand(p));
+		debug.setPermission("eithonfixes.debug");
+		debug.addArgument(ArgumentType.STRING, "plugin");
+		ArgumentSyntax argument = debug.addArgument(ArgumentType.INTEGER, "level");
+		argument.setValues(0, 1, 2, 3);
+	}
+
+	public void setupServerCommand(CommandSyntax commandSyntax) {
+		CommandSyntax server = commandSyntax.addCommand("server", p -> serverCommand(p));
+		server.setPermission("eithonfixes.server");
+		server.addArgument(ArgumentType.STRING, "name");
+	}
+
+	public void setupBalanceCommand(CommandSyntax commandSyntax) {
+		commandSyntax.addCommand("balance", p -> balanceCommand(p));
+	}
+
+	public void setupSpCommand(CommandSyntax commandSyntax) {
+		CommandSyntax sp = commandSyntax.addCommand("sp");
+		ArgumentSyntax spExistingName = new ArgumentSyntax(ArgumentType.STRING, "name");
+		spExistingName.SetValueGetter(() -> this._controller.getAllSpawnPointNames(), true);
 		
-		// balance
-		CommandSyntax balance = commandParser.addCommand("balance");
+		// sp add
+		CommandSyntax spAdd = sp.addCommand("add", p -> spAddCommand(p));
+		spAdd.setPermission("eithonfixes.spadd");
+		spAdd.addArgument(ArgumentType.STRING, "name");
+		spAdd.setRestOfArgumentsOptional();
+		spAdd.addArgument(ArgumentType.INTEGER, "distance");
 		
-		// rc
-		CommandSyntax rc = commandParser.addCommand("rc");
-		ArgumentSyntax rcExistingName = new ArgumentSyntax(ArgumentType.String, "name");
+		// sp edit
+		CommandSyntax spEdit = sp.addCommand("edit", p -> spEditCommand(p));
+		spEdit.setPermission("eithonfixes.spedit");
+		spEdit.addArgument(spExistingName);
+		spAdd.setRestOfArgumentsOptional();
+		spAdd.addArgument(ArgumentType.INTEGER, "distance");
+		
+		// sp delete
+		CommandSyntax spDelete = sp.addCommand("delete", p -> spDeleteCommand(p));
+		spDelete.setPermission("eithonfixes.spdelete");
+		spDelete.addArgument(spExistingName);
+		
+		// sp goto
+		CommandSyntax spGoto = sp.addCommand("goto", p -> spGotoCommand(p));
+		spGoto.setPermission("eithonfixes.spgoto");
+		spGoto.addArgument(spExistingName);
+		
+		sp.addCommand("list", p -> spListCommand(p));
+		spGoto.setPermission("eithonfixes.splist");
+	}
+
+	public void setupRcCommand(CommandSyntax commandSyntax) {
+
+		CommandSyntax rc = commandSyntax.addCommand("rc");
+		ArgumentSyntax rcExistingName = new ArgumentSyntax(ArgumentType.STRING, "name");
 		rcExistingName.SetValueGetter(() -> this._controller.getAllRegionCommands(), true);
 		
 		// rc add
-		CommandSyntax rcAdd = commandParser.addCommand("add");
-		rcAdd.addArgument(ArgumentType.String, "name");
-		rcAdd.addArgument(ArgumentType.Rest, "command");
+		CommandSyntax rcAdd = rc.addCommand("add", p -> rcAddCommand(p));
+		rcAdd.setPermission("eithonfixes.rcadd");
+		rcAdd.addArgument(ArgumentType.STRING, "name");
+		rcAdd.addArgument(ArgumentType.REST, "command");
+		
 		// rc edit
-		CommandSyntax rcEdit = commandParser.addCommand("edit");
+		CommandSyntax rcEdit = rc.addCommand("edit", p -> rcEditCommand(p));
+		rcEdit.setPermission("eithonfixes.rcedit");
 		rcEdit.addArgument(rcExistingName);
-		rcEdit.addArgument(ArgumentType.Rest, "command");
+		rcEdit.addArgument(ArgumentType.REST, "command");
+		
 		// rc set
-		CommandSyntax rcSet = commandParser.addCommand("set");
+		CommandSyntax rcSet = rc.addCommand("set", p -> rcSetCommand(p));
+		rcSet.setPermission("eithonfixes.rcset");
 		rcSet.addArgument(rcExistingName);
-		rcSet.addNamedArgument(ArgumentType.Boolean, "OnEnter");
-		rcSet.addNamedArgument(ArgumentType.Boolean, "OnOtherWorld");
+		rcSet.addNamedArgument(ArgumentType.BOOLEAN, "OnEnter");
+		rcSet.addNamedArgument(ArgumentType.BOOLEAN, "OnOtherWorld");
+		
 		// rc delete
-		CommandSyntax rcDelete = commandParser.addCommand("delete");
+		CommandSyntax rcDelete = rc.addCommand("delete", p -> rcDeleteCommand(p));
+		rcDelete.setPermission("eithonfixes.rcdelete");
 		rcDelete.addArgument(rcExistingName);
+		
 		// rc goto
-		CommandSyntax rcGoto = commandParser.addCommand("goto");
+		CommandSyntax rcGoto = rc.addCommand("goto", p -> rcGotoCommand(p));
+		rcGoto.setPermission("eithonfixes.rcgoto");
 		rcGoto.addArgument(rcExistingName);
-		// rc goto
-		CommandSyntax rcList = commandParser.addCommand("list");
+		
+		commandSyntax.addCommand("list", p -> rcListCommand(p));
 	}
-	
-	public boolean onCommand(CommandParser commandParser) {
-		String command = commandParser.getArgumentCommand();
-		if (command == null) return false;
 
-		if (command.equals("buy")) {
-			buyCommand(commandParser);
-		} else if (command.equals("balance")) {
-			balanceCommand(commandParser);
-		} else if (command.equals("debug")) {
-			debugCommand(commandParser);
-		} else if (command.equals("rcadd")) {
-			rcAddCommand(commandParser);
-		} else if (command.equals("rcedit")) {
-			rcEditCommand(commandParser);
-		} else if (command.equals("rcset")) {
-			rcSetCommand(commandParser);
-		} else if (command.equals("rcdelete")) {
-			rcDeleteCommand(commandParser);
-		} else if (command.equals("rcgoto")) {
-			rcGotoCommand(commandParser);
-		} else if (command.equals("rclist")) {
-			rcListCommand(commandParser);
-		} else if (command.equals("restart")) {
-			restartCommand(commandParser);
-		} else if (command.equals("server")) {
-			serverCommand(commandParser);
-		} else if (command.equals("spadd")) {
-			spAddCommand(commandParser);
-		} else if (command.equals("spedit")) {
-			spEditCommand(commandParser);
-		} else if (command.equals("spdelete")) {
-			spDeleteCommand(commandParser);
-		} else if (command.equals("spgoto")) {
-			spGotoCommand(commandParser);
-		} else if (command.equals("splist")) {
-			spListCommand(commandParser);
-		} else if (command.equals("test")) {
-			testCommand(commandParser);
-		} else {
-			commandParser.showCommandSyntax();
-		}
-		return true;
+	public void setupBuyCommand(CommandSyntax commandSyntax) {
+		// buy
+		CommandSyntax buy = commandSyntax.addCommand("buy", p -> buyCommand(p));
+		buy.setPermission("eithonfixes.buy");
+		buy.addArgumentPlayer("player");
+		buy.addArgument(ArgumentType.STRING, "item");
+		buy.addArgument(ArgumentType.REAL, "price");
+		buy.addArgument(ArgumentType.INTEGER, "amount");
 	}
 
 	void buyCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.buy")) return;
+		CommandArguments arguments = commandParser.getArguments();
 		EithonPlayer eithonPlayer = commandParser.getEithonPlayer();
 		if ((eithonPlayer != null) && (!eithonPlayer.isInAcceptableWorldOrInformPlayer(Config.V.buyWorlds))) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(4, 5)) return;
 
-		Player buyingPlayer = commandParser.getArgumentPlayer(null);
+		Player buyingPlayer = arguments.getPlayer(null);
 		if (buyingPlayer == null) return;
 
 
-		String item = commandParser.getArgumentStringAsLowercase();
-		double pricePerItem = commandParser.getArgumentDouble(Double.MAX_VALUE);
+		String item = arguments.getStringAsLowercase();
+		double pricePerItem = arguments.getDouble(Double.MAX_VALUE);
 		if (pricePerItem == Double.MAX_VALUE) return;
-		int amount = commandParser.getArgumentInteger(1);
+		int amount = arguments.getInteger(1);
 
 		this._controller.buy(buyingPlayer, item, pricePerItem, amount);
 	}
 
 	void balanceCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.balance")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
-
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return ;
 
@@ -155,11 +161,10 @@ public class CommandHandler implements ICommandHandler {
 
 	void debugCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.debug")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(3)) return;
+		CommandArguments arguments = commandParser.getArguments();
 
-		String pluginName = commandParser.getArgumentString();
-		int debugLevel = commandParser.getArgumentInteger(0);
+		String pluginName = arguments.getString();
+		int debugLevel = arguments.getInteger(0);
 		CommandSender sender = commandParser.getSender();
 		boolean success = this._controller.setPluginDebugLevel(sender, pluginName, debugLevel);
 		if (!success) return;
@@ -168,140 +173,123 @@ public class CommandHandler implements ICommandHandler {
 
 	void rcAddCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcadd")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(3)) return;
-
+		CommandArguments arguments = commandParser.getArguments();
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = commandParser.getArgumentString();
-		String commands = commandParser.getArgumentRest();
+		String name = arguments.getString();
+		String commands = arguments.getRest();
 		this._controller.rcAdd(player, name, commands);
 	}
 
 	void rcEditCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcedit")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(3)) return;
+		CommandArguments arguments = commandParser.getArguments();
 
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = commandParser.getArgumentString();
-		String commands = commandParser.getArgumentRest();
+		String name = arguments.getString();
+		String commands = arguments.getRest();
 		this._controller.rcEdit(player, name, commands);
 	}
 
 	void rcSetCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcedit")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(4)) return;
+		CommandArguments arguments = commandParser.getArguments();
 
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = commandParser.getArgumentString();
-		boolean onEnter = commandParser.getArgumentBoolean(true);
-		boolean onOtherWorld = commandParser.getArgumentBoolean(true);
+		String name = arguments.getString();
+		boolean onEnter = arguments.getBoolean(true);
+		boolean onOtherWorld = arguments.getBoolean(true);
 		this._controller.rcSet(player, name, onEnter, onOtherWorld);
 	}
 
 	void rcDeleteCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcdelete")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
+		CommandArguments arguments = commandParser.getArguments();
 
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = commandParser.getArgumentString();
+		String name = arguments.getString();
 		this._controller.rcDelete(player, name);
 	}
 
 	void rcGotoCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rcgoto")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
+		CommandArguments arguments = commandParser.getArguments();
 
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = commandParser.getArgumentString();
+		String name = arguments.getString();
 		this._controller.rcGoto(player, name);
 	}
 
 	void rcListCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rclist")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
-
 		this._controller.rcList(commandParser.getSender());
 	}
 
 	void spAddCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.spadd")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2,3)) return;
+		CommandArguments arguments = commandParser.getArguments();
 
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = commandParser.getArgumentString();
-		long distance = commandParser.getArgumentInteger(10);
+		String name = arguments.getString();
+		long distance = arguments.getInteger(10);
 		this._controller.spAdd(player, name, distance);
 	}
 
 	void spEditCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.spedit")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2,3)) return;
+		CommandArguments arguments = commandParser.getArguments();
 
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = commandParser.getArgumentString();
-		long distance = commandParser.getArgumentInteger(10);
+		String name = arguments.getString();
+		long distance = arguments.getInteger(10);
 		this._controller.spEdit(player, name, distance);
 	}
 
 	void spDeleteCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.spdelete")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
+		CommandArguments arguments = commandParser.getArguments();
 
-		String name = commandParser.getArgumentString();
+		String name = arguments.getString();
 		this._controller.spDelete(commandParser.getSender(), name);
 	}
 
 	void spGotoCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.spgoto")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
+		CommandArguments arguments = commandParser.getArguments();
 
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = commandParser.getArgumentString();
+		String name = arguments.getString();
 		this._controller.rcGoto(player, name);
 	}
 
 	void spListCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.rclist")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
-
 		this._controller.spList(commandParser.getSender());
 	}
 
 	void restartCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.restart")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1,2)) return;
+		CommandArguments arguments = commandParser.getArguments();
 
 		CommandSender sender = commandParser.getSender();
 		if (sender == null) return;
 
-		String cancel = commandParser.getArgumentString();
+		String cancel = arguments.getString();
 		if ((cancel != null) && cancel.startsWith("ca")) {
 			boolean success = this._controller.cancelRestart();
 			if (success) sender.sendMessage("The server restart has been cancelled.");
@@ -309,7 +297,7 @@ public class CommandHandler implements ICommandHandler {
 			return;
 		}
 
-		long secondsToRestart = commandParser.getArgumentTimeAsSeconds(1, 10*60);
+		long secondsToRestart = arguments.getTimeSpanAsSeconds(10*60);
 		LocalDateTime when = this._controller.initiateRestart(secondsToRestart);
 		if (when == null) sender.sendMessage("Could not initiate a restart.");
 		else sender.sendMessage(String.format("The server will be restarted %s", when.toString()));
@@ -317,18 +305,14 @@ public class CommandHandler implements ICommandHandler {
 
 	void testCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.test")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
 		Player player = commandParser.getPlayer();
 		player.sendMessage(String.format("TEST by player %s", player.getName()));
 	}
 
 	void serverCommand(CommandParser commandParser)
 	{
-		if (!commandParser.hasPermissionOrInformSender("eithonfixes.server")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(2, 2)) return;
-
-		String serverName = commandParser.getArgumentStringAsLowercase();
+		CommandArguments arguments = commandParser.getArguments();
+		String serverName = arguments.getStringAsLowercase();
 		Player player = commandParser.getPlayer();
 		boolean success = this._controller.connectPlayerToServer(player, serverName);
 		if (!success) return;

@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class SpawnPointController {
+class SpawnPointController {
 	private HashMap<String, SpawnPoint> _spawnPointsByName = null;
 	private EithonPlugin _eithonPlugin;
 
@@ -25,6 +25,10 @@ public class SpawnPointController {
 		this._eithonPlugin = eithonPlugin;
 		this._spawnPointsByName = new HashMap<String, SpawnPoint>();
 		delayedLoad(this._eithonPlugin, 0);
+	}
+	
+	public String[] getAllSpawnPointNames() {
+		return this._spawnPointsByName.keySet().toArray(new String[0]);
 	}
 	
 	public void updateOrCreateSpawnPoint(Player player, String name, long distance) {

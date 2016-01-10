@@ -144,6 +144,10 @@ public class Controller {
 	public boolean maybeTeleportToSpawnPoint(Player player) {
 		return this._spawnPointController.maybeTeleportToSpawnPoint(player);
 	}
+	
+	public String[] getAllSpawnPointNames() {
+		return this._spawnPointController.getAllSpawnPointNames();
+	}
 
 	public LocalDateTime initiateRestart(long seconds) {
 		UUID alarmId = initiateRestartInternally(seconds+1);
