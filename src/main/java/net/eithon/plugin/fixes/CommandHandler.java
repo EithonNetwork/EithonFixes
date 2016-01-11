@@ -130,7 +130,7 @@ public class CommandHandler implements ICommandHandler {
 	}
 
 	public void setupBuyCommand(CommandSyntax commandSyntax) {
-		// buy
+		// buy <player> <item> <price> [<amount>]
 		CommandSyntax buy = commandSyntax.addCommand("buy", p -> buyCommand(p));
 		buy.setPermission("eithonfixes.buy");
 		buy.addParameterPlayer("player");
@@ -145,7 +145,7 @@ public class CommandHandler implements ICommandHandler {
 		EithonPlayer eithonPlayer = commandParser.getEithonPlayer();
 		if ((eithonPlayer != null) && (!eithonPlayer.isInAcceptableWorldOrInformPlayer(Config.V.buyWorlds))) return;
 
-		Player buyingPlayer = arguments.getPlayer(null);
+		Player buyingPlayer = commandParser.getArgument("player").asPlayer();
 		if (buyingPlayer == null) return;
 
 
