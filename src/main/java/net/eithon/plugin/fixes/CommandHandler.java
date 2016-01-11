@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.command.syntax.ArgumentSyntax;
+import net.eithon.library.command.syntax.ParameterSyntax;
 import net.eithon.library.command.syntax.CommandSyntax;
-import net.eithon.library.command.syntax.ArgumentSyntax.ArgumentType;
+import net.eithon.library.command.syntax.ParameterSyntax.ParameterType;
 import net.eithon.library.command.CommandArguments;
 import net.eithon.library.command.CommandParser;
 import net.eithon.library.command.ICommandHandler;
@@ -43,15 +43,15 @@ public class CommandHandler implements ICommandHandler {
 	public void setupDebugCommand(CommandSyntax commandSyntax) {
 		CommandSyntax debug = commandSyntax.addCommand("debug", p -> debugCommand(p));
 		debug.setPermission("eithonfixes.debug");
-		debug.addArgument(ArgumentType.STRING, "plugin");
-		ArgumentSyntax argument = debug.addArgument(ArgumentType.INTEGER, "level");
+		debug.addParameter(ParameterType.STRING, "plugin");
+		ParameterSyntax argument = debug.addParameter(ParameterType.INTEGER, "level");
 		argument.setValues(0, 1, 2, 3);
 	}
 
 	public void setupServerCommand(CommandSyntax commandSyntax) {
 		CommandSyntax server = commandSyntax.addCommand("server", p -> serverCommand(p));
 		server.setPermission("eithonfixes.server");
-		server.addArgument(ArgumentType.STRING, "name");
+		server.addParameter(ParameterType.STRING, "name");
 	}
 
 	public void setupBalanceCommand(CommandSyntax commandSyntax) {
@@ -60,32 +60,32 @@ public class CommandHandler implements ICommandHandler {
 
 	public void setupSpCommand(CommandSyntax commandSyntax) {
 		CommandSyntax sp = commandSyntax.addCommand("sp");
-		ArgumentSyntax spExistingName = new ArgumentSyntax(ArgumentType.STRING, "name");
+		ParameterSyntax spExistingName = new ParameterSyntax(ParameterType.STRING, "name");
 		spExistingName.SetValueGetter(() -> this._controller.getAllSpawnPointNames(), true);
 		
 		// sp add
 		CommandSyntax spAdd = sp.addCommand("add", p -> spAddCommand(p));
 		spAdd.setPermission("eithonfixes.spadd");
-		spAdd.addArgument(ArgumentType.STRING, "name");
-		spAdd.setRestOfArgumentsOptional();
-		spAdd.addArgument(ArgumentType.INTEGER, "distance");
+		spAdd.addParameter(ParameterType.STRING, "name");
+		spAdd.setRestOfParametersAsOptional();
+		spAdd.addParameter(ParameterType.INTEGER, "distance");
 		
 		// sp edit
 		CommandSyntax spEdit = sp.addCommand("edit", p -> spEditCommand(p));
 		spEdit.setPermission("eithonfixes.spedit");
-		spEdit.addArgument(spExistingName);
-		spAdd.setRestOfArgumentsOptional();
-		spAdd.addArgument(ArgumentType.INTEGER, "distance");
+		spEdit.addParameter(spExistingName);
+		spAdd.setRestOfParametersAsOptional();
+		spAdd.addParameter(ParameterType.INTEGER, "distance");
 		
 		// sp delete
 		CommandSyntax spDelete = sp.addCommand("delete", p -> spDeleteCommand(p));
 		spDelete.setPermission("eithonfixes.spdelete");
-		spDelete.addArgument(spExistingName);
+		spDelete.addParameter(spExistingName);
 		
 		// sp goto
 		CommandSyntax spGoto = sp.addCommand("goto", p -> spGotoCommand(p));
 		spGoto.setPermission("eithonfixes.spgoto");
-		spGoto.addArgument(spExistingName);
+		spGoto.addParameter(spExistingName);
 		
 		sp.addCommand("list", p -> spListCommand(p));
 		spGoto.setPermission("eithonfixes.splist");
@@ -94,37 +94,37 @@ public class CommandHandler implements ICommandHandler {
 	public void setupRcCommand(CommandSyntax commandSyntax) {
 
 		CommandSyntax rc = commandSyntax.addCommand("rc");
-		ArgumentSyntax rcExistingName = new ArgumentSyntax(ArgumentType.STRING, "name");
+		ParameterSyntax rcExistingName = new ParameterSyntax(ParameterType.STRING, "name");
 		rcExistingName.SetValueGetter(() -> this._controller.getAllRegionCommands(), true);
 		
 		// rc add
 		CommandSyntax rcAdd = rc.addCommand("add", p -> rcAddCommand(p));
 		rcAdd.setPermission("eithonfixes.rcadd");
-		rcAdd.addArgument(ArgumentType.STRING, "name");
-		rcAdd.addArgument(ArgumentType.REST, "command");
+		rcAdd.addParameter(ParameterType.STRING, "name");
+		rcAdd.addParameter(ParameterType.REST, "command");
 		
 		// rc edit
 		CommandSyntax rcEdit = rc.addCommand("edit", p -> rcEditCommand(p));
 		rcEdit.setPermission("eithonfixes.rcedit");
-		rcEdit.addArgument(rcExistingName);
-		rcEdit.addArgument(ArgumentType.REST, "command");
+		rcEdit.addParameter(rcExistingName);
+		rcEdit.addParameter(ParameterType.REST, "command");
 		
 		// rc set
 		CommandSyntax rcSet = rc.addCommand("set", p -> rcSetCommand(p));
 		rcSet.setPermission("eithonfixes.rcset");
-		rcSet.addArgument(rcExistingName);
-		rcSet.addNamedArgument(ArgumentType.BOOLEAN, "OnEnter");
-		rcSet.addNamedArgument(ArgumentType.BOOLEAN, "OnOtherWorld");
+		rcSet.addParameter(rcExistingName);
+		rcSet.addNamedParameter(ParameterType.BOOLEAN, "OnEnter");
+		rcSet.addNamedParameter(ParameterType.BOOLEAN, "OnOtherWorld");
 		
 		// rc delete
 		CommandSyntax rcDelete = rc.addCommand("delete", p -> rcDeleteCommand(p));
 		rcDelete.setPermission("eithonfixes.rcdelete");
-		rcDelete.addArgument(rcExistingName);
+		rcDelete.addParameter(rcExistingName);
 		
 		// rc goto
 		CommandSyntax rcGoto = rc.addCommand("goto", p -> rcGotoCommand(p));
 		rcGoto.setPermission("eithonfixes.rcgoto");
-		rcGoto.addArgument(rcExistingName);
+		rcGoto.addParameter(rcExistingName);
 		
 		commandSyntax.addCommand("list", p -> rcListCommand(p));
 	}
@@ -133,10 +133,10 @@ public class CommandHandler implements ICommandHandler {
 		// buy
 		CommandSyntax buy = commandSyntax.addCommand("buy", p -> buyCommand(p));
 		buy.setPermission("eithonfixes.buy");
-		buy.addArgumentPlayer("player");
-		buy.addArgument(ArgumentType.STRING, "item");
-		buy.addArgument(ArgumentType.REAL, "price");
-		buy.addArgument(ArgumentType.INTEGER, "amount");
+		buy.addParameterPlayer("player");
+		buy.addParameter(ParameterType.STRING, "item");
+		buy.addParameter(ParameterType.REAL, "price");
+		buy.addParameter(ParameterType.INTEGER, "amount");
 	}
 
 	void buyCommand(CommandParser commandParser)

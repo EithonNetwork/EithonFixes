@@ -2,6 +2,8 @@ package net.eithon.plugin.fixes.logic;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import net.eithon.library.bungee.BungeeController;
@@ -117,8 +119,8 @@ public class Controller {
 		this._regionCommandController.listRegionCommands(sender);
 	}
 	
-	public String[] getAllRegionCommands() {
-		return this._regionCommandController.getAllRegionCommands();
+	public List<String> getAllRegionCommands() {
+		return Arrays.asList(this._regionCommandController.getAllRegionCommands());
 	}
 
 	public void spAdd(Player player, String name, long distance) {
@@ -145,8 +147,8 @@ public class Controller {
 		return this._spawnPointController.maybeTeleportToSpawnPoint(player);
 	}
 	
-	public String[] getAllSpawnPointNames() {
-		return this._spawnPointController.getAllSpawnPointNames();
+	public List<String> getAllSpawnPointNames() {
+		return Arrays.asList(this._spawnPointController.getAllSpawnPointNames());
 	}
 
 	public LocalDateTime initiateRestart(long seconds) {
