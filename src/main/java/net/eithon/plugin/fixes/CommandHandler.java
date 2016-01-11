@@ -10,6 +10,7 @@ import net.eithon.library.command.syntax.ParameterSyntax.ParameterType;
 import net.eithon.library.command.CommandArguments;
 import net.eithon.library.command.CommandParser;
 import net.eithon.library.command.ICommandHandler;
+import net.eithon.library.command.ParameterValue;
 import net.eithon.plugin.fixes.logic.Controller;
 
 import org.bukkit.command.CommandSender;
@@ -21,31 +22,43 @@ public class CommandHandler implements ICommandHandler {
 
 	public CommandHandler(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
-		
+
 		CommandSyntax commandSyntax = new CommandSyntax("eithonfixes");
-		
+
 		setupBuyCommand(commandSyntax);
+		setupDebugCommand(commandSyntax);
 		setupRcCommand(commandSyntax);
 		setupSpCommand(commandSyntax);
 		setupBalanceCommand(commandSyntax);
 		setupServerCommand(commandSyntax);
-		setupDebugCommand(commandSyntax);
-		
+
 		this._commandSyntax = commandSyntax;
 	}
-	
+
 	@Override
 	public CommandSyntax getCommandSyntax()
 	{
 		return this._commandSyntax;
 	}
 
+	public void setupBuyCommand(CommandSyntax commandSyntax) {
+		// buy <player> <item> <price> [<amount>]
+		CommandSyntax buy = commandSyntax.addCommand("buy", p -> buyCommand(p));
+		buy.setPermission("eithonfixes.buy");
+		buy.addParameterPlayer("player");
+		buy.addParameter(ParameterType.STRING, "item");
+		buy.addParameter(ParameterType.REAL, "price");
+		ParameterSyntax parameter = buy.addParameter(ParameterType.INTEGER, "amount");
+		parameter.setDefault("1");
+	}
+
 	public void setupDebugCommand(CommandSyntax commandSyntax) {
 		CommandSyntax debug = commandSyntax.addCommand("debug", p -> debugCommand(p));
 		debug.setPermission("eithonfixes.debug");
 		debug.addParameter(ParameterType.STRING, "plugin");
-		ParameterSyntax argument = debug.addParameter(ParameterType.INTEGER, "level");
-		argument.setValues(0, 1, 2, 3);
+		ParameterSyntax parameter = debug.addParameter(ParameterType.INTEGER, "level");
+		parameter.setValues("0", "1", "2", "3");
+		parameter.setDefault("0");
 	}
 
 	public void setupServerCommand(CommandSyntax commandSyntax) {
@@ -62,31 +75,32 @@ public class CommandHandler implements ICommandHandler {
 		CommandSyntax sp = commandSyntax.addCommand("sp");
 		ParameterSyntax spExistingName = new ParameterSyntax(ParameterType.STRING, "name");
 		spExistingName.SetValueGetter(() -> this._controller.getAllSpawnPointNames(), true);
-		
+
 		// sp add
 		CommandSyntax spAdd = sp.addCommand("add", p -> spAddCommand(p));
 		spAdd.setPermission("eithonfixes.spadd");
 		spAdd.addParameter(ParameterType.STRING, "name");
 		spAdd.setRestOfParametersAsOptional();
-		spAdd.addParameter(ParameterType.INTEGER, "distance");
-		
+		ParameterSyntax parameter = spAdd.addParameter(ParameterType.INTEGER, "distance");
+		parameter.setDefault("10");
+
 		// sp edit
 		CommandSyntax spEdit = sp.addCommand("edit", p -> spEditCommand(p));
 		spEdit.setPermission("eithonfixes.spedit");
 		spEdit.addParameter(spExistingName);
 		spAdd.setRestOfParametersAsOptional();
 		spAdd.addParameter(ParameterType.INTEGER, "distance");
-		
+
 		// sp delete
 		CommandSyntax spDelete = sp.addCommand("delete", p -> spDeleteCommand(p));
 		spDelete.setPermission("eithonfixes.spdelete");
 		spDelete.addParameter(spExistingName);
-		
+
 		// sp goto
 		CommandSyntax spGoto = sp.addCommand("goto", p -> spGotoCommand(p));
 		spGoto.setPermission("eithonfixes.spgoto");
 		spGoto.addParameter(spExistingName);
-		
+
 		sp.addCommand("list", p -> spListCommand(p));
 		spGoto.setPermission("eithonfixes.splist");
 	}
@@ -96,52 +110,41 @@ public class CommandHandler implements ICommandHandler {
 		CommandSyntax rc = commandSyntax.addCommand("rc");
 		ParameterSyntax rcExistingName = new ParameterSyntax(ParameterType.STRING, "name");
 		rcExistingName.SetValueGetter(() -> this._controller.getAllRegionCommands(), true);
-		
+
 		// rc add
 		CommandSyntax rcAdd = rc.addCommand("add", p -> rcAddCommand(p));
 		rcAdd.setPermission("eithonfixes.rcadd");
 		rcAdd.addParameter(ParameterType.STRING, "name");
 		rcAdd.addParameter(ParameterType.REST, "command");
-		
+
 		// rc edit
 		CommandSyntax rcEdit = rc.addCommand("edit", p -> rcEditCommand(p));
 		rcEdit.setPermission("eithonfixes.rcedit");
 		rcEdit.addParameter(rcExistingName);
 		rcEdit.addParameter(ParameterType.REST, "command");
-		
+
 		// rc set
 		CommandSyntax rcSet = rc.addCommand("set", p -> rcSetCommand(p));
 		rcSet.setPermission("eithonfixes.rcset");
 		rcSet.addParameter(rcExistingName);
 		rcSet.addNamedParameter(ParameterType.BOOLEAN, "OnEnter");
 		rcSet.addNamedParameter(ParameterType.BOOLEAN, "OnOtherWorld");
-		
+
 		// rc delete
 		CommandSyntax rcDelete = rc.addCommand("delete", p -> rcDeleteCommand(p));
 		rcDelete.setPermission("eithonfixes.rcdelete");
 		rcDelete.addParameter(rcExistingName);
-		
+
 		// rc goto
 		CommandSyntax rcGoto = rc.addCommand("goto", p -> rcGotoCommand(p));
 		rcGoto.setPermission("eithonfixes.rcgoto");
 		rcGoto.addParameter(rcExistingName);
-		
-		commandSyntax.addCommand("list", p -> rcListCommand(p));
-	}
 
-	public void setupBuyCommand(CommandSyntax commandSyntax) {
-		// buy <player> <item> <price> [<amount>]
-		CommandSyntax buy = commandSyntax.addCommand("buy", p -> buyCommand(p));
-		buy.setPermission("eithonfixes.buy");
-		buy.addParameterPlayer("player");
-		buy.addParameter(ParameterType.STRING, "item");
-		buy.addParameter(ParameterType.REAL, "price");
-		buy.addParameter(ParameterType.INTEGER, "amount");
+		commandSyntax.addCommand("list", p -> rcListCommand(p));
 	}
 
 	void buyCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
 		EithonPlayer eithonPlayer = commandParser.getEithonPlayer();
 		if ((eithonPlayer != null) && (!eithonPlayer.isInAcceptableWorldOrInformPlayer(Config.V.buyWorlds))) return;
 
@@ -149,10 +152,9 @@ public class CommandHandler implements ICommandHandler {
 		if (buyingPlayer == null) return;
 
 
-		String item = arguments.getStringAsLowercase();
-		double pricePerItem = arguments.getDouble(Double.MAX_VALUE);
-		if (pricePerItem == Double.MAX_VALUE) return;
-		int amount = arguments.getInteger(1);
+		String item = commandParser.getArgument("item").getStringAsLowerCase();
+		double pricePerItem = commandParser.getArgument("price").getDouble();
+		int amount = commandParser.getArgument("amount").getInteger();
 
 		this._controller.buy(buyingPlayer, item, pricePerItem, amount);
 	}
@@ -167,10 +169,8 @@ public class CommandHandler implements ICommandHandler {
 
 	void debugCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-
-		String pluginName = arguments.getString();
-		int debugLevel = arguments.getInteger(0);
+		String pluginName = commandParser.getArgument("plugin").getString();
+		int debugLevel = commandParser.getArgument("level").getInteger();
 		CommandSender sender = commandParser.getSender();
 		boolean success = this._controller.setPluginDebugLevel(sender, pluginName, debugLevel);
 		if (!success) return;
@@ -179,59 +179,52 @@ public class CommandHandler implements ICommandHandler {
 
 	void rcAddCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = arguments.getString();
-		String commands = arguments.getRest();
+		String name = commandParser.getArgument("name").getString();
+		String commands = commandParser.getArgument("command").getString();
 		this._controller.rcAdd(player, name, commands);
 	}
 
 	void rcEditCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = arguments.getString();
-		String commands = arguments.getRest();
+		String name = commandParser.getArgument("name").getString();
+		String commands = commandParser.getArgument("command").getString();
 		this._controller.rcEdit(player, name, commands);
 	}
 
 	void rcSetCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = arguments.getString();
-		boolean onEnter = arguments.getBoolean(true);
-		boolean onOtherWorld = arguments.getBoolean(true);
-		this._controller.rcSet(player, name, onEnter, onOtherWorld);
+		String name = commandParser.getArgument("name").getString();
+
+		for (String argumentName : new String[]{"OnEnter", "OnOtherWorld"}) {
+			ParameterValue parameterValue = commandParser.getArgument(argumentName);
+			if (parameterValue.hasValue()) this._controller.rcSet(argumentName, parameterValue.getBoolean());
+		}
 	}
 
 	void rcDeleteCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = arguments.getString();
+		String name = commandParser.getArgument("name").getString();
 		this._controller.rcDelete(player, name);
 	}
 
 	void rcGotoCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = arguments.getString();
+		String name = commandParser.getArgument("name").getString();
 		this._controller.rcGoto(player, name);
 	}
 
@@ -242,44 +235,36 @@ public class CommandHandler implements ICommandHandler {
 
 	void spAddCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = arguments.getString();
-		long distance = arguments.getInteger(10);
+		String name = commandParser.getArgument("name").getString();
+		long distance = commandParser.getArgument("distance").getLong();
 		this._controller.spAdd(player, name, distance);
 	}
 
 	void spEditCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = arguments.getString();
-		long distance = arguments.getInteger(10);
+		String name = commandParser.getArgument("name").getString();
+		long distance = commandParser.getArgument("distance").getLong();
 		this._controller.spEdit(player, name, distance);
 	}
 
 	void spDeleteCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-
-		String name = arguments.getString();
+		String name = commandParser.getArgument("name").getString();
 		this._controller.spDelete(commandParser.getSender(), name);
 	}
 
 	void spGotoCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = arguments.getString();
+		String name = commandParser.getArgument("name").getString();
 		this._controller.rcGoto(player, name);
 	}
 
@@ -290,12 +275,10 @@ public class CommandHandler implements ICommandHandler {
 
 	void restartCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-
 		CommandSender sender = commandParser.getSender();
 		if (sender == null) return;
 
-		String cancel = arguments.getString();
+		String cancel = commandParser.getArgument("cancel").getString();
 		if ((cancel != null) && cancel.startsWith("ca")) {
 			boolean success = this._controller.cancelRestart();
 			if (success) sender.sendMessage("The server restart has been cancelled.");
@@ -317,8 +300,7 @@ public class CommandHandler implements ICommandHandler {
 
 	void serverCommand(CommandParser commandParser)
 	{
-		CommandArguments arguments = commandParser.getArguments();
-		String serverName = arguments.getStringAsLowercase();
+		String serverName = commandParser.getArgument("serverName").getString();
 		Player player = commandParser.getPlayer();
 		boolean success = this._controller.connectPlayerToServer(player, serverName);
 		if (!success) return;
