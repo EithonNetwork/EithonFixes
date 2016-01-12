@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 
 public class CommandHandler implements ICommandHandler {
 	private static final String BUY_COMMAND = "/eithonfixes buy <player> <item> <price> <amount>";
-	private static final String BALANCE_COMMAND = "/eithonfixes balance";
+	private static final String BALANCE_COMMAND = "/eithonfixes balance [<player>]";
 	private static final String RCADD_COMMAND = "/eithonfixes rcadd <name> <command>";
 	private static final String RCEDIT_COMMAND = "/eithonfixes rcedit <name> <command>";
 	private static final String RCSET_COMMAND = "/eithonfixes rcset <name> <onEnter> <onOtherWorld>";
@@ -102,10 +102,10 @@ public class CommandHandler implements ICommandHandler {
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.balance")) return;
 		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
 
-		Player player = commandParser.getPlayerOrInformSender();
-		if (player == null) return ;
+		CommandSender sender = commandParser.getSender();
+		Player player = commandParser.getArgumentPlayerOrInformSender((sender instanceof Player) ? (Player) sender : null);
 
-		this._controller.displayBalance(player);
+		this._controller.displayBalance(sender, player);
 	}
 
 	void debugCommand(CommandParser commandParser)

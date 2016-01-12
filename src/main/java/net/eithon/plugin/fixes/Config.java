@@ -161,8 +161,8 @@ public class Config {
 					"You successfully purchased %d item(s) of %s.");
 			inventoryFull = config.getConfigurableMessage("messages.InventoryFull", 0,
 					"Your inventory is full.");
-			currentBalance = config.getConfigurableMessage("messages.CurrentBalance", 1,
-					"Your balance is %.2f E-Coins.");
+			currentBalance = config.getConfigurableMessage("messages.CurrentBalance", 2,
+					"The balance for %s is %.2f E-Coins.");
 			joinedChat = config.getConfigurableMessage("messages.JoinedChat", 1,
 					"You have joined chat channel %s.");
 			waitForCommandCoolDown = config.getConfigurableMessage("messages.WaitForCoolDown", 1,

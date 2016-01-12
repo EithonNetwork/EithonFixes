@@ -193,8 +193,8 @@ messages:
   InventoryFull: Your inventory is full.  
   
   #
-  # Parameters: <balance> (%f)
-  CurrentBalance: Your balance is %.2f E-Coins.
+  # Parameters: <player name> (%s), <balance> (%f)
+  CurrentBalance: The balance for %s is %.2f E-Coins.
 
   #
   # Parameters: <channel name> (%s)

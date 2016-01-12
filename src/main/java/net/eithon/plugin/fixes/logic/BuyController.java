@@ -8,6 +8,7 @@ import net.eithon.library.plugin.PluginMisc;
 import net.eithon.plugin.fixes.Config;
 
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -36,16 +37,16 @@ class BuyController {
 
 		Config.M.successfulPurchase.sendMessage(buyingPlayer, amount, item);
 	}
-	public void displayBalance(Player player) {
+	public void displayBalance(CommandSender sender, Player player) {
 		String playerName = player.getName();
 		BigDecimal balance;
 		try {
 			balance = Economy.getMoneyExact(playerName);
 		} catch (UserDoesNotExistException e) {
-			player.sendMessage(String.format("Could not find a user named \"%s\".", playerName));
+			sender.sendMessage(String.format("Could not find a user named \"%s\".", playerName));
 			return;
 		}
-		Config.M.currentBalance.sendMessage(player, balance.doubleValue());
+		Config.M.currentBalance.sendMessage(sender, playerName, balance.doubleValue());
 	}
 
 	private boolean hasEnoughOrInformPlayer(Player buyingPlayer, String item, int amount,
