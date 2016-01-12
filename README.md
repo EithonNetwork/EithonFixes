@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.31 (2016-01-12)
+
+* CHANGE: Balance now gets an optional player
+
 ### 1.30.1 (2015-11-28)
 
 * BUG: Did not save the list of RegionCommands after deleting a RegionCommand.

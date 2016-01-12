@@ -79,8 +79,8 @@ public class Controller {
 		this._buyController.buy(buyingPlayer, item, price, amount);
 	}
 
-	public void displayBalance(Player player) {
-		this._buyController.displayBalance(player);
+	public void displayBalance(CommandSender sender, Player player) {
+		this._buyController.displayBalance(sender, player);
 	}
 
 	public long secondsLeftOfCommandCoolDown(Player player, String command) {

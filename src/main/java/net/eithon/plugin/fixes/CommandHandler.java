@@ -167,10 +167,10 @@ public class CommandHandler implements ICommandHandler {
 
 	void balanceCommand(CommandParser commandParser)
 	{
-		Player player = commandParser.getPlayerOrInformSender();
-		if (player == null) return ;
+		CommandSender sender = commandParser.getSender();
+		Player player = commandParser.getArgumentPlayerOrInformSender((sender instanceof Player) ? (Player) sender : null);
 
-		this._controller.displayBalance(player);
+		this._controller.displayBalance(sender, player);
 	}
 
 	void debugCommand(CommandParser commandParser)
