@@ -52,7 +52,7 @@ PenaltyOnDeathWorlds: [W_Hardcore,W_Nether,W_SurvivalFreebuild,W_TheEnd]
 # Commands that should have a cooldown period
 #
 CoolDownCommands: ["/broadcast", "/me"]
-CoolDownCommandTimeSpans: [30, 60]
+CoolDownCommandTimeSpans: [1000, 60]
 CoolDownCommandAllowedIncidents: [1, 3]
 
 #
@@ -74,7 +74,7 @@ BuyWorlds: [W_SurvivalFreebuild]
 #
 # Worlds where you can fly (set eithonfixes.canfly to fly in all worlds)
 #
-FlyWorlds: [W_SurvivalFreebuild,W_CreativePlots,W_Builder,W_DonationBoard]
+FlyWorlds: [W_SurvivalFreebuild,W_CreativePlots,W_Builder,W_DonationBoard,W_MinigamesVoid]
 
 #
 # Chat channels. Used to leave all other channels.
@@ -194,7 +194,7 @@ messages:
   
   #
   # Parameters: <player name> (%s), <balance> (%f)
-  CurrentBalance: The balance for %s is %.2f E-Coins.
+  CurrentBalance: '[[color=darkaqua]Money[/color]] The balance for %s is [color=aqua]%.2f[/color] E-Coins.'
 
   #
   # Parameters: <channel name> (%s)
@@ -286,6 +286,9 @@ messages:
         RetiredArchitect: '[color=green]+[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
         RetiredMod: '[color=green]+[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
     players:
+        Addos: '[color=green]+[/color] [color=gray]Yo yo yo, Master[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]is in the %SERVER_NAME% house![/color]'
+        Kyralix: '[color=green]+[/color] [color=darkgreen]%PLAYER_NAME%[/color] [color=gray]the cool kid just joined the %SERVER_NAME% server! Yay ~[/color]'
+        Robot_Rebel: '[color=green]+[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]just joined the %SERVER_NAME% server. Hello Bootifuls![/color]'
   quit:
     message: '[color=green]+[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
     groups:
@@ -313,4 +316,7 @@ messages:
         RetiredArchitect: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         RetiredMod: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
     players:
-    
+        Neylion: '[color=red]-[/color] [color=red]%PLAYER_NAME%[/color] [color=gray]left the %SERVER_NAME% server. Play nice! ~[/color]'
+        Kyralix: '[color=red]-[/color] [color=darkgreen]%PLAYER_NAME%[/color] [color=gray]the cool kid just left the %SERVER_NAME% server! Aww ~[/color]'
+        Hawooo: '[color=red]-[/color] [color=red]%PLAYER_NAME%[/color] [color=gray]left the %SERVER_NAME% server. Or so you think...[/color]'
+        Robot_Rebel: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]left the %SERVER_NAME% server. Goodbye, baes! [/color]'
