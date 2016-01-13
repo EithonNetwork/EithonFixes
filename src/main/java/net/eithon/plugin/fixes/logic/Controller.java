@@ -264,7 +264,8 @@ public class Controller {
 	}
 
 	public boolean connectPlayerToServer(Player player, String serverName) {
-		if (player.getServer().getName().equalsIgnoreCase(serverName)) {
+		// TODO: Is serverName the same as Server.getServerName() or bungeeController.getServerName?
+		if (player.getServer().getServerName().equalsIgnoreCase(serverName)) {
 			Config.M.alreadyConnectedToServer.sendMessage(player, serverName);
 			return false;
 		}
