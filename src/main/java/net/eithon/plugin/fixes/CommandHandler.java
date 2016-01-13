@@ -100,7 +100,7 @@ public class CommandHandler implements ICommandHandler {
 	void balanceCommand(CommandParser commandParser)
 	{
 		if (!commandParser.hasPermissionOrInformSender("eithonfixes.balance")) return;
-		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 1)) return;
+		if (!commandParser.hasCorrectNumberOfArgumentsOrShowSyntax(1, 2)) return;
 
 		CommandSender sender = commandParser.getSender();
 		Player player = commandParser.getArgumentPlayerOrInformSender((sender instanceof Player) ? (Player) sender : null);
