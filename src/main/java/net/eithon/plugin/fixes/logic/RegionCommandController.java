@@ -156,10 +156,6 @@ public class RegionCommandController {
 		for (RegionCommand rc : this._regionCommandsByName.values()) {
 			array.add(rc.toJson());
 		}
-		if ((array == null) || (array.size() == 0)) {
-			this._eithonPlugin.getEithonLogger().info("No RegionCommands saved.");
-			return;
-		}
 		this._eithonPlugin.getEithonLogger().info("Saving %d RegionCommands", array.size());
 		File file = getRegionCommandsStorageFile();
 		
