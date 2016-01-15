@@ -102,10 +102,6 @@ public class SpawnPointController {
 		for (SpawnPoint sp : this._spawnPointsByName.values()) {
 			array.add(sp.toJson());
 		}
-		if ((array == null) || (array.size() == 0)) {
-			this._eithonPlugin.getEithonLogger().info("No SpawnPoints saved.");
-			return;
-		}
 		this._eithonPlugin.getEithonLogger().info("Saving %d SpawnPoints", array.size());
 		File file = getSpawnPointStorageFile();
 		

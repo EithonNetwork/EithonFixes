@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.31.2 (2016-01-14)
+
+* BUG: When the last region command (or spawn point) was deleted, the save file was not updated. 
+
 ### 1.31.1 (2016-01-13)
 
 * BUG: Balance expected no arguments
