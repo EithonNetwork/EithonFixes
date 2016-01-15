@@ -39,11 +39,12 @@ public class CommandHandler {
 
 	public void setupBalanceCommand(CommandSyntax commandSyntax) {
 		CommandSyntax balance = commandSyntax.addCommand("balance <player>").setCommandExecutor(p -> balanceCommand(p));
-		balance.getParameterSyntax("player")
+		balance
+		.getParameterSyntax("player")
 		.setMandatoryValues(sender -> getOnlinePlayerNames(sender))
 		.setDefaultValue(sender -> getSenderAsOnlinePlayer(sender));
 	}
-	
+
 
 	private String getSenderAsOnlinePlayer(CommandSender sender) {
 		return (sender instanceof Player) ? ((Player) sender).getName() : null;
@@ -57,7 +58,8 @@ public class CommandHandler {
 		// buy <player> <item> <price> [<amount>]
 		CommandSyntax buy = commandSyntax.addCommand("buy <player> <item : REAL> <price : FLOAT> <amount : INTEGER {1, ...}>")
 				.setCommandExecutor(eithonCommand -> buyCommand(eithonCommand));
-		buy.getParameterSyntax("player")
+		buy
+		.getParameterSyntax("player")
 		.setMandatoryValues(sender -> getOnlinePlayerNames(sender));
 	}
 
@@ -69,54 +71,68 @@ public class CommandHandler {
 	public void setupSpCommand(CommandSyntax commandSyntax) {
 		CommandSyntax sp = commandSyntax.addCommand("sp");
 		CommandSyntax subCommand;
-		
+
 		// sp add
 		sp.addCommand("add <name> <distance : INTEGER {10,...}>")
-				.setCommandExecutor(p -> spAddCommand(p));
+		.setCommandExecutor(p -> spAddCommand(p));
 
 		// sp edit
 		subCommand = sp.addCommand("edit <name> <distance : INTEGER {10,...}>")
 				.setCommandExecutor(p -> spEditCommand(p));
-		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
+		subCommand
+		.getParameterSyntax("name")
+		.setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
 
 		// sp delete
 		subCommand = sp.addCommand("delete <name>")
 				.setCommandExecutor(p -> spDeleteCommand(p));
-		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
+		subCommand
+		.getParameterSyntax("name")
+		.setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
 
 		// sp goto
 		subCommand = sp.addCommand("goto <name>")
 				.setCommandExecutor(p -> spDeleteCommand(p));
-		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
+		subCommand
+		.getParameterSyntax("name")
+		.setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
 	}
 
 	public void setupRcCommand(CommandSyntax commandSyntax) {
 		CommandSyntax rc = commandSyntax.addCommand("rc");
 		CommandSyntax subCommand;
-		
+
 		// rc add
 		rc.addCommand("add <name> <command ...>")
-				.setCommandExecutor(p -> rcAddCommand(p));
+		.setCommandExecutor(p -> rcAddCommand(p));
 
 		// rc edit
 		subCommand = rc.addCommand("edit <name> <command ...>")
 				.setCommandExecutor(p -> rcEditCommand(p));
-		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllRegionCommands());
+		subCommand
+		.getParameterSyntax("name")
+		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc set
 		subCommand = rc.addCommand("edit set <name> OnEnter=<on-enter : BOOLEAN> OnWorld=<on-world : BOOLEAN>")
 				.setCommandExecutor(p -> rcSetCommand(p));
-		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllRegionCommands());
+		subCommand
+		.getParameterSyntax("name")
+		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc delete
 		subCommand = rc.addCommand("delete <name>")
 				.setCommandExecutor(p -> rcDeleteCommand(p));
-		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllRegionCommands());
+		subCommand
+		.getParameterSyntax("name")
+		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc goto
 		subCommand = rc.addCommand("goto <name>")
 				.setCommandExecutor(p -> rcDeleteCommand(p));
-		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllRegionCommands());
+		subCommand
+		.getParameterSyntax("name")
+		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 	}
 
 	void buyCommand(EithonCommand commandParser)
@@ -183,7 +199,7 @@ public class CommandHandler {
 		for (String argumentName : new String[]{"OnEnter", "OnOtherWorld"}) {
 			Argument parameterValue = commandParser.getArgument(argumentName);
 			throw new NotImplementedException();
-			//if (parameterValue.hasValue()) this._controller.rcSet(player, argumentName, parameterValue.asBoolean());
+			//if (parameterValue.hasValue()) this._controller.rcSet(player, name, argumentName, parameterValue.asBoolean());
 		}
 	}
 
