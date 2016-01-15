@@ -1,22 +1,21 @@
 package net.eithon.plugin.fixes;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import net.eithon.library.command.Argument;
+import net.eithon.library.command.EithonCommand;
+import net.eithon.library.command.syntax.CommandSyntax;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.command.syntax.ParameterSyntax;
-import net.eithon.library.command.syntax.CommandSyntax;
-import net.eithon.library.command.syntax.ParameterSyntax.ParameterType;
-import net.eithon.library.command.CommandArguments;
-import net.eithon.library.command.CommandParser;
-import net.eithon.library.command.ICommandHandler;
-import net.eithon.library.command.ParameterValue;
 import net.eithon.plugin.fixes.logic.Controller;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandHandler implements ICommandHandler {
+public class CommandHandler {
 	private Controller _controller;
 	private CommandSyntax _commandSyntax;
 
@@ -24,132 +23,103 @@ public class CommandHandler implements ICommandHandler {
 		this._controller = controller;
 
 		CommandSyntax commandSyntax = new CommandSyntax("eithonfixes");
+		commandSyntax.setPermissionsAutomatically();
 
 		setupBuyCommand(commandSyntax);
 		setupDebugCommand(commandSyntax);
 		setupRcCommand(commandSyntax);
 		setupSpCommand(commandSyntax);
 		setupBalanceCommand(commandSyntax);
-		setupServerCommand(commandSyntax);
-		setupRestartCommand(commandSyntax);
-
+		commandSyntax.addCommand("server <name>").setCommandExecutor(p -> serverCommand(p));
+		commandSyntax.addCommand("restart <time : TIME_SPAN {10m, ...}>").setCommandExecutor(p -> serverCommand(p));
 		this._commandSyntax = commandSyntax;
 	}
 
-	@Override
-	public CommandSyntax getCommandSyntax()
-	{
-		return this._commandSyntax;
+	public CommandSyntax getCommandSyntax() { return this._commandSyntax;	}
+
+	public void setupBalanceCommand(CommandSyntax commandSyntax) {
+		CommandSyntax balance = commandSyntax.addCommand("balance <player>").setCommandExecutor(p -> balanceCommand(p));
+		balance.getParameterSyntax("player")
+		.setMandatoryValues(sender -> getOnlinePlayerNames(sender))
+		.setDefaultValue(sender -> getSenderAsOnlinePlayer(sender));
+	}
+	
+
+	private String getSenderAsOnlinePlayer(CommandSender sender) {
+		return (sender instanceof Player) ? ((Player) sender).getName() : null;
+	}
+
+	private List<String> getOnlinePlayerNames(CommandSender sender) {
+		return sender.getServer().getOnlinePlayers().stream().map(p -> p.getName()).collect(Collectors.toList());
 	}
 
 	public void setupBuyCommand(CommandSyntax commandSyntax) {
 		// buy <player> <item> <price> [<amount>]
-		CommandSyntax buy = commandSyntax.addCommand(
-				"buy", "eithonfixes.buy", p -> buyCommand(p));
-		buy.addParameterPlayer("player");
-		buy.addParameter(ParameterType.STRING, "item");
-		buy.addParameter(ParameterType.REAL, "price");
-		ParameterSyntax parameter = buy.addParameter(ParameterType.INTEGER, "amount");
-		parameter.setDefault("1");
+		CommandSyntax buy = commandSyntax.addCommand("buy <player> <item : REAL> <price : FLOAT> <amount : INTEGER {1, ...}>")
+				.setCommandExecutor(eithonCommand -> buyCommand(eithonCommand));
+		buy.getParameterSyntax("player")
+		.setMandatoryValues(sender -> getOnlinePlayerNames(sender));
 	}
 
 	public void setupDebugCommand(CommandSyntax commandSyntax) {
-		CommandSyntax debug = commandSyntax.addCommand(
-				"debug", "eithonfixes.debug", p -> debugCommand(p));
-		debug.addParameter(ParameterType.STRING, "plugin");
-		ParameterSyntax parameter = debug.addParameter(ParameterType.INTEGER, "level");
-		parameter.setValues("0", "1", "2", "3");
-		parameter.setDefault("0");
-	}
-
-	public void setupBalanceCommand(CommandSyntax commandSyntax) {
-		commandSyntax.addCommand("balance", p -> balanceCommand(p));
+		CommandSyntax debug = commandSyntax.addCommand("debug <plugin> <level : INTEGER {0, 1, 2, _3_}");
+		debug.setCommandExecutor(p -> debugCommand(p));
 	}
 
 	public void setupSpCommand(CommandSyntax commandSyntax) {
 		CommandSyntax sp = commandSyntax.addCommand("sp");
-		ParameterSyntax spExistingName = new ParameterSyntax(ParameterType.STRING, "name");
-		spExistingName.SetValueGetter(() -> this._controller.getAllSpawnPointNames(), true);
-
+		CommandSyntax subCommand;
+		
 		// sp add
-		CommandSyntax spAdd = sp.addCommand(
-				"add", "eithonfixes.spadd", p -> spAddCommand(p));
-		spAdd.addParameter(ParameterType.STRING, "name");
-		spAdd.setRestOfParametersAsOptional();
-		ParameterSyntax parameter = spAdd.addParameter(ParameterType.INTEGER, "distance");
-		parameter.setDefault("10");
+		sp.addCommand("add <name> <distance : INTEGER {10,...}>")
+				.setCommandExecutor(p -> spAddCommand(p));
 
 		// sp edit
-		CommandSyntax spEdit = sp.addCommand(
-				"edit", "eithonfixes.spedit", p -> spEditCommand(p));
-		spEdit.addParameter(spExistingName);
-		spAdd.setRestOfParametersAsOptional();
-		spAdd.addParameter(ParameterType.INTEGER, "distance");
+		subCommand = sp.addCommand("edit <name> <distance : INTEGER {10,...}>")
+				.setCommandExecutor(p -> spEditCommand(p));
+		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
 
 		// sp delete
-		CommandSyntax spDelete = sp.addCommand(
-				"delete", "eithonfixes.spdelete", p -> spDeleteCommand(p));
-		spDelete.addParameter(spExistingName);
+		subCommand = sp.addCommand("delete <name>")
+				.setCommandExecutor(p -> spDeleteCommand(p));
+		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
 
 		// sp goto
-		CommandSyntax spGoto = sp.addCommand(
-				"goto", "eithonfixes.spgoto", p -> spGotoCommand(p));
-		spGoto.addParameter(spExistingName);
-
-		sp.addCommand("list", "eithonfixes.splist", p -> spListCommand(p));
+		subCommand = sp.addCommand("goto <name>")
+				.setCommandExecutor(p -> spDeleteCommand(p));
+		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
 	}
 
 	public void setupRcCommand(CommandSyntax commandSyntax) {
-
 		CommandSyntax rc = commandSyntax.addCommand("rc");
-		ParameterSyntax rcExistingName = new ParameterSyntax(ParameterType.STRING, "name");
-		rcExistingName.SetValueGetter(() -> this._controller.getAllRegionCommands(), true);
-
+		CommandSyntax subCommand;
+		
 		// rc add
-		CommandSyntax rcAdd = rc.addCommand(
-				"add", "eithonfixes.rcadd", p -> rcAddCommand(p));
-		rcAdd.addParameter(ParameterType.STRING, "name");
-		rcAdd.addParameter(ParameterType.REST, "command");
+		rc.addCommand("add <name> <command ...>")
+				.setCommandExecutor(p -> rcAddCommand(p));
 
 		// rc edit
-		CommandSyntax rcEdit = rc.addCommand("edit", "eithonfixes.rcedit", p -> rcEditCommand(p));
-		rcEdit.addParameter(rcExistingName);
-		rcEdit.addParameter(ParameterType.REST, "command");
+		subCommand = rc.addCommand("edit <name> <command ...>")
+				.setCommandExecutor(p -> rcEditCommand(p));
+		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc set
-		CommandSyntax rcSet = rc.addCommand(
-				"set", "eithonfixes.rcset", p -> rcSetCommand(p));
-		rcSet.addParameter(rcExistingName);
-		rcSet.addNamedParameter(ParameterType.BOOLEAN, "OnEnter");
-		rcSet.addNamedParameter(ParameterType.BOOLEAN, "OnOtherWorld");
+		subCommand = rc.addCommand("edit set <name> OnEnter=<on-enter : BOOLEAN> OnWorld=<on-world : BOOLEAN>")
+				.setCommandExecutor(p -> rcSetCommand(p));
+		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc delete
-		CommandSyntax rcDelete = rc.addCommand(
-				"delete", "eithonfixes.rcdelete", p -> rcDeleteCommand(p));
-		rcDelete.addParameter(rcExistingName);
+		subCommand = rc.addCommand("delete <name>")
+				.setCommandExecutor(p -> rcDeleteCommand(p));
+		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc goto
-		CommandSyntax rcGoto = rc.addCommand(
-				"goto", "eithonfixes.rcgoto", p -> rcGotoCommand(p));
-		rcGoto.addParameter(rcExistingName);
-
-		commandSyntax.addCommand("list", p -> rcListCommand(p));
+		subCommand = rc.addCommand("goto <name>")
+				.setCommandExecutor(p -> rcDeleteCommand(p));
+		subCommand.getParameterSyntax("name").setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 	}
 
-	public void setupServerCommand(CommandSyntax commandSyntax) {
-		CommandSyntax server = commandSyntax.addCommand(
-				"server", "eithonfixes.server", p -> serverCommand(p));
-		server.addParameter(ParameterType.STRING, "name");
-	}
-
-	public void setupRestartCommand(CommandSyntax commandSyntax) {
-		CommandSyntax restart = commandSyntax.addCommand(
-				"restart", "eithonfixes.restart", p -> serverCommand(p));
-		ParameterSyntax parameter = restart.addParameter(ParameterType.TIME_SPAN, "time");
-		parameter.setDefault("10m");
-	}
-
-	void buyCommand(CommandParser commandParser)
+	void buyCommand(EithonCommand commandParser)
 	{
 		EithonPlayer eithonPlayer = commandParser.getEithonPlayer();
 		if ((eithonPlayer != null) && (!eithonPlayer.isInAcceptableWorldOrInformPlayer(Config.V.buyWorlds))) return;
@@ -165,15 +135,15 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.buy(buyingPlayer, item, pricePerItem, amount);
 	}
 
-	void balanceCommand(CommandParser commandParser)
+	void balanceCommand(EithonCommand commandParser)
 	{
 		CommandSender sender = commandParser.getSender();
-		Player player = commandParser.getArgumentPlayerOrInformSender((sender instanceof Player) ? (Player) sender : null);
+		Player player = commandParser.getArgument("player").asPlayer();
 
 		this._controller.displayBalance(sender, player);
 	}
 
-	void debugCommand(CommandParser commandParser)
+	void debugCommand(EithonCommand commandParser)
 	{
 		String pluginName = commandParser.getArgument("plugin").asString();
 		int debugLevel = commandParser.getArgument("level").asInteger();
@@ -183,7 +153,7 @@ public class CommandHandler implements ICommandHandler {
 		sender.sendMessage(String.format("Plugin %s now has debug level %d", pluginName, debugLevel));
 	}
 
-	void rcAddCommand(CommandParser commandParser)
+	void rcAddCommand(EithonCommand commandParser)
 	{
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
@@ -193,17 +163,17 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.rcAdd(player, name, commands);
 	}
 
-	void rcEditCommand(CommandParser commandParser)
+	void rcEditCommand(EithonCommand commandParser)
 	{
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
-		
+
 		String name = commandParser.getArgument("name").asString();
 		String commands = commandParser.getArgument("command").asString();
 		this._controller.rcEdit(player, name, commands);
 	}
 
-	void rcSetCommand(CommandParser commandParser)
+	void rcSetCommand(EithonCommand commandParser)
 	{
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
@@ -211,12 +181,13 @@ public class CommandHandler implements ICommandHandler {
 		String name = commandParser.getArgument("name").asString();
 
 		for (String argumentName : new String[]{"OnEnter", "OnOtherWorld"}) {
-			ParameterValue parameterValue = commandParser.getArgument(argumentName);
-			if (parameterValue.hasValue()) this._controller.rcSet(player, argumentName, parameterValue.asBoolean());
+			Argument parameterValue = commandParser.getArgument(argumentName);
+			throw new NotImplementedException();
+			//if (parameterValue.hasValue()) this._controller.rcSet(player, argumentName, parameterValue.asBoolean());
 		}
 	}
 
-	void rcDeleteCommand(CommandParser commandParser)
+	void rcDeleteCommand(EithonCommand commandParser)
 	{
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
@@ -225,7 +196,7 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.rcDelete(player, name);
 	}
 
-	void rcGotoCommand(CommandParser commandParser)
+	void rcGotoCommand(EithonCommand commandParser)
 	{
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
@@ -234,12 +205,12 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.rcGoto(player, name);
 	}
 
-	void rcListCommand(CommandParser commandParser)
+	void rcListCommand(EithonCommand commandParser)
 	{
 		this._controller.rcList(commandParser.getSender());
 	}
 
-	void spAddCommand(CommandParser commandParser)
+	void spAddCommand(EithonCommand commandParser)
 	{
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
@@ -249,7 +220,7 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.spAdd(player, name, distance);
 	}
 
-	void spEditCommand(CommandParser commandParser)
+	void spEditCommand(EithonCommand commandParser)
 	{
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
@@ -259,13 +230,13 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.spEdit(player, name, distance);
 	}
 
-	void spDeleteCommand(CommandParser commandParser)
+	void spDeleteCommand(EithonCommand commandParser)
 	{
 		String name = commandParser.getArgument("name").asString();
 		this._controller.spDelete(commandParser.getSender(), name);
 	}
 
-	void spGotoCommand(CommandParser commandParser)
+	void spGotoCommand(EithonCommand commandParser)
 	{
 		Player player = commandParser.getPlayerOrInformSender();
 		if (player == null) return;
@@ -274,12 +245,12 @@ public class CommandHandler implements ICommandHandler {
 		this._controller.rcGoto(player, name);
 	}
 
-	void spListCommand(CommandParser commandParser)
+	void spListCommand(EithonCommand commandParser)
 	{
 		this._controller.spList(commandParser.getSender());
 	}
 
-	void restartCommand(CommandParser commandParser)
+	void restartCommand(EithonCommand commandParser)
 	{
 		CommandSender sender = commandParser.getSender();
 		if (sender == null) return;
@@ -298,13 +269,13 @@ public class CommandHandler implements ICommandHandler {
 		else sender.sendMessage(String.format("The server will be restarted %s", when.toString()));
 	}
 
-	void testCommand(CommandParser commandParser)
+	void testCommand(EithonCommand commandParser)
 	{
 		Player player = commandParser.getPlayer();
 		player.sendMessage(String.format("TEST by player %s", player.getName()));
 	}
 
-	void serverCommand(CommandParser commandParser)
+	void serverCommand(EithonCommand commandParser)
 	{
 		String serverName = commandParser.getArgument("serverName").asString();
 		Player player = commandParser.getPlayer();
