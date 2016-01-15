@@ -45,13 +45,12 @@ public class CommandHandler {
 		.setDefaultValue(sender -> getSenderAsOnlinePlayer(sender));
 	}
 
-
-	private String getSenderAsOnlinePlayer(CommandSender sender) {
-		return (sender instanceof Player) ? ((Player) sender).getName() : null;
+	private String getSenderAsOnlinePlayer(EithonCommand command) {
+		return command.getPlayer().getName();
 	}
 
-	private List<String> getOnlinePlayerNames(CommandSender sender) {
-		return sender.getServer().getOnlinePlayers().stream().map(p -> p.getName()).collect(Collectors.toList());
+	private List<String> getOnlinePlayerNames(EithonCommand command) {
+		return command.getSender().getServer().getOnlinePlayers().stream().map(p -> p.getName()).collect(Collectors.toList());
 	}
 
 	public void setupBuyCommand(CommandSyntax commandSyntax) {
