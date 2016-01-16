@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.eithon.library.command.Argument;
 import net.eithon.library.command.EithonCommand;
 import net.eithon.library.command.syntax.CommandSyntax;
+import net.eithon.library.command.syntax.CommandSyntaxException;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.plugin.fixes.logic.Controller;
@@ -23,22 +23,30 @@ public class CommandHandler {
 		this._controller = controller;
 
 		CommandSyntax commandSyntax = new CommandSyntax("eithonfixes");
-		commandSyntax.setPermissionsAutomatically();
+		//commandSyntax.setPermissionsAutomatically();
 
-		setupBuyCommand(commandSyntax);
-		setupDebugCommand(commandSyntax);
-		setupRcCommand(commandSyntax);
-		setupSpCommand(commandSyntax);
-		setupBalanceCommand(commandSyntax);
-		commandSyntax.addCommand("server <name>").setCommandExecutor(p -> serverCommand(p));
-		commandSyntax.addCommand("restart <time : TIME_SPAN {10m, ...}>").setCommandExecutor(p -> serverCommand(p));
+		try {
+			setupBuyCommand(commandSyntax);
+			setupDebugCommand(commandSyntax);
+			setupRcCommand(commandSyntax);
+			setupSpCommand(commandSyntax);
+			setupBalanceCommand(commandSyntax);
+			commandSyntax.parseSyntax("server <name>").getSubCommand("server").setCommandExecutor(p -> serverCommand(p));
+			commandSyntax.parseSyntax("restart <time : TIME_SPAN {10m, ...}>").getSubCommand("restart").setCommandExecutor(p -> serverCommand(p));
+		} catch (CommandSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this._commandSyntax = commandSyntax;
 	}
 
 	public CommandSyntax getCommandSyntax() { return this._commandSyntax;	}
 
-	public void setupBalanceCommand(CommandSyntax commandSyntax) {
-		CommandSyntax balance = commandSyntax.addCommand("balance <player>").setCommandExecutor(p -> balanceCommand(p));
+	public void setupBalanceCommand(CommandSyntax commandSyntax) throws CommandSyntaxException {
+		CommandSyntax balance = commandSyntax.parseSyntax("balance <player>")
+				.getSubCommand("balance")
+				.setCommandExecutor(p -> balanceCommand(p));
+
 		balance
 		.getParameterSyntax("player")
 		.setMandatoryValues(sender -> getOnlinePlayerNames(sender))
@@ -53,82 +61,93 @@ public class CommandHandler {
 		return command.getSender().getServer().getOnlinePlayers().stream().map(p -> p.getName()).collect(Collectors.toList());
 	}
 
-	public void setupBuyCommand(CommandSyntax commandSyntax) {
+	public void setupBuyCommand(CommandSyntax commandSyntax) throws CommandSyntaxException {
 		// buy <player> <item> <price> [<amount>]
-		CommandSyntax buy = commandSyntax.addCommand("buy <player> <item : REAL> <price : FLOAT> <amount : INTEGER {1, ...}>")
+		CommandSyntax buy = commandSyntax.parseSyntax("buy <player> <item> <price : REAL> <amount : INTEGER {1, ...}>")
+				.getSubCommand("buy")
 				.setCommandExecutor(eithonCommand -> buyCommand(eithonCommand));
 		buy
 		.getParameterSyntax("player")
 		.setMandatoryValues(sender -> getOnlinePlayerNames(sender));
 	}
 
-	public void setupDebugCommand(CommandSyntax commandSyntax) {
-		CommandSyntax debug = commandSyntax.addCommand("debug <plugin> <level : INTEGER {0, 1, 2, _3_}");
-		debug.setCommandExecutor(p -> debugCommand(p));
+	public void setupDebugCommand(CommandSyntax commandSyntax) throws CommandSyntaxException {
+		commandSyntax.parseSyntax("debug <plugin> <level : INTEGER {0, 1, 2, _3_}>")
+				.getSubCommand("debug")
+				.setCommandExecutor(p -> debugCommand(p));
 	}
 
-	public void setupSpCommand(CommandSyntax commandSyntax) {
-		CommandSyntax sp = commandSyntax.addCommand("sp");
+	public void setupSpCommand(CommandSyntax commandSyntax) throws CommandSyntaxException {
+		CommandSyntax sp = commandSyntax.parseSyntax("sp").getSubCommand("sp");
 		CommandSyntax subCommand;
 
 		// sp add
-		sp.addCommand("add <name> <distance : INTEGER {10,...}>")
+		sp.parseSyntax("add <name> <distance : INTEGER {10,...}>")
+		.getSubCommand("add")
 		.setCommandExecutor(p -> spAddCommand(p));
 
 		// sp edit
-		subCommand = sp.addCommand("edit <name> <distance : INTEGER {10,...}>")
+		subCommand = sp.parseSyntax("edit <name> <distance : INTEGER {10,...}>")
+				.getSubCommand("edit")
 				.setCommandExecutor(p -> spEditCommand(p));
-		
+
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
 
 		// sp delete
-		subCommand = sp.addCommand("delete <name>")
+		subCommand = sp.parseSyntax("delete <name>")
+				.getSubCommand("delete")
 				.setCommandExecutor(p -> spDeleteCommand(p));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
 
 		// sp goto
-		subCommand = sp.addCommand("goto <name>")
+		subCommand = sp.parseSyntax("goto <name>")
+				.getSubCommand("goto")
 				.setCommandExecutor(p -> spDeleteCommand(p));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
 	}
 
-	public void setupRcCommand(CommandSyntax commandSyntax) {
+	public void setupRcCommand(CommandSyntax commandSyntax) throws CommandSyntaxException {
 		CommandSyntax rc = commandSyntax.addCommand("rc");
 		CommandSyntax subCommand;
 
 		// rc add
-		rc.addCommand("add <name> <command ...>")
+		rc.parseSyntax("add <name> <command ...>")
+		.getSubCommand("add")
 		.setCommandExecutor(p -> rcAddCommand(p));
 
 		// rc edit
-		subCommand = rc.addCommand("edit <name> <command ...>")
+		subCommand = rc.parseSyntax("edit <name> <command ...>")
+				.getSubCommand("edit")
 				.setCommandExecutor(p -> rcEditCommand(p));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc set
-		subCommand = rc.addCommand("edit set <name> OnEnter=<on-enter : BOOLEAN> OnWorld=<on-world : BOOLEAN>")
+		subCommand = rc.parseSyntax("set <name> OnEnter=<on-enter : BOOLEAN> OnWorld=<on-world : BOOLEAN>")
+				.getSubCommand("set")
 				.setCommandExecutor(p -> rcSetCommand(p));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc delete
-		subCommand = rc.addCommand("delete <name>")
+		subCommand = rc.parseSyntax("delete <name>")
+				.getSubCommand("delete")
 				.setCommandExecutor(p -> rcDeleteCommand(p));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc goto
-		subCommand = rc.addCommand("goto <name>")
+		subCommand = rc.parseSyntax("goto <name>")
+				.getSubCommand("goto")
 				.setCommandExecutor(p -> rcDeleteCommand(p));
 		subCommand
 		.getParameterSyntax("name")
@@ -193,10 +212,10 @@ public class CommandHandler {
 		Player player = command.getPlayerOrInformSender();
 		if (player == null) return;
 
-		String name = command.getArgument("name").asString();
+		command.getArgument("name").asString();
 
 		for (String argumentName : new String[]{"OnEnter", "OnOtherWorld"}) {
-			Argument parameterValue = command.getArgument(argumentName);
+			command.getArgument(argumentName);
 			throw new NotImplementedException();
 			//if (parameterValue.hasValue()) this._controller.rcSet(player, name, argumentName, parameterValue.asBoolean());
 		}
