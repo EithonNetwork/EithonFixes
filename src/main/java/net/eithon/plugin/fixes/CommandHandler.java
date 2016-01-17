@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.eithon.library.command.CommandSyntax;
+import net.eithon.library.command.CommandSyntaxException;
 import net.eithon.library.command.EithonCommand;
-import net.eithon.library.command.syntax.CommandSyntax;
-import net.eithon.library.command.syntax.CommandSyntaxException;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.plugin.fixes.logic.Controller;
@@ -58,7 +58,13 @@ public class CommandHandler {
 	}
 
 	private List<String> getOnlinePlayerNames(EithonCommand command) {
-		return command.getSender().getServer().getOnlinePlayers().stream().map(p -> p.getName()).collect(Collectors.toList());
+		return command
+				.getSender()
+				.getServer()
+				.getOnlinePlayers()
+				.stream()
+				.map(p -> p.getName())
+				.collect(Collectors.toList());
 	}
 
 	public void setupBuyCommand(CommandSyntax commandSyntax) throws CommandSyntaxException {
@@ -173,6 +179,7 @@ public class CommandHandler {
 	{
 		CommandSender sender = command.getSender();
 		Player player = command.getArgument("player").asPlayer();
+		if (player == null) return;
 
 		this._controller.displayBalance(sender, player);
 	}
