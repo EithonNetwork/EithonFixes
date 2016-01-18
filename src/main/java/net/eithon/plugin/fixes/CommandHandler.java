@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.eithon.library.command.CommandSyntax;
 import net.eithon.library.command.CommandSyntaxException;
 import net.eithon.library.command.EithonCommand;
 import net.eithon.library.command.ICommandSyntax;
@@ -27,13 +26,16 @@ public class CommandHandler {
 		//commandSyntax.setPermissionsAutomatically();
 
 		try {
+			commandSyntax
+			.parseCommandSyntax("server <name>")
+			.setCommandExecutor(p -> serverCommand(p));
+			commandSyntax.parseCommandSyntax("restart <time : TIME_SPAN {10m, ...}>")
+			.setCommandExecutor(p -> serverCommand(p));
 			setupBuyCommand(commandSyntax);
 			setupDebugCommand(commandSyntax);
 			setupRcCommand(commandSyntax);
 			setupSpCommand(commandSyntax);
 			setupBalanceCommand(commandSyntax);
-			commandSyntax.parseCommandSyntax("server <name>").getSubCommand("server").setCommandExecutor(p -> serverCommand(p));
-			commandSyntax.parseCommandSyntax("restart <time : TIME_SPAN {10m, ...}>").getSubCommand("restart").setCommandExecutor(p -> serverCommand(p));
 		} catch (CommandSyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -45,7 +47,6 @@ public class CommandHandler {
 
 	public void setupBalanceCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
 		ICommandSyntax balance = commandSyntax.parseCommandSyntax("balance <player>")
-				.getSubCommand("balance")
 				.setCommandExecutor(p -> balanceCommand(p));
 
 		balance
@@ -71,7 +72,6 @@ public class CommandHandler {
 	public void setupBuyCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
 		// buy <player> <item> <price> [<amount>]
 		ICommandSyntax buy = commandSyntax.parseCommandSyntax("buy <player> <item> <price : REAL> <amount : INTEGER {1, ...}>")
-				.getSubCommand("buy")
 				.setCommandExecutor(eithonCommand -> buyCommand(eithonCommand));
 		buy
 		.getParameterSyntax("player")
@@ -80,7 +80,6 @@ public class CommandHandler {
 
 	public void setupDebugCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
 		commandSyntax.parseCommandSyntax("debug <plugin> <level : INTEGER {0, 1, 2, _3_}>")
-				.getSubCommand("debug")
 				.setCommandExecutor(p -> debugCommand(p));
 	}
 
@@ -89,13 +88,13 @@ public class CommandHandler {
 		ICommandSyntax subCommand;
 
 		// sp add
-		sp.parseCommandSyntax("add <name> <distance : INTEGER {10,...}>")
-		.getSubCommand("add")
+		sp
+		.parseCommandSyntax("add <name> <distance : INTEGER {10,...}>")
 		.setCommandExecutor(p -> spAddCommand(p));
 
 		// sp edit
-		subCommand = sp.parseCommandSyntax("edit <name> <distance : INTEGER {10,...}>")
-				.getSubCommand("edit")
+		subCommand = sp
+				.parseCommandSyntax("edit <name> <distance : INTEGER {10,...}>")
 				.setCommandExecutor(p -> spEditCommand(p));
 
 		subCommand
@@ -104,15 +103,14 @@ public class CommandHandler {
 
 		// sp delete
 		subCommand = sp.parseCommandSyntax("delete <name>")
-				.getSubCommand("delete")
 				.setCommandExecutor(p -> spDeleteCommand(p));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
 
 		// sp goto
-		subCommand = sp.parseCommandSyntax("goto <name>")
-				.getSubCommand("goto")
+		subCommand = sp
+				.parseCommandSyntax("goto <name>")
 				.setCommandExecutor(p -> spDeleteCommand(p));
 		subCommand
 		.getParameterSyntax("name")
@@ -125,36 +123,35 @@ public class CommandHandler {
 
 		// rc add
 		rc.parseCommandSyntax("add <name> <command ...>")
-		.getSubCommand("add")
 		.setCommandExecutor(p -> rcAddCommand(p));
 
 		// rc edit
-		subCommand = rc.parseCommandSyntax("edit <name> <command ...>")
-				.getSubCommand("edit")
+		subCommand = rc
+				.parseCommandSyntax("edit <name> <command ...>")
 				.setCommandExecutor(p -> rcEditCommand(p));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc set
-		subCommand = rc.parseCommandSyntax("set <name> OnEnter=<on-enter : BOOLEAN> OnWorld=<on-world : BOOLEAN>")
-				.getSubCommand("set")
+		subCommand = rc
+				.parseCommandSyntax("set <name> OnEnter=<on-enter : BOOLEAN> OnWorld=<on-world : BOOLEAN>")
 				.setCommandExecutor(p -> rcSetCommand(p));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc delete
-		subCommand = rc.parseCommandSyntax("delete <name>")
-				.getSubCommand("delete")
+		subCommand = rc
+				.parseCommandSyntax("delete <name>")
 				.setCommandExecutor(p -> rcDeleteCommand(p));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
 
 		// rc goto
-		subCommand = rc.parseCommandSyntax("goto <name>")
-				.getSubCommand("goto")
+		subCommand = rc
+				.parseCommandSyntax("goto <name>")
 				.setCommandExecutor(p -> rcDeleteCommand(p));
 		subCommand
 		.getParameterSyntax("name")
