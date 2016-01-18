@@ -84,7 +84,7 @@ public class CommandHandler {
 	}
 
 	public void setupSpCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
-		ICommandSyntax sp = commandSyntax.parseCommandSyntax("sp").getSubCommand("sp");
+		ICommandSyntax sp = commandSyntax.addKeyWord("sp");
 		ICommandSyntax subCommand;
 
 		// sp add
