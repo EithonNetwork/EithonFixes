@@ -8,6 +8,7 @@ import net.eithon.library.plugin.PluginMisc;
 import net.eithon.plugin.fixes.Config;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +38,7 @@ class BuyController {
 
 		Config.M.successfulPurchase.sendMessage(buyingPlayer, amount, item);
 	}
-	public void displayBalance(CommandSender sender, Player player) {
+	public void displayBalance(CommandSender sender, OfflinePlayer player) {
 		String playerName = player.getName();
 		BigDecimal balance;
 		try {

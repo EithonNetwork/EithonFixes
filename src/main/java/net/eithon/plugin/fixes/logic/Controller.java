@@ -5,9 +5,12 @@ import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import net.eithon.library.bungee.BungeeController;
 import net.eithon.library.core.CoreMisc;
+import net.eithon.library.core.PlayerCollection;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.plugin.Logger;
@@ -18,11 +21,14 @@ import net.eithon.plugin.eithonlibrary.EithonLibraryApi;
 import net.eithon.plugin.fixes.Config;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class Controller {
@@ -38,6 +44,7 @@ public class Controller {
 	private EithonPlugin _eithonPlugin;
 	private IndividualMessageController _individualMessageController;
 	private EithonLibraryApi _eithonLibraryApi;
+	private PlayerCollection<FrozenPlayer> _frozenPlayers;
 
 	public Controller(EithonPlugin plugin) {
 		this._eithonPlugin = plugin;
@@ -50,6 +57,7 @@ public class Controller {
 		this._coolDownCommandController = new CoolDownCommandController(plugin);
 		this._coolDownWorldController = new CoolDownWorldController(plugin);
 		this._individualMessageController = new IndividualMessageController(plugin);
+		this._frozenPlayers = new PlayerCollection<FrozenPlayer>();
 		Config.V.commandScheduler.start();
 	}
 
@@ -79,7 +87,7 @@ public class Controller {
 		this._buyController.buy(buyingPlayer, item, price, amount);
 	}
 
-	public void displayBalance(CommandSender sender, Player player) {
+	public void displayBalance(CommandSender sender, OfflinePlayer player) {
 		this._buyController.displayBalance(sender, player);
 	}
 
@@ -351,5 +359,33 @@ public class Controller {
 				regionCommandController.playerMovedOneBlockAsync(player, fromBlock, toBlock);
 			}
 		});
+	}
+
+	public boolean freezePlayer(CommandSender sender, Player player) {
+		if (this._frozenPlayers.hasInformation(player)) {
+			Config.M.playerAlreadyFrozen.sendMessage(sender, player.getName());
+			return false;
+		}
+		this._frozenPlayers.put(player, new FrozenPlayer(player));
+		return true;
+	}
+
+	public boolean thawPlayer(CommandSender sender, OfflinePlayer player) {
+		FrozenPlayer frozenPlayer = this._frozenPlayers.get(player);
+		if (frozenPlayer == null) {
+			Config.M.playerNotFrozen.sendMessage(sender, player.getName());
+			return false;
+		}
+		frozenPlayer.thaw();
+		this._frozenPlayers.remove(player);
+		return true;
+	}
+
+	public boolean isFrozen(Player player) {
+		return this._frozenPlayers.hasInformation(player);
+	}
+
+	public List<String> getFrozenPlayerNames() {
+		return this._frozenPlayers.values().stream().map(p->p.getName()).collect(Collectors.toList());
 	}
 }

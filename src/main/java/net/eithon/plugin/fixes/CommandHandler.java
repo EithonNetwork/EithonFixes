@@ -12,6 +12,7 @@ import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.plugin.fixes.logic.Controller;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -23,7 +24,7 @@ public class CommandHandler {
 		this._controller = controller;
 
 		ICommandSyntax commandSyntax = EithonCommand.createRootCommand("eithonfixes");
-		//commandSyntax.setPermissionsAutomatically();
+		commandSyntax.setPermissionsAutomatically();
 
 		try {
 			commandSyntax
@@ -31,6 +32,7 @@ public class CommandHandler {
 			.setCommandExecutor(p -> serverCommand(p));
 			commandSyntax.parseCommandSyntax("restart <time : TIME_SPAN {10m, ...}>")
 			.setCommandExecutor(p -> serverCommand(p));
+			setupFreezeCommand(commandSyntax);
 			setupBuyCommand(commandSyntax);
 			setupDebugCommand(commandSyntax);
 			setupRcCommand(commandSyntax);
@@ -43,6 +45,27 @@ public class CommandHandler {
 		this._commandSyntax = commandSyntax;
 	}
 
+	public void setupFreezeCommand(ICommandSyntax commandSyntax)
+			throws CommandSyntaxException {
+		ICommandSyntax freeze = commandSyntax.parseCommandSyntax("freeze <player>")
+		.setCommandExecutor(p -> freezeCommand(p));
+		
+		freeze
+		.getParameterSyntax("player")
+		.setMandatoryValues(sender -> getOnlinePlayerNames(sender));
+		
+		ICommandSyntax thaw = commandSyntax.parseCommandSyntax("unfreeze <player>")
+		.setCommandExecutor(p -> thawCommand(p));
+		
+		thaw
+		.getParameterSyntax("player")
+		.setMandatoryValues(sender->getFrozenPlayerNames());
+	}
+
+	private List<String> getFrozenPlayerNames() {
+		return this._controller.getFrozenPlayerNames();
+	}
+
 	public ICommandSyntax getCommandSyntax() { return this._commandSyntax;	}
 
 	public void setupBalanceCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
@@ -51,7 +74,7 @@ public class CommandHandler {
 
 		balance
 		.getParameterSyntax("player")
-		.setMandatoryValues(sender -> getOnlinePlayerNames(sender))
+		.setExampleValues(sender -> getOnlinePlayerNames(sender))
 		.setDefaultValue(sender -> getSenderAsOnlinePlayer(sender));
 	}
 
@@ -173,10 +196,30 @@ public class CommandHandler {
 		this._controller.buy(buyingPlayer, item, pricePerItem, amount);
 	}
 
+	private void freezeCommand(EithonCommand command) {
+		CommandSender sender = command.getSender();
+		Player player = command.getArgument("player").asPlayer();
+		if (player == null) return;
+
+		if (!this._controller.freezePlayer(sender, player)) return;
+		Config.M.playerFrozen.sendMessage(sender, player);
+		
+	}
+
+	private void thawCommand(EithonCommand command) {
+		CommandSender sender = command.getSender();
+		OfflinePlayer player = command.getArgument("player").asOfflinePlayer();
+		if (player == null) return;
+
+		if (!this._controller.thawPlayer(sender, player)) return;
+		Config.M.playerThawn.sendMessage(sender, player.getName());
+		
+	}
+
 	void balanceCommand(EithonCommand command)
 	{
 		CommandSender sender = command.getSender();
-		Player player = command.getArgument("player").asPlayer();
+		OfflinePlayer player = command.getArgument("player").asOfflinePlayer();
 		if (player == null) return;
 
 		this._controller.displayBalance(sender, player);

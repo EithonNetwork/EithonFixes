@@ -151,6 +151,11 @@ public class Config {
 		public static ConfigurableMessage connectedToServer;
 		public static IndividualConfigurableMessage joinMessage;
 		public static IndividualConfigurableMessage quitMessage;
+		public static ConfigurableMessage playerAlreadyFrozen;
+		public static ConfigurableMessage playerNotFrozen;
+		public static ConfigurableMessage playerFrozen;
+		public static ConfigurableMessage playerThawn;
+		public static ConfigurableMessage frozenPlayerCannotTeleport;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -193,6 +198,16 @@ public class Config {
 					"Connected to server %s.");
 			joinMessage = new IndividualConfigurableMessage(config, "messages.join");
 			quitMessage = new IndividualConfigurableMessage(config, "messages.quit");
+			playerAlreadyFrozen = config.getConfigurableMessage("messages.PlayerAlreadyFrozen", 1,
+					"The player %s has already been frozen.");
+			playerNotFrozen = config.getConfigurableMessage("messages.PlayerNotFrozen", 1,
+					"The player %s can't be thawn - was not frozen.");
+			playerFrozen = config.getConfigurableMessage("messages.PlayerFrozen", 1,
+					"The player %s has now been frozen.");
+			playerThawn = config.getConfigurableMessage("messages.PlayerThawn", 1,
+					"The player %s has now been thawn.");
+			frozenPlayerCannotTeleport = config.getConfigurableMessage("messages.FrozenPlayerCannotTeleport", 0,
+					"You have been frozen and are not allowed to teleport.");
 		}		
 	}
 

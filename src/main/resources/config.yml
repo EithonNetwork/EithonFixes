@@ -257,6 +257,26 @@ messages:
   ConnectedToServer: Connected to server %s.
 
   #
+  # Parameters: <player name> (%s)
+  PlayerAlreadyFrozen: 'The player %s has already been frozen.'
+
+  #
+  # Parameters: <player name> (%s)
+  PlayerFrozen: 'The player %s has now been frozen.'
+
+  #
+  # Parameters: <player name> (%s)
+  PlayerNotFrozen: 'The player %s can't be thawn - was not frozen.'
+
+  #
+  # Parameters: <player name> (%s)
+  PlayerThawn: 'The player %s has now been thawn.'
+
+  #
+  # Parameters: -
+  FrozenPlayerCannotTeleport: 'You have been frozen and are not allowed to teleport.'
+
+  #
   # %PLAYER_NAME%, %SERVER_NAME%
   #
   join:

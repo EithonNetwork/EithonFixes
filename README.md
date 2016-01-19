@@ -4,6 +4,11 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.33 (2016-01-19)
+
+* NEW: Added commands freeze/unfreeze
+* CHANGE: Command balance now accepts offline players. 
+
 ### 1.32 (2016-01-19)
 
 * CHANGE: Now uses the new command syntax interpretator from EithonLibrary 

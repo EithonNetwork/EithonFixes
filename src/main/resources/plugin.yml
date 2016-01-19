@@ -8,7 +8,7 @@ description: A Minecraft plugin for Eithon fixes
 commands:
   eithonfixes:
     description: Fix things other plugins fail to do
-    usage: /eithonfixes buy | balance | debug | rcadd | rcedit | rclist | rcdelete | rcgoto  | spadd | spedit | splist | spdelete | spgoto | restart | server | test
+    usage: /eithonfixes buy | balance | debug | rcadd | rcedit | rclist | rcdelete | rcgoto  | spadd | spedit | splist | spdelete | spgoto | restart | server | test | freeze | unfreeze
     permission-message: You don't have <permission>
 permissions:
   eithonfixes.*:
@@ -32,6 +32,8 @@ permissions:
     eithonfixes.test: true
     eithonfixes.server: true
     eithonfixes.canfly: true
+    eithonfixes.freeze: true
+    eithonfixes.unfreeze: true
   eithonfixes.buy:
     description: Access to /eithonfixes buy command
     default: op
@@ -82,6 +84,12 @@ permissions:
     default: op
   eithonfixes.server:
     description: Access to /eithonfixes server command
+    default: op
+  eithonfixes.freeze:
+    description: Access to /eithonfixes freeze command
+    default: op
+  eithonfixes.unfreeze:
+    description: Access to /eithonfixes unfreeze command
     default: op
   eithonfixes.nocooldown:
     description: Avoid cool down period between commands.
