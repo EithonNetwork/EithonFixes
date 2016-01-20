@@ -47,19 +47,28 @@ public class CommandHandler {
 
 	public void setupFreezeCommand(ICommandSyntax commandSyntax)
 			throws CommandSyntaxException {
-		ICommandSyntax freeze = commandSyntax.parseCommandSyntax("freeze <player>")
-		.setCommandExecutor(p -> freezeCommand(p));
 		
-		freeze
+		ICommandSyntax freeze = commandSyntax.addKeyWord("freeze");
+		
+		// freeze on
+		ICommandSyntax on = freeze.parseCommandSyntax("on <player>")
+		.setCommandExecutor(p -> freezeOnCommand(p));
+		
+		on
 		.getParameterSyntax("player")
 		.setMandatoryValues(sender -> getOnlinePlayerNames(sender));
 		
-		ICommandSyntax thaw = commandSyntax.parseCommandSyntax("unfreeze <player>")
-		.setCommandExecutor(p -> thawCommand(p));
+		// freeze off
+		ICommandSyntax off = freeze.parseCommandSyntax("off <player>")
+		.setCommandExecutor(p -> freezeOffCommand(p));
 		
-		thaw
+		off
 		.getParameterSyntax("player")
 		.setMandatoryValues(sender->getFrozenPlayerNames());
+		
+		// freeze list
+		freeze.parseCommandSyntax("list")
+		.setCommandExecutor(p -> freezeListCommand(p));
 	}
 
 	private List<String> getFrozenPlayerNames() {
@@ -196,7 +205,7 @@ public class CommandHandler {
 		this._controller.buy(buyingPlayer, item, pricePerItem, amount);
 	}
 
-	private void freezeCommand(EithonCommand command) {
+	private void freezeOnCommand(EithonCommand command) {
 		CommandSender sender = command.getSender();
 		Player player = command.getArgument("player").asPlayer();
 		if (player == null) return;
@@ -206,7 +215,7 @@ public class CommandHandler {
 		
 	}
 
-	private void thawCommand(EithonCommand command) {
+	private void freezeOffCommand(EithonCommand command) {
 		CommandSender sender = command.getSender();
 		OfflinePlayer player = command.getArgument("player").asOfflinePlayer();
 		if (player == null) return;
@@ -214,6 +223,12 @@ public class CommandHandler {
 		if (!this._controller.thawPlayer(sender, player)) return;
 		Config.M.playerThawn.sendMessage(sender, player.getName());
 		
+	}
+
+	private void freezeListCommand(EithonCommand command) {
+		CommandSender sender = command.getSender();
+
+		this._controller.freezeList(sender);
 	}
 
 	void balanceCommand(EithonCommand command)

@@ -388,4 +388,14 @@ public class Controller {
 	public List<String> getFrozenPlayerNames() {
 		return this._frozenPlayers.values().stream().map(p->p.getName()).collect(Collectors.toList());
 	}
+
+	public void freezeList(CommandSender sender) {
+		if ((this._frozenPlayers == null) || (this._frozenPlayers.size() == 0)) {
+			sender.sendMessage("No frozen players");
+			return;
+		}
+		for (FrozenPlayer frozenPlayer : this._frozenPlayers) {
+			sender.sendMessage(frozenPlayer.getName());
+		}
+	}
 }
