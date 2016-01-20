@@ -6,7 +6,7 @@ A EithonFixes plugin for Minecraft.
 
 ### 1.33 (2016-01-19)
 
-* NEW: Added commands freeze/unfreeze
+* NEW: Added commands freeze on/off/restore/list
 * CHANGE: Command balance now accepts offline players. 
 
 ### 1.32 (2016-01-19)
