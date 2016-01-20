@@ -40,6 +40,8 @@ public class Config {
 		public static double consecutiveDaysMultiplyAmount;
 		public static double consecutiveDaysMaxAmount;
 		public static CommandScheduler commandScheduler;
+		public static double freezeRestoreWalkSpeed;
+		public static double freezeRestoreFlySpeed;
 		
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
@@ -59,6 +61,8 @@ public class Config {
 			consecutiveDaysMultiplyAmount = config.getDouble("ConsecutiveDaysMultiplyAmount", 25.0);
 			consecutiveDaysMaxAmount = config.getDouble("ConsecutiveDaysMaxAmount", 700.0);
 			commandScheduler = CommandScheduler.getFromConfig(config, "schedule");
+			freezeRestoreWalkSpeed = config.getDouble("FreezeRestoreWalkSpeed", 0.2);
+			freezeRestoreFlySpeed = config.getDouble("FreezeRestoreFlySpeed", 0.2);
 		}
 
 		private static List<CoolDownInfo> loadCoolDownCommandsConfig(Configuration config,
@@ -151,6 +155,12 @@ public class Config {
 		public static ConfigurableMessage connectedToServer;
 		public static IndividualConfigurableMessage joinMessage;
 		public static IndividualConfigurableMessage quitMessage;
+		public static ConfigurableMessage playerAlreadyFrozen;
+		public static ConfigurableMessage playerNotFrozen;
+		public static ConfigurableMessage playerFrozen;
+		public static ConfigurableMessage playerThawn;
+		public static ConfigurableMessage frozenPlayerCannotTeleport;
+		public static ConfigurableMessage playerRestored;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -193,6 +203,18 @@ public class Config {
 					"Connected to server %s.");
 			joinMessage = new IndividualConfigurableMessage(config, "messages.join");
 			quitMessage = new IndividualConfigurableMessage(config, "messages.quit");
+			playerAlreadyFrozen = config.getConfigurableMessage("messages.PlayerAlreadyFrozen", 1,
+					"The player %s has already been frozen.");
+			playerNotFrozen = config.getConfigurableMessage("messages.PlayerNotFrozen", 1,
+					"The player %s can't be thawn - was not frozen.");
+			playerFrozen = config.getConfigurableMessage("messages.PlayerFrozen", 1,
+					"The player %s has now been frozen.");
+			playerThawn = config.getConfigurableMessage("messages.PlayerThawn", 1,
+					"The player %s has now been thawn.");
+			playerRestored = config.getConfigurableMessage("messages.PlayerRestored", 1,
+					"The player %s has now been restored.");
+			frozenPlayerCannotTeleport = config.getConfigurableMessage("messages.FrozenPlayerCannotTeleport", 0,
+					"You have been frozen and are not allowed to teleport.");
 		}		
 	}
 

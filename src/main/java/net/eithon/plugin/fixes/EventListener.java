@@ -19,8 +19,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -44,6 +48,93 @@ public class EventListener implements Listener {
 	public void onPlayerJoinEvent(EithonPlayerMoveOneBlockEvent event) {
 		this._controller.playerMovedOneBlock(event.getPlayer(), event.getFromBlock(), event.getToBlock());
 	}
+
+	@EventHandler
+	public void onPlayerJoinEvent(PlayerInteractEvent event) {
+		if (event.isCancelled()) return;
+		Player player = event.getPlayer();
+		if (!this._controller.isFrozen(player)) return;
+		event.setCancelled(true);
+	}	
+
+	// Frozen players should not be able to be damaged or damage
+	@EventHandler
+	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+		verbose("onEntityDamageByEntityEvent", "Enter");
+		if (event.isCancelled()) {
+			verbose("onEntityDamageByEntityEvent", "Already cancelled, leave");
+			return;
+		}
+		// Frozen player is the damager?
+		if (event.getDamager() instanceof Player) {
+			Player player = (Player) event.getDamager();
+			verbose("onEntityDamageByEntityEvent", "Damage by player %s.", player.getName());
+			if (this._controller.isFrozen(player)) {
+				verbose("onEntityDamageByEntityEvent", 
+						"Player %s is not allowed to do damage when frozen.", player.getName());
+				event.setCancelled(true);
+				verbose("onEntityDamageByEntityEvent", "Leave");
+				return;
+			}
+		}
+		// Frozen player being damaged?
+		if (event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			verbose("onEntityDamageByEntityEvent", "Damage to player %s.", player.getName());
+			if (this._controller.isFrozen(player)) {
+				verbose("onEntityDamageByEntityEvent", 
+						"Player %s is not allowed to receive damage when frozen.", player.getName());
+				event.setCancelled(true);
+				verbose("onEntityDamageByEntityEvent", "Leave");
+				return;
+			}
+		}
+		verbose("onEntityDamageByEntityEvent", "Leave");
+	}		
+
+	// Frozen players should not be able to be damaged or damage
+	@EventHandler
+	public void onBlockBreakEvent(BlockBreakEvent event) {
+		verbose("onBlockBreakEvent", "Enter");
+		if (event.isCancelled()) {
+			verbose("onBlockBreakEvent", "Already cancelled, leave");
+			return;
+		}
+		// Frozen player is the damager?
+		Player player = event.getPlayer();
+		verbose("onBlockBreakEvent", "Player %s is breaking a block.", player.getName());
+		if (this._controller.isFrozen(player)) {
+			verbose("onBlockBreakEvent", 
+					"Player %s is not allowed to break blocks when frozen.", player.getName());
+			event.setCancelled(true);
+			verbose("onBlockBreakEvent", "Leave");
+			return;
+		}
+		
+		verbose("onBlockBreakEvent", "Leave");
+	}			
+
+	// Frozen players should not be able to be damaged or damage
+	@EventHandler
+	public void onBlockPlaceEvent(BlockPlaceEvent event) {
+		verbose("onBlockPlaceEvent", "Enter");
+		if (event.isCancelled()) {
+			verbose("onBlockPlaceEvent", "Already cancelled, leave");
+			return;
+		}
+		// Frozen player is the damager?
+		Player player = event.getPlayer();
+		verbose("onBlockPlaceEvent", "Player %s is placing a block.", player.getName());
+		if (this._controller.isFrozen(player)) {
+			verbose("onBlockPlaceEvent", 
+					"Player %s is not allowed to place blocks when frozen.", player.getName());
+			event.setCancelled(true);
+			verbose("onBlockPlaceEvent", "Leave");
+			return;
+		}
+		
+		verbose("onBlockPlaceEvent", "Leave");
+	}	
 
 	@EventHandler
 	public void onPlayerDeathEvent(PlayerDeathEvent event) {
@@ -166,7 +257,7 @@ public class EventListener implements Listener {
 
 		event.setMoney(money);
 	}
-	
+
 	// Players should be encouraged to login on consecutive days
 	@EventHandler
 	public void onConsecutiveDaysEvent(ConsecutiveDaysEvent event) {
@@ -182,7 +273,7 @@ public class EventListener implements Listener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Only allow fly in certain worlds
 	@EventHandler
 	public void onPlayerToggleFlightEvent(PlayerToggleFlightEvent event) {
@@ -195,26 +286,26 @@ public class EventListener implements Listener {
 			verbose("onPlayerToggleFlightEvent", "Not flying, rather landing. Return.");
 			return;
 		}
-		
+
 		Player player = event.getPlayer();
 		if (this._controller.isInWorldWhereFlyIsAllowed(player)) {
 			verbose("onPlayerToggleFlightEvent", "Player %s is in world where flying is allowed. Return.", player.getName());
 			return;
 		}
-		
+
 		// Allow players with permission freebuild.canfly to fly
 		if (player.hasPermission("eithonfixes.canfly")) {
 			verbose("onPlayerToggleFlightEvent", "Player %s has eithonfixes.canfly permission. Return.", player.getName());
 			return;
 		}
-		
+
 		verbose("onPlayerToggleFlightEvent", "The player %s is not allowed to fly in world %s. Cancels the event and return."
 				, player.getName(), player.getWorld().getName());
 		player.sendMessage("You are currently not allowed to fly.");
 		event.setCancelled(true);
 		Config.C.stopFly.executeAs(event.getPlayer());
 	}
-	
+
 	// Only allow fly in certain worlds
 	@EventHandler
 	public void onPlayerTeleportEvent(PlayerTeleportEvent event) {
@@ -223,25 +314,32 @@ public class EventListener implements Listener {
 			verbose("onPlayerTeleportEvent", "Event has already been cancelled. Return.");
 			return;
 		}
-		
+
 		Player player = event.getPlayer();
-		
+
+		if (this._controller.isFrozen(player)) {
+			verbose("onPlayerTeleportEvent", "Player is frozen. Cancel and return.");
+			Config.M.frozenPlayerCannotTeleport.sendMessage(player);
+			event.setCancelled(true);
+			return;
+		}
+
 		if (!player.isFlying()) {
 			verbose("onPlayerTeleportEvent", "Not flying. Return.");
 			return;
 		}
-		
+
 		if (this._controller.isWorldWhereFlyIsAllowed(event.getTo().getWorld())) {
 			verbose("onPlayerTeleportEvent", "Player %s is in world where flying is allowed. Return.", player.getName());
 			return;
 		}
-		
+
 		// Allow players with permission eithonfixes.canfly to fly
 		if (player.hasPermission("eithonfixes.canfly")) {
 			verbose("onPlayerTeleportEvent", "Player %s has eithonfixes.canfly permission. Return.", player.getName());
 			return;
 		}
-		
+
 		verbose("onPlayerTeleportEvent", "The player %s is not allowed to fly in world %s. Stop fly."
 				, player.getName(), player.getWorld().getName());
 		player.sendMessage(String.format("You are currently not allowed to fly in world %s.", event.getTo().getWorld()));

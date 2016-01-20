@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.eithon.plugin</groupId>
 	<artifactId>EithonFixes</artifactId>
-	<version>1.31.2</version>
+	<version>1.33</version>
 	<name>EithonFixes</name>
 	<build>
 		<plugins>
@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>net.eithon.plugin</groupId>
 			<artifactId>EithonLibrary</artifactId>
-			<version>[3.0,)</version>
+			<version>[3.6,)</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

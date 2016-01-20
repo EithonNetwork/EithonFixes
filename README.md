@@ -4,6 +4,15 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.33 (2016-01-20)
+
+* NEW: Added commands freeze on/off/restore/list
+* CHANGE: Command balance now accepts offline players. 
+
+### 1.32 (2016-01-19)
+
+* CHANGE: Now uses the new command syntax interpretator from EithonLibrary 
+
 ### 1.31.2 (2016-01-14)
 
 * BUG: When the last region command (or spawn point) was deleted, the save file was not updated. 
