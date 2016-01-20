@@ -4,7 +4,7 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
-### 1.33 (2016-01-19)
+### 1.33 (2016-01-20)
 
 * NEW: Added commands freeze on/off/restore/list
 * CHANGE: Command balance now accepts offline players. 
