@@ -111,6 +111,18 @@ ConsecutiveDaysMultiplyAmount: 25.0
 #
 ConsecutiveDaysMaxAmount: 700.0
 
+#
+# If the "freeze off" command fails to restore the player, you can use "freeze restore" command.
+# It will restore the walk speed to this value 
+#
+FreezeRestoreWalkSpeed: 0.2
+
+#
+# If the "freeze off" command fails to restore the player, you can use "freeze restore" command.
+# It will restore the fly speed to this value 
+#
+FreezeRestoreFlySpeed: 0.2
+
 multipliers:
   donationboard:
     mobKill:
@@ -271,6 +283,10 @@ messages:
   #
   # Parameters: <player name> (%s)
   PlayerThawn: 'The player %s has now been thawn.'
+
+  #
+  # Parameters: <player name> (%s)
+  PlayerRestored: 'The player %s has now been restored.'
 
   #
   # Parameters: -

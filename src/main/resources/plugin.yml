@@ -34,6 +34,7 @@ permissions:
     eithonfixes.canfly: true
     eithonfixes.freeze.on : true
     eithonfixes.freeze.off : true
+    eithonfixes.freeze.restore : true
     eithonfixes.freeze.list : true
   eithonfixes.buy:
     description: Access to /eithonfixes buy command
@@ -91,6 +92,9 @@ permissions:
     default: op
   eithonfixes.freeze.off:
     description: Access to /eithonfixes freeze off command
+    default: op
+  eithonfixes.freeze.restore:
+    description: Access to /eithonfixes freeze restore command
     default: op
   eithonfixes.freeze.list:
     description: Access to /eithonfixes freeze list command

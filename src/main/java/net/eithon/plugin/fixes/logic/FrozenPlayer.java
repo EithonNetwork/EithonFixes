@@ -44,4 +44,13 @@ public class FrozenPlayer {
 		player.setFoodLevel(this._foodLevel);
 		player.removePotionEffect(PotionEffectType.JUMP);
 	}
+	
+	public static void restore(Player player, float walkSpeed, float flySpeed) {
+		if (!player.isOnline()) return;
+		player.setWalkSpeed(walkSpeed);
+		player.setFlySpeed(flySpeed);
+		player.setFireTicks(0);
+		player.setFoodLevel(20);
+		player.removePotionEffect(PotionEffectType.JUMP);
+	}
 }

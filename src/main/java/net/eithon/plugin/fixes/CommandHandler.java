@@ -66,6 +66,16 @@ public class CommandHandler {
 		.getParameterSyntax("player")
 		.setMandatoryValues(sender->getFrozenPlayerNames());
 		
+		// freeze restore
+		ICommandSyntax restore = freeze.parseCommandSyntax(String.format(
+				"restore <player> <walk-speed:REAL {%.1f,...}> <fly-speed:REAL {%.1f,...}>",
+				Config.V.freezeRestoreWalkSpeed, Config.V.freezeRestoreFlySpeed))
+		.setCommandExecutor(ec -> freezeRestoreCommand(ec));
+		
+		restore
+		.getParameterSyntax("player")
+		.setMandatoryValues(sender -> getOnlinePlayerNames(sender));
+		
 		// freeze list
 		freeze.parseCommandSyntax("list")
 		.setCommandExecutor(p -> freezeListCommand(p));
@@ -107,7 +117,7 @@ public class CommandHandler {
 				.setCommandExecutor(eithonCommand -> buyCommand(eithonCommand));
 		buy
 		.getParameterSyntax("player")
-		.setMandatoryValues(sender -> getOnlinePlayerNames(sender));
+		.setMandatoryValues(ec -> getOnlinePlayerNames(ec));
 	}
 
 	public void setupDebugCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
@@ -122,12 +132,12 @@ public class CommandHandler {
 		// sp add
 		sp
 		.parseCommandSyntax("add <name> <distance : INTEGER {10,...}>")
-		.setCommandExecutor(p -> spAddCommand(p));
+		.setCommandExecutor(ec -> spAddCommand(ec));
 
 		// sp edit
 		subCommand = sp
 				.parseCommandSyntax("edit <name> <distance : INTEGER {10,...}>")
-				.setCommandExecutor(p -> spEditCommand(p));
+				.setCommandExecutor(ec -> spEditCommand(ec));
 
 		subCommand
 		.getParameterSyntax("name")
@@ -135,10 +145,10 @@ public class CommandHandler {
 
 		// sp delete
 		subCommand = sp.parseCommandSyntax("delete <name>")
-				.setCommandExecutor(p -> spDeleteCommand(p));
+				.setCommandExecutor(ec -> spDeleteCommand(ec));
 		subCommand
 		.getParameterSyntax("name")
-		.setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
+		.setMandatoryValues(ec -> this._controller.getAllSpawnPointNames());
 
 		// sp goto
 		subCommand = sp
@@ -146,7 +156,7 @@ public class CommandHandler {
 				.setCommandExecutor(p -> spDeleteCommand(p));
 		subCommand
 		.getParameterSyntax("name")
-		.setMandatoryValues(sender -> this._controller.getAllSpawnPointNames());
+		.setMandatoryValues(ec -> this._controller.getAllSpawnPointNames());
 	}
 
 	public void setupRcCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
@@ -155,12 +165,12 @@ public class CommandHandler {
 
 		// rc add
 		rc.parseCommandSyntax("add <name> <command ...>")
-		.setCommandExecutor(p -> rcAddCommand(p));
+		.setCommandExecutor(ec -> rcAddCommand(ec));
 
 		// rc edit
 		subCommand = rc
 				.parseCommandSyntax("edit <name> <command ...>")
-				.setCommandExecutor(p -> rcEditCommand(p));
+				.setCommandExecutor(ec -> rcEditCommand(ec));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
@@ -168,26 +178,26 @@ public class CommandHandler {
 		// rc set
 		subCommand = rc
 				.parseCommandSyntax("set <name> OnEnter=<on-enter : BOOLEAN> OnWorld=<on-world : BOOLEAN>")
-				.setCommandExecutor(p -> rcSetCommand(p));
+				.setCommandExecutor(ec -> rcSetCommand(ec));
 		subCommand
 		.getParameterSyntax("name")
-		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
+		.setMandatoryValues(ec -> this._controller.getAllRegionCommands());
 
 		// rc delete
 		subCommand = rc
 				.parseCommandSyntax("delete <name>")
-				.setCommandExecutor(p -> rcDeleteCommand(p));
+				.setCommandExecutor(ec -> rcDeleteCommand(ec));
 		subCommand
 		.getParameterSyntax("name")
-		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
+		.setMandatoryValues(ec -> this._controller.getAllRegionCommands());
 
 		// rc goto
 		subCommand = rc
 				.parseCommandSyntax("goto <name>")
-				.setCommandExecutor(p -> rcDeleteCommand(p));
+				.setCommandExecutor(ec -> rcDeleteCommand(ec));
 		subCommand
 		.getParameterSyntax("name")
-		.setMandatoryValues(sender -> this._controller.getAllRegionCommands());
+		.setMandatoryValues(ec -> this._controller.getAllRegionCommands());
 	}
 
 	void buyCommand(EithonCommand command)
@@ -211,7 +221,7 @@ public class CommandHandler {
 		if (player == null) return;
 
 		if (!this._controller.freezePlayer(sender, player)) return;
-		Config.M.playerFrozen.sendMessage(sender, player);
+		Config.M.playerFrozen.sendMessage(sender, player.getName());
 		
 	}
 
@@ -223,6 +233,17 @@ public class CommandHandler {
 		if (!this._controller.thawPlayer(sender, player)) return;
 		Config.M.playerThawn.sendMessage(sender, player.getName());
 		
+	}
+
+	private void freezeRestoreCommand(EithonCommand command) {
+		CommandSender sender = command.getSender();
+		Player player = command.getArgument("player").asPlayer();
+		if (player == null) return;
+		float walkSpeed = command.getArgument("walk-speed").asFloat();
+		float flySpeed = command.getArgument("fly-speed").asFloat();
+
+		if (!this._controller.restorePlayer(sender, player, walkSpeed, flySpeed)) return;
+		Config.M.playerRestored.sendMessage(sender, player.getName());
 	}
 
 	private void freezeListCommand(EithonCommand command) {

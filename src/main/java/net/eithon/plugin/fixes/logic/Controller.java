@@ -381,6 +381,11 @@ public class Controller {
 		return true;
 	}
 
+	public boolean restorePlayer(CommandSender sender, Player player, float walkSpeed, float flySpeed) {
+		FrozenPlayer.restore(player, walkSpeed, flySpeed);
+		return true;
+	}
+
 	public boolean isFrozen(Player player) {
 		return this._frozenPlayers.hasInformation(player);
 	}
