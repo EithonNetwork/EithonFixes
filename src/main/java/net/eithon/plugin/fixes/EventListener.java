@@ -19,12 +19,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -48,93 +44,6 @@ public class EventListener implements Listener {
 	public void onPlayerJoinEvent(EithonPlayerMoveOneBlockEvent event) {
 		this._controller.playerMovedOneBlock(event.getPlayer(), event.getFromBlock(), event.getToBlock());
 	}
-
-	@EventHandler
-	public void onPlayerJoinEvent(PlayerInteractEvent event) {
-		if (event.isCancelled()) return;
-		Player player = event.getPlayer();
-		if (!this._controller.isFrozen(player)) return;
-		event.setCancelled(true);
-	}	
-
-	// Frozen players should not be able to be damaged or damage
-	@EventHandler
-	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-		verbose("onEntityDamageByEntityEvent", "Enter");
-		if (event.isCancelled()) {
-			verbose("onEntityDamageByEntityEvent", "Already cancelled, leave");
-			return;
-		}
-		// Frozen player is the damager?
-		if (event.getDamager() instanceof Player) {
-			Player player = (Player) event.getDamager();
-			verbose("onEntityDamageByEntityEvent", "Damage by player %s.", player.getName());
-			if (this._controller.isFrozen(player)) {
-				verbose("onEntityDamageByEntityEvent", 
-						"Player %s is not allowed to do damage when frozen.", player.getName());
-				event.setCancelled(true);
-				verbose("onEntityDamageByEntityEvent", "Leave");
-				return;
-			}
-		}
-		// Frozen player being damaged?
-		if (event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			verbose("onEntityDamageByEntityEvent", "Damage to player %s.", player.getName());
-			if (this._controller.isFrozen(player)) {
-				verbose("onEntityDamageByEntityEvent", 
-						"Player %s is not allowed to receive damage when frozen.", player.getName());
-				event.setCancelled(true);
-				verbose("onEntityDamageByEntityEvent", "Leave");
-				return;
-			}
-		}
-		verbose("onEntityDamageByEntityEvent", "Leave");
-	}		
-
-	// Frozen players should not be able to be damaged or damage
-	@EventHandler
-	public void onBlockBreakEvent(BlockBreakEvent event) {
-		verbose("onBlockBreakEvent", "Enter");
-		if (event.isCancelled()) {
-			verbose("onBlockBreakEvent", "Already cancelled, leave");
-			return;
-		}
-		// Frozen player is the damager?
-		Player player = event.getPlayer();
-		verbose("onBlockBreakEvent", "Player %s is breaking a block.", player.getName());
-		if (this._controller.isFrozen(player)) {
-			verbose("onBlockBreakEvent", 
-					"Player %s is not allowed to break blocks when frozen.", player.getName());
-			event.setCancelled(true);
-			verbose("onBlockBreakEvent", "Leave");
-			return;
-		}
-		
-		verbose("onBlockBreakEvent", "Leave");
-	}			
-
-	// Frozen players should not be able to be damaged or damage
-	@EventHandler
-	public void onBlockPlaceEvent(BlockPlaceEvent event) {
-		verbose("onBlockPlaceEvent", "Enter");
-		if (event.isCancelled()) {
-			verbose("onBlockPlaceEvent", "Already cancelled, leave");
-			return;
-		}
-		// Frozen player is the damager?
-		Player player = event.getPlayer();
-		verbose("onBlockPlaceEvent", "Player %s is placing a block.", player.getName());
-		if (this._controller.isFrozen(player)) {
-			verbose("onBlockPlaceEvent", 
-					"Player %s is not allowed to place blocks when frozen.", player.getName());
-			event.setCancelled(true);
-			verbose("onBlockPlaceEvent", "Leave");
-			return;
-		}
-		
-		verbose("onBlockPlaceEvent", "Leave");
-	}	
 
 	@EventHandler
 	public void onPlayerDeathEvent(PlayerDeathEvent event) {
@@ -316,13 +225,6 @@ public class EventListener implements Listener {
 		}
 
 		Player player = event.getPlayer();
-
-		if (this._controller.isFrozen(player)) {
-			verbose("onPlayerTeleportEvent", "Player is frozen. Cancel and return.");
-			Config.M.frozenPlayerCannotTeleport.sendMessage(player);
-			event.setCancelled(true);
-			return;
-		}
 
 		if (!player.isFlying()) {
 			verbose("onPlayerTeleportEvent", "Not flying. Return.");

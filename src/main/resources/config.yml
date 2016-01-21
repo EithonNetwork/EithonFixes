@@ -111,18 +111,6 @@ ConsecutiveDaysMultiplyAmount: 25.0
 #
 ConsecutiveDaysMaxAmount: 700.0
 
-#
-# If the "freeze off" command fails to restore the player, you can use "freeze restore" command.
-# It will restore the walk speed to this value 
-#
-FreezeRestoreWalkSpeed: 0.2
-
-#
-# If the "freeze off" command fails to restore the player, you can use "freeze restore" command.
-# It will restore the fly speed to this value 
-#
-FreezeRestoreFlySpeed: 0.2
-
 multipliers:
   donationboard:
     mobKill:
@@ -267,31 +255,7 @@ messages:
   #
   # Parameters: <server name> (%s)
   ConnectedToServer: Connected to server %s.
-
-  #
-  # Parameters: <player name> (%s)
-  PlayerAlreadyFrozen: 'The player %s has already been frozen.'
-
-  #
-  # Parameters: <player name> (%s)
-  PlayerFrozen: 'The player %s has now been frozen.'
-
-  #
-  # Parameters: <player name> (%s)
-  PlayerNotFrozen: 'The player %s can't be thawn - was not frozen.'
-
-  #
-  # Parameters: <player name> (%s)
-  PlayerThawn: 'The player %s has now been thawn.'
-
-  #
-  # Parameters: <player name> (%s)
-  PlayerRestored: 'The player %s has now been restored.'
-
-  #
-  # Parameters: -
-  FrozenPlayerCannotTeleport: 'You have been frozen and are not allowed to teleport.'
-
+  
   #
   # %PLAYER_NAME%, %SERVER_NAME%
   #
