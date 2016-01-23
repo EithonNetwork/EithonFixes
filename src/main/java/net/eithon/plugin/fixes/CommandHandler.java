@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.eithon.library.command.BukkitValueLists;
 import net.eithon.library.command.CommandSyntaxException;
 import net.eithon.library.command.EithonCommand;
 import net.eithon.library.command.ICommandSyntax;
@@ -52,22 +53,12 @@ public class CommandHandler {
 
 		balance
 		.getParameterSyntax("player")
-		.setExampleValues(sender -> getOnlinePlayerNames(sender))
+		.setExampleValues(sender -> BukkitValueLists.getOnlinePlayerNames(sender))
 		.setDefaultGetter(sender -> getSenderAsOnlinePlayer(sender));
 	}
 
 	private String getSenderAsOnlinePlayer(EithonCommand command) {
 		return command.getPlayer().getName();
-	}
-
-	private List<String> getOnlinePlayerNames(EithonCommand command) {
-		return command
-				.getSender()
-				.getServer()
-				.getOnlinePlayers()
-				.stream()
-				.map(p -> p.getName())
-				.collect(Collectors.toList());
 	}
 
 	public void setupBuyCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
@@ -76,7 +67,7 @@ public class CommandHandler {
 				.setCommandExecutor(eithonCommand -> buyCommand(eithonCommand));
 		buy
 		.getParameterSyntax("player")
-		.setMandatoryValues(ec -> getOnlinePlayerNames(ec));
+		.setMandatoryValues(ec -> BukkitValueLists.getOnlinePlayerNames(ec));
 	}
 
 	public void setupDebugCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
