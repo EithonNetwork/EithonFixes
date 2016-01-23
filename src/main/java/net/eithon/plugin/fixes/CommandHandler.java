@@ -32,7 +32,9 @@ public class CommandHandler {
 			.parseCommandSyntax("server <name>")
 			.setCommandExecutor(p -> serverCommand(p));
 			commandSyntax.parseCommandSyntax("restart <time : TIME_SPAN {10m, ...}>")
-			.setCommandExecutor(p -> serverCommand(p));
+			.setCommandExecutor(p -> restartCommand(p));
+			commandSyntax.parseCommandSyntax("restart cancel")
+			.setCommandExecutor(p -> restartCancelCommand(p));
 			setupBuyCommand(commandSyntax);
 			setupDebugCommand(commandSyntax);
 			setupRcCommand(commandSyntax);
@@ -72,7 +74,7 @@ public class CommandHandler {
 
 	public void setupDebugCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
 		commandSyntax.parseCommandSyntax("debug <plugin> <level : INTEGER {0, 1, 2, _3_}>")
-				.setCommandExecutor(p -> debugCommand(p));
+		.setCommandExecutor(p -> debugCommand(p));
 	}
 
 	public void setupSpCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
@@ -286,18 +288,20 @@ public class CommandHandler {
 		CommandSender sender = command.getSender();
 		if (sender == null) return;
 
-		String cancel = command.getArgument("cancel").asString();
-		if ((cancel != null) && cancel.startsWith("ca")) {
-			boolean success = this._controller.cancelRestart();
-			if (success) sender.sendMessage("The server restart has been cancelled.");
-			else sender.sendMessage("Too late to cancel server restart.");
-			return;
-		}
-
 		long secondsToRestart = command.getArgument("time").asSeconds();
 		LocalDateTime when = this._controller.initiateRestart(secondsToRestart);
 		if (when == null) sender.sendMessage("Could not initiate a restart.");
 		else sender.sendMessage(String.format("The server will be restarted %s", when.toString()));
+	}
+
+	void restartCancelCommand(EithonCommand command)
+	{
+		CommandSender sender = command.getSender();
+		if (sender == null) return;
+
+		boolean success = this._controller.cancelRestart();
+		if (success) sender.sendMessage("The server restart has been cancelled.");
+		else sender.sendMessage("Too late to cancel server restart.");
 	}
 
 	void testCommand(EithonCommand command)
@@ -308,7 +312,7 @@ public class CommandHandler {
 
 	void serverCommand(EithonCommand command)
 	{
-		String serverName = command.getArgument("serverName").asString();
+		String serverName = command.getArgument("name").asString();
 		Player player = command.getPlayer();
 		boolean success = this._controller.connectPlayerToServer(player, serverName);
 		if (!success) return;
