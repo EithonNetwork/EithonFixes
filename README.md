@@ -4,6 +4,14 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.34.1 (2016-01-23)
+
+* BUG: amount was not optional in the buy command.
+
+### 1.34 (2016-01-20)
+
+* CHANGE: Moved commands freeze on/off/restore/list to copbot.
+
 ### 1.33 (2016-01-20)
 
 * NEW: Added commands freeze on/off/restore/list

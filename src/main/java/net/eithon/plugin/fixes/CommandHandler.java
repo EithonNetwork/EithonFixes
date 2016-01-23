@@ -32,7 +32,6 @@ public class CommandHandler {
 			.setCommandExecutor(p -> serverCommand(p));
 			commandSyntax.parseCommandSyntax("restart <time : TIME_SPAN {10m, ...}>")
 			.setCommandExecutor(p -> serverCommand(p));
-			setupFreezeCommand(commandSyntax);
 			setupBuyCommand(commandSyntax);
 			setupDebugCommand(commandSyntax);
 			setupRcCommand(commandSyntax);
@@ -45,46 +44,6 @@ public class CommandHandler {
 		this._commandSyntax = commandSyntax;
 	}
 
-	public void setupFreezeCommand(ICommandSyntax commandSyntax)
-			throws CommandSyntaxException {
-		
-		ICommandSyntax freeze = commandSyntax.addKeyWord("freeze");
-		
-		// freeze on
-		ICommandSyntax on = freeze.parseCommandSyntax("on <player>")
-		.setCommandExecutor(p -> freezeOnCommand(p));
-		
-		on
-		.getParameterSyntax("player")
-		.setMandatoryValues(sender -> getOnlinePlayerNames(sender));
-		
-		// freeze off
-		ICommandSyntax off = freeze.parseCommandSyntax("off <player>")
-		.setCommandExecutor(p -> freezeOffCommand(p));
-		
-		off
-		.getParameterSyntax("player")
-		.setMandatoryValues(sender->getFrozenPlayerNames());
-		
-		// freeze restore
-		ICommandSyntax restore = freeze.parseCommandSyntax(String.format(
-				"restore <player> <walk-speed:REAL {%.1f,...}> <fly-speed:REAL {%.1f,...}>",
-				Config.V.freezeRestoreWalkSpeed, Config.V.freezeRestoreFlySpeed))
-		.setCommandExecutor(ec -> freezeRestoreCommand(ec));
-		
-		restore
-		.getParameterSyntax("player")
-		.setMandatoryValues(sender -> getOnlinePlayerNames(sender));
-		
-		// freeze list
-		freeze.parseCommandSyntax("list")
-		.setCommandExecutor(p -> freezeListCommand(p));
-	}
-
-	private List<String> getFrozenPlayerNames() {
-		return this._controller.getFrozenPlayerNames();
-	}
-
 	public ICommandSyntax getCommandSyntax() { return this._commandSyntax;	}
 
 	public void setupBalanceCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
@@ -94,7 +53,7 @@ public class CommandHandler {
 		balance
 		.getParameterSyntax("player")
 		.setExampleValues(sender -> getOnlinePlayerNames(sender))
-		.setDefaultValue(sender -> getSenderAsOnlinePlayer(sender));
+		.setDefaultGetter(sender -> getSenderAsOnlinePlayer(sender));
 	}
 
 	private String getSenderAsOnlinePlayer(EithonCommand command) {
@@ -113,7 +72,7 @@ public class CommandHandler {
 
 	public void setupBuyCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
 		// buy <player> <item> <price> [<amount>]
-		ICommandSyntax buy = commandSyntax.parseCommandSyntax("buy <player> <item> <price : REAL> <amount : INTEGER {1, ...}>")
+		ICommandSyntax buy = commandSyntax.parseCommandSyntax("buy <player> <item> <price : REAL> <amount : INTEGER {_1_, ...}>")
 				.setCommandExecutor(eithonCommand -> buyCommand(eithonCommand));
 		buy
 		.getParameterSyntax("player")
@@ -208,48 +167,11 @@ public class CommandHandler {
 		Player buyingPlayer = command.getArgument("player").asPlayer();
 		if (buyingPlayer == null) return;
 
-		String item = command.getArgument("item").asLowerCase();
+		String item = command.getArgument("item").asString();
 		double pricePerItem = command.getArgument("price").asDouble();
 		int amount = command.getArgument("amount").asInteger();
 
 		this._controller.buy(buyingPlayer, item, pricePerItem, amount);
-	}
-
-	private void freezeOnCommand(EithonCommand command) {
-		CommandSender sender = command.getSender();
-		Player player = command.getArgument("player").asPlayer();
-		if (player == null) return;
-
-		if (!this._controller.freezePlayer(sender, player)) return;
-		Config.M.playerFrozen.sendMessage(sender, player.getName());
-		
-	}
-
-	private void freezeOffCommand(EithonCommand command) {
-		CommandSender sender = command.getSender();
-		OfflinePlayer player = command.getArgument("player").asOfflinePlayer();
-		if (player == null) return;
-
-		if (!this._controller.thawPlayer(sender, player)) return;
-		Config.M.playerThawn.sendMessage(sender, player.getName());
-		
-	}
-
-	private void freezeRestoreCommand(EithonCommand command) {
-		CommandSender sender = command.getSender();
-		Player player = command.getArgument("player").asPlayer();
-		if (player == null) return;
-		float walkSpeed = command.getArgument("walk-speed").asFloat();
-		float flySpeed = command.getArgument("fly-speed").asFloat();
-
-		if (!this._controller.restorePlayer(sender, player, walkSpeed, flySpeed)) return;
-		Config.M.playerRestored.sendMessage(sender, player.getName());
-	}
-
-	private void freezeListCommand(EithonCommand command) {
-		CommandSender sender = command.getSender();
-
-		this._controller.freezeList(sender);
 	}
 
 	void balanceCommand(EithonCommand command)

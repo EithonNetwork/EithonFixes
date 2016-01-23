@@ -44,7 +44,6 @@ public class Controller {
 	private EithonPlugin _eithonPlugin;
 	private IndividualMessageController _individualMessageController;
 	private EithonLibraryApi _eithonLibraryApi;
-	private PlayerCollection<FrozenPlayer> _frozenPlayers;
 
 	public Controller(EithonPlugin plugin) {
 		this._eithonPlugin = plugin;
@@ -57,7 +56,6 @@ public class Controller {
 		this._coolDownCommandController = new CoolDownCommandController(plugin);
 		this._coolDownWorldController = new CoolDownWorldController(plugin);
 		this._individualMessageController = new IndividualMessageController(plugin);
-		this._frozenPlayers = new PlayerCollection<FrozenPlayer>();
 		Config.V.commandScheduler.start();
 	}
 
@@ -359,48 +357,5 @@ public class Controller {
 				regionCommandController.playerMovedOneBlockAsync(player, fromBlock, toBlock);
 			}
 		});
-	}
-
-	public boolean freezePlayer(CommandSender sender, Player player) {
-		if (this._frozenPlayers.hasInformation(player)) {
-			Config.M.playerAlreadyFrozen.sendMessage(sender, player.getName());
-			return false;
-		}
-		this._frozenPlayers.put(player, new FrozenPlayer(player));
-		return true;
-	}
-
-	public boolean thawPlayer(CommandSender sender, OfflinePlayer player) {
-		FrozenPlayer frozenPlayer = this._frozenPlayers.get(player);
-		if (frozenPlayer == null) {
-			Config.M.playerNotFrozen.sendMessage(sender, player.getName());
-			return false;
-		}
-		frozenPlayer.thaw();
-		this._frozenPlayers.remove(player);
-		return true;
-	}
-
-	public boolean restorePlayer(CommandSender sender, Player player, float walkSpeed, float flySpeed) {
-		FrozenPlayer.restore(player, walkSpeed, flySpeed);
-		return true;
-	}
-
-	public boolean isFrozen(Player player) {
-		return this._frozenPlayers.hasInformation(player);
-	}
-
-	public List<String> getFrozenPlayerNames() {
-		return this._frozenPlayers.values().stream().map(p->p.getName()).collect(Collectors.toList());
-	}
-
-	public void freezeList(CommandSender sender) {
-		if ((this._frozenPlayers == null) || (this._frozenPlayers.size() == 0)) {
-			sender.sendMessage("No frozen players");
-			return;
-		}
-		for (FrozenPlayer frozenPlayer : this._frozenPlayers) {
-			sender.sendMessage(frozenPlayer.getName());
-		}
 	}
 }
