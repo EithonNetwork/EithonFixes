@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.eithon.library.command.BukkitValueLists;
 import net.eithon.library.command.CommandSyntaxException;
 import net.eithon.library.command.EithonCommand;
 import net.eithon.library.command.ICommandSyntax;
@@ -31,7 +32,9 @@ public class CommandHandler {
 			.parseCommandSyntax("server <name>")
 			.setCommandExecutor(p -> serverCommand(p));
 			commandSyntax.parseCommandSyntax("restart <time : TIME_SPAN {10m, ...}>")
-			.setCommandExecutor(p -> serverCommand(p));
+			.setCommandExecutor(p -> restartCommand(p));
+			commandSyntax.parseCommandSyntax("restart cancel")
+			.setCommandExecutor(p -> restartCancelCommand(p));
 			setupBuyCommand(commandSyntax);
 			setupDebugCommand(commandSyntax);
 			setupRcCommand(commandSyntax);
@@ -52,22 +55,12 @@ public class CommandHandler {
 
 		balance
 		.getParameterSyntax("player")
-		.setExampleValues(sender -> getOnlinePlayerNames(sender))
+		.setExampleValues(sender -> BukkitValueLists.getOnlinePlayerNames(sender))
 		.setDefaultGetter(sender -> getSenderAsOnlinePlayer(sender));
 	}
 
 	private String getSenderAsOnlinePlayer(EithonCommand command) {
 		return command.getPlayer().getName();
-	}
-
-	private List<String> getOnlinePlayerNames(EithonCommand command) {
-		return command
-				.getSender()
-				.getServer()
-				.getOnlinePlayers()
-				.stream()
-				.map(p -> p.getName())
-				.collect(Collectors.toList());
 	}
 
 	public void setupBuyCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
@@ -76,12 +69,12 @@ public class CommandHandler {
 				.setCommandExecutor(eithonCommand -> buyCommand(eithonCommand));
 		buy
 		.getParameterSyntax("player")
-		.setMandatoryValues(ec -> getOnlinePlayerNames(ec));
+		.setMandatoryValues(ec -> BukkitValueLists.getOnlinePlayerNames(ec));
 	}
 
 	public void setupDebugCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
 		commandSyntax.parseCommandSyntax("debug <plugin> <level : INTEGER {0, 1, 2, _3_}>")
-				.setCommandExecutor(p -> debugCommand(p));
+		.setCommandExecutor(p -> debugCommand(p));
 	}
 
 	public void setupSpCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
@@ -295,18 +288,20 @@ public class CommandHandler {
 		CommandSender sender = command.getSender();
 		if (sender == null) return;
 
-		String cancel = command.getArgument("cancel").asString();
-		if ((cancel != null) && cancel.startsWith("ca")) {
-			boolean success = this._controller.cancelRestart();
-			if (success) sender.sendMessage("The server restart has been cancelled.");
-			else sender.sendMessage("Too late to cancel server restart.");
-			return;
-		}
-
 		long secondsToRestart = command.getArgument("time").asSeconds();
 		LocalDateTime when = this._controller.initiateRestart(secondsToRestart);
 		if (when == null) sender.sendMessage("Could not initiate a restart.");
 		else sender.sendMessage(String.format("The server will be restarted %s", when.toString()));
+	}
+
+	void restartCancelCommand(EithonCommand command)
+	{
+		CommandSender sender = command.getSender();
+		if (sender == null) return;
+
+		boolean success = this._controller.cancelRestart();
+		if (success) sender.sendMessage("The server restart has been cancelled.");
+		else sender.sendMessage("Too late to cancel server restart.");
 	}
 
 	void testCommand(EithonCommand command)
@@ -317,7 +312,7 @@ public class CommandHandler {
 
 	void serverCommand(EithonCommand command)
 	{
-		String serverName = command.getArgument("serverName").asString();
+		String serverName = command.getArgument("name").asString();
 		Player player = command.getPlayer();
 		boolean success = this._controller.connectPlayerToServer(player, serverName);
 		if (!success) return;
