@@ -72,7 +72,7 @@ public class CommandHandler {
 
 	public void setupBuyCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
 		// buy <player> <item> <price> [<amount>]
-		ICommandSyntax buy = commandSyntax.parseCommandSyntax("buy <player> <item> <price : REAL> <amount : INTEGER {1, ...}>")
+		ICommandSyntax buy = commandSyntax.parseCommandSyntax("buy <player> <item> <price : REAL> <amount : INTEGER {_1_, ...}>")
 				.setCommandExecutor(eithonCommand -> buyCommand(eithonCommand));
 		buy
 		.getParameterSyntax("player")
@@ -167,7 +167,7 @@ public class CommandHandler {
 		Player buyingPlayer = command.getArgument("player").asPlayer();
 		if (buyingPlayer == null) return;
 
-		String item = command.getArgument("item").asLowerCase();
+		String item = command.getArgument("item").asString();
 		double pricePerItem = command.getArgument("price").asDouble();
 		int amount = command.getArgument("amount").asInteger();
 
