@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.eithon.library.command.BukkitValueLists;
+import net.eithon.library.command.EithonCommandUtilities;
 import net.eithon.library.command.CommandSyntaxException;
 import net.eithon.library.command.EithonCommand;
 import net.eithon.library.command.ICommandSyntax;
@@ -60,7 +60,7 @@ public class CommandHandler {
 
 		balance
 		.getParameterSyntax("player")
-		.setExampleValues(sender -> BukkitValueLists.getOnlinePlayerNames(sender))
+		.setExampleValues(sender -> EithonCommandUtilities.getOnlinePlayerNames(sender))
 		.setDefaultGetter(sender -> getSenderAsOnlinePlayer(sender));
 	}
 
@@ -74,7 +74,7 @@ public class CommandHandler {
 				.setCommandExecutor(eithonCommand -> buyCommand(eithonCommand));
 		buy
 		.getParameterSyntax("player")
-		.setMandatoryValues(ec -> BukkitValueLists.getOnlinePlayerNames(ec));
+		.setMandatoryValues(ec -> EithonCommandUtilities.getOnlinePlayerNames(ec));
 	}
 
 	public void setupDebugCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
