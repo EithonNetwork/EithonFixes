@@ -60,12 +60,12 @@ public class CommandHandler {
 
 		balance
 		.getParameterSyntax("player")
-		.setExampleValues(sender -> EithonCommandUtilities.getOnlinePlayerNames(sender))
-		.setDefaultGetter(sender -> getSenderAsOnlinePlayer(sender));
+		.setExampleValues(ec -> EithonCommandUtilities.getOnlinePlayerNames(ec))
+		.setDefaultGetter(ec -> getSenderName(ec));
 	}
 
-	private String getSenderAsOnlinePlayer(EithonCommand command) {
-		return command.getPlayer().getName();
+	private String getSenderName(EithonCommand command) {
+		return command.getSender().getName();
 	}
 
 	public void setupBuyCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
