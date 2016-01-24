@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.34.3 (2016-01-24)
+
+* BUG: "/eithonfixes restart" was actually executing "/eithonfixes cancel".
+
 ### 1.34.2 (2016-01-23)
 
 * BUG: Commands /eithonfixes server and /eithonfixes restart did not work.
