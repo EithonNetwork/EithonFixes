@@ -31,10 +31,7 @@ public class CommandHandler {
 			commandSyntax
 			.parseCommandSyntax("server <name>")
 			.setCommandExecutor(p -> serverCommand(p));
-			commandSyntax.parseCommandSyntax("restart <time : TIME_SPAN {10m, ...}>")
-			.setCommandExecutor(p -> restartCommand(p));
-			commandSyntax.parseCommandSyntax("restart cancel")
-			.setCommandExecutor(p -> restartCancelCommand(p));
+			setupResetCommand(commandSyntax);
 			setupBuyCommand(commandSyntax);
 			setupDebugCommand(commandSyntax);
 			setupRcCommand(commandSyntax);
@@ -45,6 +42,14 @@ public class CommandHandler {
 			e.printStackTrace();
 		}
 		this._commandSyntax = commandSyntax;
+	}
+
+	public void setupResetCommand(ICommandSyntax commandSyntax)
+			throws CommandSyntaxException {
+		commandSyntax.parseCommandSyntax("restart <time : TIME_SPAN {10m, ...}>")
+		.setCommandExecutor(p -> restartCommand(p));
+		commandSyntax.parseCommandSyntax("restart cancel")
+		.setCommandExecutor(p -> restartCancelCommand(p));
 	}
 
 	public ICommandSyntax getCommandSyntax() { return this._commandSyntax;	}
