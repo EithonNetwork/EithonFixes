@@ -119,12 +119,12 @@ public class CommandHandler {
 		ICommandSyntax subCommand;
 
 		// rc add
-		rc.parseCommandSyntax("add <name> <command ...>")
+		rc.parseCommandSyntax("add <name> <command : REST>")
 		.setCommandExecutor(ec -> rcAddCommand(ec));
 
 		// rc edit
 		subCommand = rc
-				.parseCommandSyntax("edit <name> <command ...>")
+				.parseCommandSyntax("edit <name> <command : REST>")
 				.setCommandExecutor(ec -> rcEditCommand(ec));
 		subCommand
 		.getParameterSyntax("name")
