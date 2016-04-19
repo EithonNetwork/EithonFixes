@@ -7,6 +7,7 @@ A EithonFixes plugin for Minecraft.
 ### 1.34.5 (2016-04-09)
 
 * BUG: Wrong command syntax.
+* BUG: rc goto ran rc delete by mistake.
 
 ### 1.34.4 (2016-01-24)
 

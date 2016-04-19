@@ -41,7 +41,8 @@ public class EventListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerJoinEvent(EithonPlayerMoveOneBlockEvent event) {
+	public void onEithonPlayerMoveOneBlockEvent(EithonPlayerMoveOneBlockEvent event) {
+		verbose("onEithonPlayerMoveOneBlockEvent", "Moved one block");
 		this._controller.playerMovedOneBlock(event.getPlayer(), event.getFromBlock(), event.getToBlock());
 	}
 
@@ -56,12 +57,14 @@ public class EventListener implements Listener {
 	// Inform everyone if we have a new player on this server
 	@EventHandler
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
+		verbose("onPlayerJoinEvent", "Enter");
 		Player player = event.getPlayer();
 		if (player == null) return;
 		maybeTeleportToSpawnPoint(player);
 		maybeBroadcast(event, player);
 		String joinMessage = this._controller.getJoinMessage(player);
 		if (joinMessage != null) event.setJoinMessage(joinMessage);
+		verbose("onPlayerJoinEvent", "Leave");
 	}
 
 	// Inform everyone that a player joined on another server
@@ -127,7 +130,7 @@ public class EventListener implements Listener {
 
 	// CoolDown for worlds
 	@EventHandler
-	public void onPlayerCommandPreprocessEvent(PlayerTeleportEvent event) {
+	public void onTeleportEventCooldown(PlayerTeleportEvent event) {
 		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		String fromWorld = safeGetWorldName(event.getFrom());
