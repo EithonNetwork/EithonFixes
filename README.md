@@ -4,6 +4,12 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.34.5 (2016-04-09)
+
+* BUG: Wrong command syntax.
+* BUG: rc goto ran rc delete by mistake.
+* BUG: Corrected hard dependency to KillerMoney.
+
 ### 1.34.4 (2016-01-24)
 
 * BUG: Compiled with the wrong version of EithonLibrary

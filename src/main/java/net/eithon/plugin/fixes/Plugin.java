@@ -1,5 +1,6 @@
 package net.eithon.plugin.fixes;
 import net.eithon.library.extensions.EithonPlugin;
+import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.plugin.fixes.logic.CommandScheduler;
 import net.eithon.plugin.fixes.logic.Controller;
 
@@ -15,8 +16,9 @@ public final class Plugin extends EithonPlugin {
 		Config.load(this);
 		this._controller = new Controller(this);
 		CommandHandler commandHandler = new CommandHandler(this, this._controller);
-		Listener eventListener = new EventListener(this, this._controller);
-		super.activate(commandHandler.getCommandSyntax(), eventListener);
+		super.activate(commandHandler.getCommandSyntax(),
+				new EventListener(this, this._controller),
+				new EventListenerKillerMoney(this, this._controller));
 	}
 
 	@Override

@@ -119,12 +119,12 @@ public class CommandHandler {
 		ICommandSyntax subCommand;
 
 		// rc add
-		rc.parseCommandSyntax("add <name> <command ...>")
+		rc.parseCommandSyntax("add <name> <command : REST>")
 		.setCommandExecutor(ec -> rcAddCommand(ec));
 
 		// rc edit
 		subCommand = rc
-				.parseCommandSyntax("edit <name> <command ...>")
+				.parseCommandSyntax("edit <name> <command : REST>")
 				.setCommandExecutor(ec -> rcEditCommand(ec));
 		subCommand
 		.getParameterSyntax("name")
@@ -149,10 +149,15 @@ public class CommandHandler {
 		// rc goto
 		subCommand = rc
 				.parseCommandSyntax("goto <name>")
-				.setCommandExecutor(ec -> rcDeleteCommand(ec));
+				.setCommandExecutor(ec -> rcGotoCommand(ec));
 		subCommand
 		.getParameterSyntax("name")
 		.setMandatoryValues(ec -> this._controller.getAllRegionCommands());
+
+		// rc list
+		subCommand = rc
+				.parseCommandSyntax("list")
+				.setCommandExecutor(ec -> rcListCommand(ec));
 	}
 
 	void buyCommand(EithonCommand command)
@@ -196,6 +201,10 @@ public class CommandHandler {
 
 		String name = command.getArgument("name").asString();
 		String commands = command.getArgument("command").asString();
+		if (commands == null) {
+			player.sendMessage("You must specify a command.");
+			return;
+		}
 		this._controller.rcAdd(player, name, commands);
 	}
 
@@ -206,6 +215,10 @@ public class CommandHandler {
 
 		String name = command.getArgument("name").asString();
 		String commands = command.getArgument("command").asString();
+		if (commands == null) {
+			player.sendMessage("You must specify a command.");
+			return;
+		}
 		this._controller.rcEdit(player, name, commands);
 	}
 
