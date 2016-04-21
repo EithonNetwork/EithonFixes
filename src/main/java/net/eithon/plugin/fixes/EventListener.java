@@ -2,7 +2,6 @@ package net.eithon.plugin.fixes;
 
 import java.math.BigDecimal;
 
-import net.diecode.KillerMoney.CustomEvents.KillerMoneyMoneyRewardEvent;
 import net.eithon.library.bungee.EithonBungeeJoinEvent;
 import net.eithon.library.bungee.EithonBungeeQuitEvent;
 import net.eithon.library.extensions.EithonPlayer;
@@ -152,22 +151,6 @@ public class EventListener implements Listener {
 		if (location == null) return null;
 		if (location.getWorld() == null) return null;
 		return location.getWorld().getName();
-	}
-
-	// Reduce money reward if killing in fast succession
-	@EventHandler
-	public void onMoneyRewardEvent(KillerMoneyMoneyRewardEvent event) {
-		if (event.isCancelled()) return;
-		Player player = event.getPlayer();
-		double money = this._controller.getReductedMoney(player, event.getMoney());
-		double factor = Config.V.killerMoneyMultiplier.getMultiplier(player);
-		verbose("getReductedMoney", "Money before permission based multiplier: %.4f", money);
-		money = money * factor;
-		verbose("getReductedMoney", "Money after permission based multiplier: %.4f", money);
-		money = Math.round(money*4)/4.0;
-		verbose("getReductedMoney", "Money after round off: %.2f", money);
-
-		event.setMoney(money);
 	}
 
 	// Players should be encouraged to login on consecutive days

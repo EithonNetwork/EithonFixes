@@ -8,6 +8,7 @@ A EithonFixes plugin for Minecraft.
 
 * BUG: Wrong command syntax.
 * BUG: rc goto ran rc delete by mistake.
+* BUG: Corrected hard dependency to KillerMoney.
 
 ### 1.34.4 (2016-01-24)
 
