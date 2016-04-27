@@ -274,27 +274,6 @@ public class Controller {
 		return eithonPlayer.isInAcceptableWorld(Config.V.flyWorlds);
 	}
 
-	public boolean connectPlayerToServer(Player player, String serverName) {
-		// TODO: Is serverName the same as Server.getServerName() or bungeeController.getServerName?
-		if (player.getServer().getServerName().equalsIgnoreCase(serverName)) {
-			Config.M.alreadyConnectedToServer.sendMessage(player, serverName);
-			return false;
-		}
-
-		if (!playerCanConnectToServer(player, serverName)) {
-			Config.M.noAccessToServer.sendMessage(player, serverName);
-			return false;
-		}
-
-		boolean success = this._eithonPlugin.getApi().teleportPlayerToServer(player, serverName);
-
-		if (!success) {
-			Config.M.couldNotConnectToServer.sendMessage(player, serverName, "Unspecified fail reason");
-			return false;
-		}
-		return true;
-	}
-
 	public void broadcastPlayerJoined(String serverName, EithonPlayer player, String groupName) {
 		verbose("broadcastPlayerJoined", String.format("Enter: serverName=%s, player=%s, groupName=%s",
 				serverName, player.getName(), groupName));
@@ -331,11 +310,6 @@ public class Controller {
 				serverName, player.getName(), groupName));
 		this._individualMessageController.broadcastPlayerQuit(serverName, player, groupName);
 		verbose("broadcastPlayerQuitted", "Leave");
-	}
-
-	private boolean playerCanConnectToServer(Player player, String serverName) {
-		if (player.hasPermission("eithonfixes.server.all")) return true;
-		return player.hasPermission(String.format("eithonfixes.server.%s", serverName));
 	}
 
 	private void verbose(String method, String format, Object... args) {
