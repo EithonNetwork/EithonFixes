@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.35 (2016-04-27)
+
+* CHANGE: Moved the server command to eithonbungee.
+
 ### 1.34.5 (2016-04-09)
 
 * BUG: Wrong command syntax.

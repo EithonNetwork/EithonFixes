@@ -239,22 +239,6 @@ messages:
   #
   # Parameters: <amount> (%f), <consecutive days> (%d)
   ConsecutiveDaysReward: You were awarded %.2f E-Coins for playing on the server for %d consecutive days.
-
-  #
-  # Parameters: <server name> (%s)
-  AlreadyConnectedToServer: You are already connected to server %s.
-
-  #
-  # Parameters: <server name> (%s)
-  NoAccessToServer: You do not have access to server %s.
-
-  #
-  # Parameters: <server name> (%s), <error message> (%s)
-  CouldNotConnectToServer: "Could not connect to server %s: %s"
-
-  #
-  # Parameters: <server name> (%s)
-  ConnectedToServer: Connected to server %s.
   
   #
   # %PLAYER_NAME%, %SERVER_NAME%
@@ -272,11 +256,12 @@ messages:
         Tourist: '[color=green]+[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
         Trusted: '[color=green]+[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
         Builder: '[color=green]+[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
-        Legendary: '[color=green]+[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
+        Legend: '[color=green]+[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
         Veteran: '[color=green]+[/color] [color=blue]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
         Citizen: '[color=green]+[/color] [color=blue]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
         Member: '[color=green]+[/color] [color=blue]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
         New: '[color=green]+[/color] [color=lightpurple]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
+        Guest: '[color=green]+[/color] [color=lightpurple]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
         Vip1: '[color=green]+[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
         Vip2: '[color=green]+[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
         Vip3: '[color=green]+[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
@@ -287,10 +272,10 @@ messages:
         RetiredMod: '[color=green]+[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has joined the %SERVER_NAME% server.[/color]'
     players:
         Addos: '[color=green]+[/color] [color=gray]Yo yo yo, Master[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]is in the %SERVER_NAME% house![/color]'
-        Kyralix: '[color=green]+[/color] [color=darkgreen]%PLAYER_NAME%[/color] [color=gray]the cool kid just joined the %SERVER_NAME% server! Yay ~[/color]'
-        Robot_Rebel: '[color=green]+[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]just joined the %SERVER_NAME% server. Hello Bootifuls![/color]'
+        Kyralix: '[color=green]+[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]the cool kid just joined the %SERVER_NAME% server! Yay ~[/color]'
+        Robot_Rebel: '[color=green]+[/color] [color=darkgreen]%PLAYER_NAME%[/color] [color=gray]just joined the %SERVER_NAME% server. Hello Bootifuls![/color]'
   quit:
-    message: '[color=green]+[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
+    message: '[color=red]-[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
     groups:
         Owner: '[color=red]-[/color] [color=red]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         Admin: '[color=red]-[/color] [color=red]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
@@ -301,12 +286,14 @@ messages:
         Submod: '[color=red]-[/color] [color=darkgreen]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         Tourist: '[color=red]-[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         Trusted: '[color=red]-[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
-        Builder: '[color=red]-[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
-        Legendary: '[color=red]-[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
+        BuilderT1: '[color=red]-[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
+        BuilderT2: '[color=red]-[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
+        Legend: '[color=red]-[/color] [color=yellow]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         Veteran: '[color=red]-[/color] [color=blue]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         Citizen: '[color=red]-[/color] [color=blue]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         Member: '[color=red]-[/color] [color=blue]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         New: '[color=red]-[/color] [color=lightpurple]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
+        Guest: '[color=red]-[/color] [color=lightpurple]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         Vip1: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         Vip2: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
         Vip3: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
@@ -317,6 +304,6 @@ messages:
         RetiredMod: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]has left the %SERVER_NAME% server.[/color]'
     players:
         Neylion: '[color=red]-[/color] [color=red]%PLAYER_NAME%[/color] [color=gray]left the %SERVER_NAME% server. Play nice! ~[/color]'
-        Kyralix: '[color=red]-[/color] [color=darkgreen]%PLAYER_NAME%[/color] [color=gray]the cool kid just left the %SERVER_NAME% server! Aww ~[/color]'
+        Kyralix: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]the cool kid just left the %SERVER_NAME% server! Aww ~[/color]'
         Hawooo: '[color=red]-[/color] [color=red]%PLAYER_NAME%[/color] [color=gray]left the %SERVER_NAME% server. Or so you think...[/color]'
-        Robot_Rebel: '[color=red]-[/color] [color=gold]%PLAYER_NAME%[/color] [color=gray]left the %SERVER_NAME% server. Goodbye, baes! [/color]'
+        Robot_Rebel: '[color=red]-[/color] [color=darkgreen]%PLAYER_NAME%[/color] [color=gray]left the %SERVER_NAME% server. Goodbye, baes! [/color]'

@@ -26,9 +26,6 @@ public class CommandHandler {
 		commandSyntax.setPermissionsAutomatically();
 
 		try {
-			commandSyntax
-			.parseCommandSyntax("server <name>")
-			.setCommandExecutor(p -> serverCommand(p));
 			setupResetCommand(commandSyntax);
 			setupBuyCommand(commandSyntax);
 			setupDebugCommand(commandSyntax);
@@ -324,14 +321,5 @@ public class CommandHandler {
 	{
 		Player player = command.getPlayer();
 		player.sendMessage(String.format("TEST by player %s", player.getName()));
-	}
-
-	void serverCommand(EithonCommand command)
-	{
-		String serverName = command.getArgument("name").asString();
-		Player player = command.getPlayer();
-		boolean success = this._controller.connectPlayerToServer(player, serverName);
-		if (!success) return;
-		Config.M.connectedToServer.sendMessage(player, serverName);
 	}
 }

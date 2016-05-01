@@ -147,10 +147,6 @@ public class Config {
 		public static ConfigurableMessage finalWarningMessage;
 		public static ConfigurableMessage restartingServer;
 		public static ConfigurableMessage consecutiveDaysReward;
-		public static ConfigurableMessage alreadyConnectedToServer;
-		public static ConfigurableMessage noAccessToServer;
-		public static ConfigurableMessage couldNotConnectToServer;
-		public static ConfigurableMessage connectedToServer;
 		public static IndividualConfigurableMessage joinMessage;
 		public static IndividualConfigurableMessage quitMessage;
 
@@ -185,14 +181,6 @@ public class Config {
 					"[title/]Server restarting");
 			consecutiveDaysReward = config.getConfigurableMessage("messages.ConsecutiveDaysReward", 2,
 					"You were awarded %.2f E-Coins for using the server for %d consecutive days.");
-			alreadyConnectedToServer = config.getConfigurableMessage("messages.AlreadyConnectedToServer", 1,
-					"You are already connected to server %s.");
-			noAccessToServer = config.getConfigurableMessage("messages.NoAccessToServer", 1,
-					"You do not have access to server %s.");
-			couldNotConnectToServer = config.getConfigurableMessage("messages.CouldNotConnectToServer", 2,
-					"Could not connect to server %s: %s");
-			connectedToServer = config.getConfigurableMessage("messages.ConnectedToServer", 1,
-					"Connected to server %s.");
 			joinMessage = new IndividualConfigurableMessage(config, "messages.join");
 			quitMessage = new IndividualConfigurableMessage(config, "messages.quit");
 		}		
