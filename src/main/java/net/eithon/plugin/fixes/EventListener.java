@@ -2,9 +2,6 @@ package net.eithon.plugin.fixes;
 
 import java.math.BigDecimal;
 
-import net.eithon.library.bungee.EithonBungeeJoinEvent;
-import net.eithon.library.bungee.EithonBungeeQuitEvent;
-import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.move.EithonPlayerMoveOneBlockEvent;
 import net.eithon.library.plugin.Logger;
@@ -21,7 +18,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
@@ -60,58 +56,11 @@ public class EventListener implements Listener {
 		Player player = event.getPlayer();
 		if (player == null) return;
 		maybeTeleportToSpawnPoint(player);
-		maybeBroadcast(event, player);
-		String joinMessage = this._controller.getJoinMessage(player);
-		if (joinMessage != null) event.setJoinMessage(joinMessage);
 		verbose("onPlayerJoinEvent", "Leave");
-	}
-
-	// Inform everyone that a player joined on another server
-	@EventHandler
-	public void onEithonBungeeJoinEvent(EithonBungeeJoinEvent event) {
-		verbose("onEithonBungeeJoinEvent", "Enter");
-		EithonPlayer player = event.getPlayer();
-		if (player == null) return;
-		this._controller.broadcastPlayerJoined(event.getThatServerName(), player, event.getMainGroup());
-		verbose("onEithonBungeeJoinEvent", "Leave");
-	}
-
-	// Inform everyone that a player left this server
-	@EventHandler
-	public void onPlayerQuitEvent(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		if (player == null) return;
-		String quitMessage = this._controller.getQuitMessage(player);
-		if (quitMessage != null) event.setQuitMessage(quitMessage);
-	}
-
-	// Inform everyone that a player left another server
-	@EventHandler
-	public void onEithonBungeeQuitEvent(EithonBungeeQuitEvent event) {
-		verbose("onEithonBungeeQuitEvent", "Enter");
-		EithonPlayer player = event.getPlayer();
-		if (player == null) return;
-		this._controller.broadcastPlayerQuitted(event.getThatServerName(), player, event.getMainGroup());
-		verbose("onEithonBungeeQuitEvent", "Leave");
 	}
 
 	private boolean maybeTeleportToSpawnPoint(Player player) {
 		return this._controller.maybeTeleportToSpawnPoint(player);
-	}
-
-	private boolean maybeBroadcast(PlayerJoinEvent event, Player player) {
-		verbose("maybeBroadcast", "Enter Player %s", player.getName());
-		if (player.hasPlayedBefore()) {
-			verbose("maybeBroadcast", "%s is not a new player.", player.getName());
-			verbose("maybeBroadcast", "Leave false");
-			return false;
-		}
-		verbose("maybeBroadcast", "%s is a new player.", player.getName());
-		verbose("maybeBroadcast", "Broadcast");
-		event.setJoinMessage(Config.M.joinedServerFirstTime.getMessageWithColorCoding(player.getName()));
-		Config.M.pleaseWelcomeNewPlayer.broadcastMessage(player.getName());
-		verbose("maybeBroadcast", "Leave true");
-		return true;
 	}
 
 	// CoolDown for commands
