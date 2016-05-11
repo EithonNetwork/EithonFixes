@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.36 (2016-05-10)
+
+* CHANGE: Moved all Bungee related code from EithonLibrary to BungeePlugin.
+
 ### 1.35 (2016-04-27)
 
 * CHANGE: Moved the server command to eithonbungee.

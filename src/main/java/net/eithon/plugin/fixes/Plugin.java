@@ -1,10 +1,7 @@
 package net.eithon.plugin.fixes;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.plugin.fixes.logic.CommandScheduler;
 import net.eithon.plugin.fixes.logic.Controller;
-
-import org.bukkit.event.Listener;
 
 public final class Plugin extends EithonPlugin {
 	private Controller _controller;

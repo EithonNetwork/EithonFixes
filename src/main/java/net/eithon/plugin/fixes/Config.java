@@ -11,7 +11,6 @@ import net.eithon.library.plugin.PermissionBasedMultiplier;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.CommandScheduler;
 import net.eithon.plugin.fixes.logic.CoolDownInfo;
-import net.eithon.plugin.fixes.logic.IndividualConfigurableMessage;
 
 public class Config {
 	public static void load(EithonPlugin plugin)
@@ -140,15 +139,11 @@ public class Config {
 		public static ConfigurableMessage joinedChat;
 		public static ConfigurableMessage waitForCommandCoolDown;
 		public static ConfigurableMessage waitForWorldCoolDown;
-		public static ConfigurableMessage joinedServerFirstTime;
-		public static ConfigurableMessage pleaseWelcomeNewPlayer;
 		public static ConfigurableMessage earlyWarningMessage;
 		public static ConfigurableMessage middleWarningMessage;
 		public static ConfigurableMessage finalWarningMessage;
 		public static ConfigurableMessage restartingServer;
 		public static ConfigurableMessage consecutiveDaysReward;
-		public static IndividualConfigurableMessage joinMessage;
-		public static IndividualConfigurableMessage quitMessage;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -167,10 +162,6 @@ public class Config {
 					"In cool down. Remaining time: %s.");
 			waitForWorldCoolDown = config.getConfigurableMessage("messages.WaitForWorldDown", 1,
 					"In cool down. Remaining time: %s.");
-			joinedServerFirstTime = config.getConfigurableMessage("messages.JoinedServerFirstTime", 1,
-					"%s joined for the first time!");
-			pleaseWelcomeNewPlayer = config.getConfigurableMessage("messages.PleaseWelcomeNewPlayer", 1,
-					"Welcome %s to the server!");
 			earlyWarningMessage = config.getConfigurableMessage("messages.EarlyWarningMessage", 1,
 					"The server will be restarted in %d minutes.");
 			middleWarningMessage = config.getConfigurableMessage("messages.MiddleWarningMessage", 1,
@@ -181,8 +172,6 @@ public class Config {
 					"[title/]Server restarting");
 			consecutiveDaysReward = config.getConfigurableMessage("messages.ConsecutiveDaysReward", 2,
 					"You were awarded %.2f E-Coins for using the server for %d consecutive days.");
-			joinMessage = new IndividualConfigurableMessage(config, "messages.join");
-			quitMessage = new IndividualConfigurableMessage(config, "messages.quit");
 		}		
 	}
 
