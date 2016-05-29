@@ -278,11 +278,6 @@ public class Controller {
 		return true;
 	}
 
-	private void verbose(String method, String format, Object... args) {
-		String message = CoreMisc.safeFormat(format, args);
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
-	}
-
 	public void playerMovedOneBlock(final Player player, final Block fromBlock,
 			final Block toBlock) {
 		final RegionCommandController regionCommandController = this._regionCommandController;
@@ -292,5 +287,16 @@ public class Controller {
 				regionCommandController.playerMovedOneBlockAsync(player, fromBlock, toBlock);
 			}
 		});
+	}
+
+	public boolean removeCooldowns(CommandSender sender, Player player) {
+		this._coolDownWorldController.removePlayer(player);
+		this._coolDownCommandController.removePlayer(player);
+		return true;
+	}
+
+	private void verbose(String method, String format, Object... args) {
+		String message = CoreMisc.safeFormat(format, args);
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
 	}
 }

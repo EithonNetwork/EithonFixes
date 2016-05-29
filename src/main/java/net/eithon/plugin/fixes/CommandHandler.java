@@ -26,11 +26,12 @@ public class CommandHandler {
 		commandSyntax.setPermissionsAutomatically();
 
 		try {
-			setupResetCommand(commandSyntax);
+			setupRestartCommand(commandSyntax);
 			setupBuyCommand(commandSyntax);
 			setupDebugCommand(commandSyntax);
 			setupRcCommand(commandSyntax);
 			setupSpCommand(commandSyntax);
+			setupCooldownCommand(commandSyntax);
 			setupBalanceCommand(commandSyntax);
 		} catch (CommandSyntaxException e) {
 			// TODO Auto-generated catch block
@@ -39,7 +40,7 @@ public class CommandHandler {
 		this._commandSyntax = commandSyntax;
 	}
 
-	public void setupResetCommand(ICommandSyntax commandSyntax)
+	public void setupRestartCommand(ICommandSyntax commandSyntax)
 			throws CommandSyntaxException {
 		commandSyntax.parseCommandSyntax("restart <time : TIME_SPAN {10m, ...}>")
 		.setCommandExecutor(p -> restartCommand(p));
@@ -48,6 +49,16 @@ public class CommandHandler {
 	}
 
 	public ICommandSyntax getCommandSyntax() { return this._commandSyntax;	}
+
+	public void setupCooldownCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
+		ICommandSyntax cmd = commandSyntax.parseCommandSyntax("cooldown remove all <player>")
+				.setCommandExecutor(p -> removeCooldowns(p));
+
+		cmd
+		.getParameterSyntax("player")
+		.setExampleValues(ec -> EithonCommandUtilities.getOnlinePlayerNames(ec));
+	}
+
 
 	public void setupBalanceCommand(ICommandSyntax commandSyntax) throws CommandSyntaxException {
 		ICommandSyntax balance = commandSyntax.parseCommandSyntax("balance <player>")
@@ -179,6 +190,16 @@ public class CommandHandler {
 		if (player == null) return;
 
 		this._controller.displayBalance(sender, player);
+	}
+
+	void removeCooldowns(EithonCommand command)
+	{
+		CommandSender sender = command.getSender();
+		Player player = command.getArgument("player").asPlayer();
+		if (player == null) return;
+
+		if (!this._controller.removeCooldowns(sender, player)) return;
+		sender.sendMessage(String.format("Removed cooldowns for player %s", player.getName()));
 	}
 
 	void debugCommand(EithonCommand command)
