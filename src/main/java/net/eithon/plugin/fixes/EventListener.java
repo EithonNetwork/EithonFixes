@@ -64,9 +64,8 @@ public class EventListener implements Listener {
 	}
 
 	// CoolDown for commands
-	@EventHandler
+	@EventHandler(ignoreCancelled=true)
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
-		if (event.isCancelled()) return;
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "Intercepted command \"%s\".", event.getMessage());
 		long secondsLeftOfCoolDown = this._controller.secondsLeftOfCommandCoolDown(event.getPlayer(), event.getMessage());
 		if (secondsLeftOfCoolDown > 0) {
@@ -77,14 +76,14 @@ public class EventListener implements Listener {
 	}
 
 	// CoolDown for worlds
-	@EventHandler
+	@EventHandler(ignoreCancelled=true)
 	public void onTeleportEventCooldown(PlayerTeleportEvent event) {
-		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		String fromWorld = safeGetWorldName(event.getFrom());
 		String toWorld = safeGetWorldName(event.getTo());
 		if ((fromWorld == null) || (toWorld == null)) return;
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "Player %s started teleport from %s to %s", 
+		if (fromWorld.equalsIgnoreCase(toWorld)) return;
+		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "Player %s started teleport between two worlds (%s to %s)", 
 				player.getName(), fromWorld, toWorld);
 		long secondsLeftOfCoolDown = this._controller.secondsLeftOfWorldCoolDown(player, toWorld);
 		if (secondsLeftOfCoolDown > 0) {

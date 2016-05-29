@@ -4,6 +4,11 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.37 (2016-05-29)
+
+* CHANGE: Added a command for removing cooldowns.
+* BUG: Could not teleport within the same world when in cooldown.
+
 ### 1.36 (2016-05-10)
 
 * CHANGE: Moved all Bungee related code from EithonLibrary to BungeePlugin.

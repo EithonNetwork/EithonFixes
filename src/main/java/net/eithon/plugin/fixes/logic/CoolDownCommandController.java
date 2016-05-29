@@ -25,6 +25,12 @@ class CoolDownCommandController {
 		}
 	}
 
+	public void removePlayer(Player player) {
+		for (CoolDown coolDown : this._coolDownHashMap.values()) {
+			coolDown.removePlayer(player);
+		}
+	}
+
 	public long secondsLeftOfCoolDown(Player player, String command) {
 		verbose("secondsLeftOfCoolDown", "Enter");
 		CoolDown coolDown = getCoolDown(command);
@@ -38,7 +44,7 @@ class CoolDownCommandController {
 			verbose("secondsLeftOfCoolDown", "return 0.");
 			return 0;			
 		}
-		
+
 		long secondsLeft = coolDown.secondsLeft(player);
 		if (secondsLeft > 0) {
 			verbose("secondsLeftOfCoolDown", "Player \"%s\" is in cooldown.", player.getName());
@@ -70,7 +76,7 @@ class CoolDownCommandController {
 		}
 		return null;
 	}
-	
+
 	private void verbose(String method, String format, Object... args)
 	{
 		String message = CoreMisc.safeFormat(format, args);

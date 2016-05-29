@@ -24,6 +24,12 @@ class CoolDownWorldController {
 			this._coolDownHashMap.put(info.getId(), new CoolDown(info.getName(), info.getCoolDownPeriodInSeconds(), info.getAllowedIncidents()));
 		}
 	}
+	
+	public void removePlayer(Player player) {
+		for (CoolDown coolDown : this._coolDownHashMap.values()) {
+			coolDown.removePlayer(player);
+		}
+	}
 
 	public long secondsLeftOfCoolDown(Player player, String world) {
 		verbose("secondsLeftOfCoolDown", "Enter");
