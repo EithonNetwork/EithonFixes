@@ -41,6 +41,8 @@ public class Config {
 		public static CommandScheduler commandScheduler;
 		public static double freezeRestoreWalkSpeed;
 		public static double freezeRestoreFlySpeed;
+		public static double firstJoinTodayRewardWhenAfk;
+		public static double firstJoinTodayRewardWhenOnline;
 		
 		static void load(Configuration config, EithonPlugin plugin) {
 			rewardCoolDownInSeconds = config.getSeconds("RewardCoolDownTimeSpan", 10);
@@ -60,6 +62,8 @@ public class Config {
 			consecutiveDaysMultiplyAmount = config.getDouble("ConsecutiveDaysMultiplyAmount", 25.0);
 			consecutiveDaysMaxAmount = config.getDouble("ConsecutiveDaysMaxAmount", 700.0);
 			commandScheduler = CommandScheduler.getFromConfig(config, "schedule");
+			firstJoinTodayRewardWhenAfk = config.getDouble("FirstJoinTodayRewardWhenAfk", 5.0);
+			firstJoinTodayRewardWhenOnline = config.getDouble("FirstJoinTodayRewardWhenOnline", 20.0);
 		}
 
 		private static List<CoolDownInfo> loadCoolDownCommandsConfig(Configuration config,
@@ -144,6 +148,7 @@ public class Config {
 		public static ConfigurableMessage finalWarningMessage;
 		public static ConfigurableMessage restartingServer;
 		public static ConfigurableMessage consecutiveDaysReward;
+		public static ConfigurableMessage firstJoinTodayReward;
 
 		static void load(Configuration config) {
 			penaltyOnDeath = config.getConfigurableMessage("messages.PenaltyOnDeath", 1,
@@ -172,6 +177,8 @@ public class Config {
 					"[title/]Server restarting");
 			consecutiveDaysReward = config.getConfigurableMessage("messages.ConsecutiveDaysReward", 2,
 					"You were awarded %.2f E-Coins for using the server for %d consecutive days.");
+			firstJoinTodayReward = config.getConfigurableMessage("messages.FirstJoinTodayReward", 2,
+					"You were awarded %.2f E-Coins for witnessing %s's first login today!");
 		}		
 	}
 

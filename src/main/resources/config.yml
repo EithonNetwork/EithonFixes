@@ -111,6 +111,16 @@ ConsecutiveDaysMultiplyAmount: 25.0
 #
 ConsecutiveDaysMaxAmount: 700.0
 
+#
+# The amount of e-coins rewarded if you are AFK when another player joins for the first time today
+#
+FirstJoinTodayRewardWhenAfk: 5.0
+
+#
+# The amount of e-coins rewarded if you are online when another player joins for the first time today
+#
+FirstJoinTodayRewardWhenOnline: 20.0
+
 multipliers:
   donationboard:
     mobKill:
@@ -227,4 +237,8 @@ messages:
   #
   # Parameters: <amount> (%f), <consecutive days> (%d)
   ConsecutiveDaysReward: You were awarded %.2f E-Coins for playing on the server for %d consecutive days.
+
+  #
+  # Parameters: <amount> (%f), <player name> (%s)
+  FirstJoinTodayReward: You were awarded %.2f E-Coins for witnessing %s's first login today!
   

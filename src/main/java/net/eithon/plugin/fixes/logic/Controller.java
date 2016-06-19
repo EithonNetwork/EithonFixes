@@ -1,5 +1,6 @@
 package net.eithon.plugin.fixes.logic;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ import net.eithon.plugin.fixes.logic.cooldown.CoolDownCommandController;
 import net.eithon.plugin.fixes.logic.cooldown.CoolDownWorldController;
 import net.eithon.plugin.fixes.logic.regioncommand.RegionCommandController;
 import net.eithon.plugin.fixes.logic.spawnpoint.SpawnPointController;
+import net.eithon.plugin.stats.EithonStatsApi;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -27,6 +29,10 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
+
+import com.earth2me.essentials.api.Economy;
+import com.earth2me.essentials.api.NoLoanPermittedException;
+import com.earth2me.essentials.api.UserDoesNotExistException;
 
 public class Controller {
 	private KillerMoneyController _killerMoneyController;
@@ -117,7 +123,7 @@ public class Controller {
 	public void rcList(CommandSender sender) {
 		this._regionCommandController.listRegionCommands(sender);
 	}
-	
+
 	public List<String> getAllRegionCommands() {
 		return Arrays.asList(this._regionCommandController.getAllRegionCommands());
 	}
@@ -145,7 +151,7 @@ public class Controller {
 	public boolean maybeTeleportToSpawnPoint(Player player) {
 		return this._spawnPointController.maybeTeleportToSpawnPoint(player);
 	}
-	
+
 	public List<String> getAllSpawnPointNames() {
 		return Arrays.asList(this._spawnPointController.getAllSpawnPointNames());
 	}
@@ -235,7 +241,7 @@ public class Controller {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
 				if (thisObject._restartAlarmIdentity == null) return;
-				Config.M.restartingServer.broadcastMessage();
+				Config.M.restartingServer.broadcastToThisServer();
 			}
 		}, TimeMisc.secondsToTicks(secondsLeft));
 	}
@@ -243,21 +249,21 @@ public class Controller {
 	void earlyWarningMessage(UUID alarmId, long seconds) {
 		if (!alarmId.equals(this._restartAlarmIdentity)) return;
 		verbose("earlyWarningMessage", " %d seconds", seconds);
-		Config.M.earlyWarningMessage.broadcastMessage(seconds/60);
+		Config.M.earlyWarningMessage.broadcastToThisServer(seconds/60);
 		setNextMessageAlarm(alarmId);
 	}
 
 	void middleWarningMessage(UUID alarmId, long seconds) {
 		if (!alarmId.equals(this._restartAlarmIdentity)) return;
 		verbose("middleWarningMessage", "%d seconds", seconds);
-		Config.M.middleWarningMessage.broadcastMessage(seconds);
+		Config.M.middleWarningMessage.broadcastToThisServer(seconds);
 		setNextMessageAlarm(alarmId);
 	}
 
 	void finalWarningMessage(UUID alarmId, long seconds) {
 		if (!alarmId.equals(this._restartAlarmIdentity)) return;
 		verbose("finalWarningMessage", "%d seconds", seconds);
-		Config.M.finalWarningMessage.broadcastMessage(seconds);
+		Config.M.finalWarningMessage.broadcastToThisServer(seconds);
 		setNextMessageAlarm(alarmId);
 	}
 
@@ -299,8 +305,23 @@ public class Controller {
 		return true;
 	}
 
+	public void rewardPlayersOnFirstJoinToday(String playerName) {
+		for (Player rewardedPlayer : Bukkit.getServer().getOnlinePlayers()) {
+			try {
+				double reward = 0.0;
+				if (EithonStatsApi.isActive(rewardedPlayer)) reward = Config.V.firstJoinTodayRewardWhenOnline;
+				else reward = Config.V.firstJoinTodayRewardWhenAfk;
+				Economy.add(rewardedPlayer.getName(), new BigDecimal(reward));
+				Config.M.firstJoinTodayReward.sendMessage(rewardedPlayer, reward, playerName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void verbose(String method, String format, Object... args) {
 		String message = CoreMisc.safeFormat(format, args);
 		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
 	}
+
 }

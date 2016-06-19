@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.38 (2016-06-19)
+
+* NEW: Reward for watching other players first login for the day.
+
 ### 1.37 (2016-05-29)
 
 * CHANGE: Added a command for removing cooldowns.
