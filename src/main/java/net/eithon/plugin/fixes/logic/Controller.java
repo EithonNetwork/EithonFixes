@@ -14,6 +14,10 @@ import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.AlarmTrigger;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.Config;
+import net.eithon.plugin.fixes.logic.cooldown.CoolDownCommandController;
+import net.eithon.plugin.fixes.logic.cooldown.CoolDownWorldController;
+import net.eithon.plugin.fixes.logic.regioncommand.RegionCommandController;
+import net.eithon.plugin.fixes.logic.spawnpoint.SpawnPointController;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

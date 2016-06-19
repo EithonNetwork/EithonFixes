@@ -10,7 +10,7 @@ import net.eithon.library.plugin.Configuration;
 import net.eithon.library.plugin.PermissionBasedMultiplier;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.CommandScheduler;
-import net.eithon.plugin.fixes.logic.CoolDownInfo;
+import net.eithon.plugin.fixes.logic.cooldown.CoolDownInfo;
 
 public class Config {
 	public static void load(EithonPlugin plugin)
