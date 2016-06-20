@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.38.1 (2016-06-20)
+
+* BUG: Was not properly listening to EithonBungee events.
+
 ### 1.38 (2016-06-19)
 
 * NEW: Reward for watching other players first login for the day.

@@ -7,6 +7,7 @@ import net.eithon.plugin.fixes.logic.Controller;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class EventListenerEithonBungee implements Listener {
@@ -20,9 +21,10 @@ public class EventListenerEithonBungee implements Listener {
 	}
 
 	// Reward players that are on the server when another player joins Eithon for the first time this day
+	@EventHandler
 	public void onEithonBungeeJoinEvent(EithonBungeeJoinEvent event) {
 		this._eithonPlugin.getEithonLogger().debug(DebugPrintLevel.MINOR,
-				"EithonFixes.onEithonBungeeJoinEvent: %s",
+				"EventListenerEithonBungee.onEithonBungeeJoinEvent: %s",
 				event.toString());
 		if (!event.getIsFirstJoinToday()) return;
 		OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(event.getPlayerId());
