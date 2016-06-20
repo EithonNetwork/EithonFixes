@@ -1,4 +1,4 @@
-package net.eithon.plugin.fixes.logic;
+package net.eithon.plugin.fixes.logic.spawnpoint;
 
 import java.util.UUID;
 
@@ -11,7 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
-public class SpawnPoint extends JsonObject<SpawnPoint> {
+class SpawnPoint extends JsonObject<SpawnPoint> {
 	private UUID _id;
 	private String _name;
 	private EithonLocation _location;

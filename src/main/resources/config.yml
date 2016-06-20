@@ -9,7 +9,7 @@ eithon:
   #  2 = MINOR (also minor messages)
   #  3 = VERBOSE (all messages)
   #
-  DebugLevel: 1
+  DebugLevel: 2
 
 #
 # Weekly scheduled commands. What day and time every week
@@ -46,7 +46,7 @@ RewardCoolDownTimeSpan: 8
 #
 # Worlds where there is a penalty for dying
 #
-PenaltyOnDeathWorlds: [W_Hardcore,W_Nether,W_SurvivalFreebuild,W_TheEnd]
+PenaltyOnDeathWorlds: [world,world_nether,world_the_end]
 
 #
 # Commands that should have a cooldown period
@@ -58,8 +58,8 @@ CoolDownCommandAllowedIncidents: [1, 3]
 #
 # Worlds that should have a cooldown period before you can reenter them
 #
-CoolDownWorlds: [W_TheEnd]
-CoolDownWorldTimeSpans: [30m]
+CoolDownWorlds: [world_the_end]
+CoolDownWorldTimeSpans: [20m]
 
 #
 # The cost of dying in one of the worlds in PenaltyOnDeathWorlds
@@ -69,12 +69,12 @@ CostOfDeath: 50.0
 #
 # Worlds where you can buy stuff
 #
-BuyWorlds: [W_SurvivalFreebuild]
+BuyWorlds: [world]
 
 #
 # Worlds where you can fly (set eithonfixes.canfly to fly in all worlds)
 #
-FlyWorlds: [W_SurvivalFreebuild,W_CreativePlots,W_Builder,W_DonationBoard,W_MinigamesVoid]
+FlyWorlds: [world,world_donationboard,world_minigames]
 
 #
 # Chat channels. Used to leave all other channels.
@@ -110,6 +110,16 @@ ConsecutiveDaysMultiplyAmount: 25.0
 # The base amount that the player will be rewarded for another day of consecutive days
 #
 ConsecutiveDaysMaxAmount: 700.0
+
+#
+# The amount of e-coins rewarded if you are AFK when another player joins for the first time today
+#
+FirstJoinTodayRewardWhenAfk: 5.0
+
+#
+# The amount of e-coins rewarded if you are online when another player joins for the first time today
+#
+FirstJoinTodayRewardWhenOnline: 20.0
 
 multipliers:
   donationboard:
@@ -227,4 +237,8 @@ messages:
   #
   # Parameters: <amount> (%f), <consecutive days> (%d)
   ConsecutiveDaysReward: You were awarded %.2f E-Coins for playing on the server for %d consecutive days.
+
+  #
+  # Parameters: <amount> (%f), <player name> (%s)
+  FirstJoinTodayReward: You were awarded %.2f E-Coins for witnessing %s's first login today!
   

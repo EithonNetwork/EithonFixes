@@ -1,4 +1,4 @@
-package net.eithon.plugin.fixes.logic;
+package net.eithon.plugin.fixes.logic.spawnpoint;
 
 import java.io.File;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-class SpawnPointController {
+public class SpawnPointController {
 	private HashMap<String, SpawnPoint> _spawnPointsByName = null;
 	private EithonPlugin _eithonPlugin;
 

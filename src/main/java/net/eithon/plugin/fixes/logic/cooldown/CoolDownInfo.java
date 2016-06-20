@@ -1,4 +1,4 @@
-package net.eithon.plugin.fixes.logic;
+package net.eithon.plugin.fixes.logic.cooldown;
 
 import java.util.UUID;
 

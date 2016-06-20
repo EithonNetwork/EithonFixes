@@ -1,4 +1,4 @@
-package net.eithon.plugin.fixes.logic;
+package net.eithon.plugin.fixes.logic.regioncommand;
 
 import java.io.File;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-class RegionCommandController {
+public class RegionCommandController {
 	private WorldEditPlugin _worldEditPlugin;	
 	private HashMap<String, RegionCommand> _regionCommandsByName = null;
 	private EithonPlugin _eithonPlugin;

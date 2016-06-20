@@ -1,4 +1,4 @@
-package net.eithon.plugin.fixes.logic;
+package net.eithon.plugin.fixes.logic.regioncommand;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONObject;
 
-public class RegionCommand extends JsonObject<RegionCommand> {
+class RegionCommand extends JsonObject<RegionCommand> {
 	private UUID _id;
 	private String _name;
 	private String _commands;
