@@ -31,8 +31,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.earth2me.essentials.api.Economy;
-import com.earth2me.essentials.api.NoLoanPermittedException;
-import com.earth2me.essentials.api.UserDoesNotExistException;
 
 public class Controller {
 	private KillerMoneyController _killerMoneyController;
@@ -306,6 +304,8 @@ public class Controller {
 	}
 
 	public void rewardPlayersOnFirstJoinToday(String playerName) {
+		this._eithonPlugin.getEithonLogger().debug(DebugPrintLevel.MAJOR,
+				"EithonFixes.rewardPlayersOnFirstJoinToday(%s)", playerName);
 		for (Player rewardedPlayer : Bukkit.getServer().getOnlinePlayers()) {
 			try {
 				double reward = 0.0;
