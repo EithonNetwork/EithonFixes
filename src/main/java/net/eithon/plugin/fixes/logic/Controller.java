@@ -10,8 +10,6 @@ import java.util.UUID;
 import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlayer;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.AlarmTrigger;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.Config;
@@ -41,12 +39,10 @@ public class Controller {
 	private CoolDownWorldController _coolDownWorldController;
 	UUID _restartAlarmIdentity;
 	private LocalDateTime _whenRestart;
-	private Logger _eithonLogger;
 	private EithonPlugin _eithonPlugin;
 
 	public Controller(EithonPlugin plugin) {
 		this._eithonPlugin = plugin;
-		this._eithonLogger = plugin.getEithonLogger();
 		this._killerMoneyController = new KillerMoneyController(plugin);
 		this._buyController = new BuyController(plugin);
 		this._regionCommandController = new RegionCommandController(plugin);
@@ -282,7 +278,7 @@ public class Controller {
 			sender.sendMessage(String.format("Could not find EithonPlugin by name %s", pluginName));
 			return false;
 		}
-		eithonPlugin.getEithonLogger().setDebugLevel(debugLevel);
+		eithonPlugin.setDebugLevel(debugLevel);
 		return true;
 	}
 
@@ -304,10 +300,9 @@ public class Controller {
 	}
 
 	public void rewardPlayersOnFirstJoinToday(String playerName) {
-		this._eithonPlugin.getEithonLogger().debug(DebugPrintLevel.MAJOR,
-				"EithonFixes.rewardPlayersOnFirstJoinToday(%s)", playerName);
 		for (Player rewardedPlayer : Bukkit.getServer().getOnlinePlayers()) {
 			try {
+				verbose("rewardPlayersOnFirstJoinToday", "Will reward %s", rewardedPlayer.getName());
 				double reward = 0.0;
 				if (EithonStatsApi.isActive(rewardedPlayer)) reward = Config.V.firstJoinTodayRewardWhenOnline;
 				else reward = Config.V.firstJoinTodayRewardWhenAfk;
@@ -320,8 +315,7 @@ public class Controller {
 	}
 
 	private void verbose(String method, String format, Object... args) {
-		String message = CoreMisc.safeFormat(format, args);
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
+		this._eithonPlugin.dbgVerbose("Controller", method, format, args);
 	}
 
 }

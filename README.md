@@ -4,6 +4,10 @@ A EithonFixes plugin for Minecraft.
 
 ## Release history
 
+### 1.38.2 (2016-06-27)
+
+* BUG: Still not listening to EithonBungee events.
+
 ### 1.38.1 (2016-06-20)
 
 * BUG: Was not properly listening to EithonBungee events.

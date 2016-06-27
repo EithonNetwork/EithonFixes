@@ -3,7 +3,6 @@ package net.eithon.plugin.fixes.logic;
 import java.math.BigDecimal;
 
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger;
 import net.eithon.library.plugin.PluginMisc;
 import net.eithon.plugin.fixes.Config;
 
@@ -18,12 +17,12 @@ import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
 class BuyController {
-	private Logger _eithonLogger;
+	private EithonPlugin _eithonPlugin;
 
 	public BuyController(EithonPlugin plugin){
-		this._eithonLogger = plugin.getEithonLogger();
+		this._eithonPlugin = plugin;
 		if (PluginMisc.isPluginEnabled("Economy")) {
-			this._eithonLogger.info("Succesfully hooked into Essentials economy!");
+			this._eithonPlugin.logInfo("Succesfully hooked into Essentials economy!");
 		}
 	}
 
@@ -77,7 +76,7 @@ class BuyController {
 		Material material = Material.getMaterial(item);
 		if (material == null) {
 			String message = String.format("Could not find a material named \"%s\".", item);
-			this._eithonLogger.warning("%s", message);
+			this._eithonPlugin.logWarn("%s", message);
 			buyingPlayer.sendMessage(message);
 			return false;
 		}

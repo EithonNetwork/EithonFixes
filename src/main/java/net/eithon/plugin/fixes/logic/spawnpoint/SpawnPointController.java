@@ -106,7 +106,7 @@ public class SpawnPointController {
 		for (SpawnPoint sp : this._spawnPointsByName.values()) {
 			array.add(sp.toJson());
 		}
-		this._eithonPlugin.getEithonLogger().info("Saving %d SpawnPoints", array.size());
+		this._eithonPlugin.logInfo("Saving %d SpawnPoints", array.size());
 		File file = getSpawnPointStorageFile();
 		
 		FileContent fileContent = new FileContent("SpawnPoints", 1, array);
@@ -122,15 +122,15 @@ public class SpawnPointController {
 		File file = getSpawnPointStorageFile();
 		FileContent fileContent = FileContent.loadFromFile(file);
 		if (fileContent == null) {
-			this._eithonPlugin.getEithonLogger().debug(DebugPrintLevel.MAJOR, "File was empty.");
+			this._eithonPlugin.dbgMajor( "File was empty.");
 			return;			
 		}
 		JSONArray array = (JSONArray) fileContent.getPayload();
 		if ((array == null) || (array.size() == 0)) {
-			this._eithonPlugin.getEithonLogger().debug(DebugPrintLevel.MAJOR, "The list of SpawnPoints was empty.");
+			this._eithonPlugin.dbgMajor( "The list of SpawnPoints was empty.");
 			return;
 		}
-		this._eithonPlugin.getEithonLogger().info("Restoring %d SpawnPoints from loaded file.", array.size());
+		this._eithonPlugin.logInfo("Restoring %d SpawnPoints from loaded file.", array.size());
 		this._spawnPointsByName = new HashMap<String, SpawnPoint>();
 		for (int i = 0; i < array.size(); i++) {
 			this.add(SpawnPoint.getFromJson((JSONObject) array.get(i)));

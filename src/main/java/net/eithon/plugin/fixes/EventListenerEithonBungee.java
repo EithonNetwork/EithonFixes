@@ -1,7 +1,6 @@
 package net.eithon.plugin.fixes;
 
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.plugin.bungee.logic.joinleave.EithonBungeeJoinEvent;
 import net.eithon.plugin.fixes.logic.Controller;
 
@@ -17,18 +16,22 @@ public class EventListenerEithonBungee implements Listener {
 	public EventListenerEithonBungee(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
 		this._eithonPlugin = eithonPlugin;
-		eithonPlugin.getEithonLogger();
 	}
 
 	// Reward players that are on the server when another player joins Eithon for the first time this day
 	@EventHandler
 	public void onEithonBungeeJoinEvent(EithonBungeeJoinEvent event) {
-		this._eithonPlugin.getEithonLogger().debug(DebugPrintLevel.MINOR,
-				"EventListenerEithonBungee.onEithonBungeeJoinEvent: %s",
-				event.toString());
-		if (!event.getIsFirstJoinToday()) return;
+		this._eithonPlugin.dbgMinor("EithonBungeeJoinEvent: %s", event.toString());
+		if (!event.getIsFirstJoinToday()) {
+			this._eithonPlugin.dbgMinor("EithonBungeeJoinEvent: Not first join today");
+			return;
+		}
+		this._eithonPlugin.dbgMajor("First join today: %s", event.toString());
 		OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(event.getPlayerId());
-		if (player == null) return;
+		if (player == null) {
+			this._eithonPlugin.logWarn("Did not expect player to be null for %s", event.toString());
+			return;
+		}
 		this._controller.rewardPlayersOnFirstJoinToday(event.getPlayerName());
 	}
 }

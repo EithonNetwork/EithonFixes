@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.move.EithonPlayerMoveOneBlockEvent;
-import net.eithon.library.plugin.Logger;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.TimeMisc;
 import net.eithon.plugin.fixes.logic.Controller;
 import net.eithon.plugin.stats.logic.ConsecutiveDaysEvent;
@@ -28,11 +26,11 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 public class EventListener implements Listener {
 
 	private Controller _controller;
-	private Logger _eithonLogger;
+	private EithonPlugin _eithonPlugin;
 
 	public EventListener(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
-		this._eithonLogger = eithonPlugin.getEithonLogger();
+		this._eithonPlugin = eithonPlugin;
 	}
 
 	@EventHandler
@@ -66,10 +64,10 @@ public class EventListener implements Listener {
 	// CoolDown for commands
 	@EventHandler(ignoreCancelled=true)
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "Intercepted command \"%s\".", event.getMessage());
+		verbose("Intercepted command \"%s\".", event.getMessage());
 		long secondsLeftOfCoolDown = this._controller.secondsLeftOfCommandCoolDown(event.getPlayer(), event.getMessage());
 		if (secondsLeftOfCoolDown > 0) {
-			this._eithonLogger.debug(DebugPrintLevel.MAJOR, "Command \"%s\" will be cancelled.", event.getMessage());
+			verbose("Command \"%s\" will be cancelled.", event.getMessage());
 			event.setCancelled(true);
 			Config.M.waitForCommandCoolDown.sendMessage(event.getPlayer(), TimeMisc.secondsToString(secondsLeftOfCoolDown));
 		}
@@ -83,11 +81,11 @@ public class EventListener implements Listener {
 		String toWorld = safeGetWorldName(event.getTo());
 		if ((fromWorld == null) || (toWorld == null)) return;
 		if (fromWorld.equalsIgnoreCase(toWorld)) return;
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "Player %s started teleport between two worlds (%s to %s)", 
+		verbose("Player %s started teleport between two worlds (%s to %s)", 
 				player.getName(), fromWorld, toWorld);
 		long secondsLeftOfCoolDown = this._controller.secondsLeftOfWorldCoolDown(player, toWorld);
 		if (secondsLeftOfCoolDown > 0) {
-			this._eithonLogger.debug(DebugPrintLevel.MAJOR, "Teleport for player %s will be cancelled.", player.getName());
+			verbose("Teleport for player %s will be cancelled.", player.getName());
 			event.setCancelled(true);
 			Config.M.waitForWorldCoolDown.sendMessage(player, TimeMisc.secondsToString(secondsLeftOfCoolDown));
 			return;
@@ -183,7 +181,6 @@ public class EventListener implements Listener {
 	}
 
 	private void verbose(String method, String format, Object... args) {
-		String message = String.format(format, args);
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
+		this._eithonPlugin.dbgVerbose("EventListener", method, format, args);
 	}
 }

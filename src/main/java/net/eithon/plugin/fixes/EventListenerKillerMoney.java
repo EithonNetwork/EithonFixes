@@ -2,8 +2,6 @@ package net.eithon.plugin.fixes;
 
 import net.diecode.KillerMoney.CustomEvents.KillerMoneyMoneyRewardEvent;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.plugin.fixes.logic.Controller;
 
 import org.bukkit.entity.Player;
@@ -13,11 +11,11 @@ import org.bukkit.event.Listener;
 public class EventListenerKillerMoney implements Listener {
 
 	private Controller _controller;
-	private Logger _eithonLogger;
+	private EithonPlugin _eithonPlugin;
 
 	public EventListenerKillerMoney(EithonPlugin eithonPlugin, Controller controller) {
 		this._controller = controller;
-		this._eithonLogger = eithonPlugin.getEithonLogger();
+		this._eithonPlugin = eithonPlugin;
 	}
 
 	// Reduce money reward if killing in fast succession
@@ -37,7 +35,6 @@ public class EventListenerKillerMoney implements Listener {
 
 
 	private void verbose(String method, String format, Object... args) {
-		String message = String.format(format, args);
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "EventListener.%s: %s", method, message);
+		this._eithonPlugin.dbgVerbose("EventListenerKillerMoney", method, format, args);
 	}
 }

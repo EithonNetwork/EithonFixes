@@ -35,12 +35,12 @@ public class RegionCommandController {
 		this._eithonPlugin = eithonPlugin;
 		this._regionCommandsByName = new HashMap<String, RegionCommand>();
 		if (!PluginMisc.isPluginEnabled("WorldEdit")) {
-			eithonPlugin.getEithonLogger().error("Expected WorldEdit to be enabled");
+			eithonPlugin.logError("Expected WorldEdit to be enabled");
 			return;
 		}
 		Plugin plugin = PluginMisc.getPlugin("WorldEdit");
 		if (plugin == null || !(plugin instanceof WorldEditPlugin)) {
-			eithonPlugin.getEithonLogger().error("Expected to be able to get the WorldEditPlugin");
+			eithonPlugin.logError("Expected to be able to get the WorldEditPlugin");
 			return;
 		}
 		delayedLoad(this._eithonPlugin, 0);
@@ -160,7 +160,7 @@ public class RegionCommandController {
 		for (RegionCommand rc : this._regionCommandsByName.values()) {
 			array.add(rc.toJson());
 		}
-		this._eithonPlugin.getEithonLogger().info("Saving %d RegionCommands", array.size());
+		this._eithonPlugin.logInfo("Saving %d RegionCommands", array.size());
 		File file = getRegionCommandsStorageFile();
 		
 		FileContent fileContent = new FileContent("RegionCommands", 1, array);
@@ -176,15 +176,15 @@ public class RegionCommandController {
 		File file = getRegionCommandsStorageFile();
 		FileContent fileContent = FileContent.loadFromFile(file);
 		if (fileContent == null) {
-			this._eithonPlugin.getEithonLogger().debug(DebugPrintLevel.MAJOR, "File was empty.");
+			this._eithonPlugin.dbgMajor( "File was empty.");
 			return;			
 		}
 		JSONArray array = (JSONArray) fileContent.getPayload();
 		if ((array == null) || (array.size() == 0)) {
-			this._eithonPlugin.getEithonLogger().debug(DebugPrintLevel.MAJOR, "The list of RegionCommands was empty.");
+			this._eithonPlugin.dbgMajor( "The list of RegionCommands was empty.");
 			return;
 		}
-		this._eithonPlugin.getEithonLogger().info("Restoring %d RegionCommands from loaded file.", array.size());
+		this._eithonPlugin.logInfo("Restoring %d RegionCommands from loaded file.", array.size());
 		this._regionCommandsByName = new HashMap<String, RegionCommand>();
 		for (int i = 0; i < array.size(); i++) {
 			this.add(RegionCommand.getFromJson((JSONObject) array.get(i)));

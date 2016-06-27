@@ -2,7 +2,6 @@ package net.eithon.plugin.fixes.logic;
 
 import net.eithon.library.core.PlayerCollection;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.CoolDown;
 import net.eithon.plugin.fixes.Config;
 
@@ -37,7 +36,6 @@ public class KillerMoneyController {
 	}
 
 	private void verbose(String method, String format, Object... args) {
-		String message = String.format(format, args);
-		this._eithonPlugin.getEithonLogger().debug(DebugPrintLevel.VERBOSE, "%s: %s", method, message);
+		this._eithonPlugin.dbgVerbose("KillerMoneyController", method, format, args);
 	}
 }
