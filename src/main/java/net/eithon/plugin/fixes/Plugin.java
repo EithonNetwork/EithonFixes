@@ -15,7 +15,8 @@ public final class Plugin extends EithonPlugin {
 		CommandHandler commandHandler = new CommandHandler(this, this._controller);
 		super.activate(commandHandler.getCommandSyntax(),
 				new EventListener(this, this._controller),
-				new EventListenerKillerMoney(this, this._controller));
+				new EventListenerKillerMoney(this, this._controller),
+				new EventListenerEithonBungee(this, this._controller));
 	}
 
 	@Override

@@ -72,13 +72,13 @@ public class Config {
 			ArrayList<String> coolDownCommands = new ArrayList<String>(config.getStringList("CoolDownCommands"));
 			ArrayList<String> timeSpansAsStrings = new ArrayList<String>(config.getStringList("CoolDownCommandTimeSpans"));
 			if (coolDownCommands.size() != timeSpansAsStrings.size()) {
-				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownCommandTimeSpans. Should be the same number.",
+				plugin.logError("%d CoolDownCommands, but %d CoolDownCommandTimeSpans. Should be the same number.",
 						coolDownCommands.size(), timeSpansAsStrings.size());
 				return coolDownInfos;
 			}
 			ArrayList<String> incidentsAsStrings = new ArrayList<String>(config.getStringList("CoolDownCommandAllowedIncidents"));
 			if (coolDownCommands.size() != incidentsAsStrings.size()) {
-				plugin.getEithonLogger().error("%d CoolDownCommands, but %d CoolDownCommandAllowedIncidents. Should be the same number.",
+				plugin.logError("%d CoolDownCommands, but %d CoolDownCommandAllowedIncidents. Should be the same number.",
 						coolDownCommands.size(), incidentsAsStrings.size());
 				return coolDownInfos;
 			}
@@ -99,7 +99,7 @@ public class Config {
 			ArrayList<String> coolDownWorlds = new ArrayList<String>(config.getStringList("CoolDownWorlds"));
 			ArrayList<String> timeSpansAsStrings = new ArrayList<String>(config.getStringList("CoolDownWorldTimeSpans"));
 			if (coolDownWorlds.size() != timeSpansAsStrings.size()) {
-				plugin.getEithonLogger().error("%d CoolDownWorlds, but %d CoolDownWorldTimeSpans. Should be the same number.",
+				plugin.logError("%d CoolDownWorlds, but %d CoolDownWorldTimeSpans. Should be the same number.",
 						coolDownWorlds.size(), timeSpansAsStrings.size());
 				return coolDownInfos;
 			}
