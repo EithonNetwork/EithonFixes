@@ -3,7 +3,6 @@ package net.eithon.plugin.fixes.logic.cooldown;
 import java.util.UUID;
 
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
 
 public class CoolDownInfo {
 	private String _comparableString;
@@ -34,12 +33,17 @@ public class CoolDownInfo {
 	public String getComparableString() { return this._comparableString; }
 	public boolean isSame(String string) {
 		String comparable = makeComparable(string);
-		eithonPlugin.getEithonLogger().debug(DebugPrintLevel.VERBOSE, "isSame: %s, %s", this._comparableString, comparable);
+		verbose("isSame", "%s, %s", this._comparableString, comparable);
 		if (comparable.length() < this._comparableString.length()) return false;
 		return (comparable.substring(0, this._length).equals(this._comparableString));
 	}
 	
 	private String makeComparable(String string) {
 		return string.trim().replace(" ", "").toLowerCase();
+	}
+	
+	private static void verbose(String method, String format, Object... args)
+	{
+		eithonPlugin.dbgVerbose("EventListener", method, format, args);
 	}
 }

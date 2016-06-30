@@ -3,10 +3,7 @@ package net.eithon.plugin.fixes.logic.cooldown;
 import java.util.HashMap;
 import java.util.UUID;
 
-import net.eithon.library.core.CoreMisc;
 import net.eithon.library.extensions.EithonPlugin;
-import net.eithon.library.plugin.Logger;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.time.CoolDown;
 import net.eithon.plugin.fixes.Config;
 
@@ -14,10 +11,10 @@ import org.bukkit.entity.Player;
 
 public class CoolDownCommandController {
 	private HashMap<UUID, CoolDown> _coolDownHashMap;
-	private Logger _eithonLogger;
+	private EithonPlugin _eithonPlugin;
 
 	public CoolDownCommandController(EithonPlugin plugin){
-		this._eithonLogger = plugin.getEithonLogger();
+		this._eithonPlugin = plugin;
 		CoolDownInfo.initialize(plugin);
 		this._coolDownHashMap = new HashMap<UUID, CoolDown>();
 		for (CoolDownInfo info : Config.V.coolDownCommandInfos) {
@@ -76,10 +73,9 @@ public class CoolDownCommandController {
 		}
 		return null;
 	}
-
+	
 	private void verbose(String method, String format, Object... args)
 	{
-		String message = CoreMisc.safeFormat(format, args);
-		this._eithonLogger.debug(DebugPrintLevel.VERBOSE, "%s: %s", method, message);
+		this._eithonPlugin.dbgVerbose("CoolDownCommandController", method, format, args);
 	}
 }
