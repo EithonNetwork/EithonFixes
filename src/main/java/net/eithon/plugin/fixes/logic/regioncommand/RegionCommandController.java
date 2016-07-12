@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import net.eithon.library.extensions.EithonPlugin;
 import net.eithon.library.json.FileContent;
-import net.eithon.library.plugin.Logger.DebugPrintLevel;
 import net.eithon.library.plugin.PluginMisc;
 import net.eithon.library.time.TimeMisc;
 

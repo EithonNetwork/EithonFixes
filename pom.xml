@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.eithon.plugin</groupId>
 	<artifactId>EithonFixes</artifactId>
-	<version>1.38.2</version>
+	<version>1.39</version>
 	<name>EithonFixes</name>
 	<build>
 		<resources>
@@ -51,7 +51,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>[1.8.7-R0.1-SNAPSHOT,)</version>
+			<version>[1.10.2-R0.1-SNAPSHOT,)</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>net.eithon.plugin</groupId>
 			<artifactId>EithonLibrary</artifactId>
-			<version>[5.3,)</version>
+			<version>[5.5,)</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>net.eithon.plugin</groupId>
 			<artifactId>EithonBungee</artifactId>
-			<version>[1.11,)</version>
+			<version>[1.12,)</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
